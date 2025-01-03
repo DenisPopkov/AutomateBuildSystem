@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "iosApp (1)",
+            "name": "iosApp",
             "type": "xcode-app",
             "workingDir": "$PROJECT_DIR$",
             "allowParallelRun": true,
