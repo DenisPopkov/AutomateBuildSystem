@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.bb.builds.screens.create.BuildScreen
+import com.bb.builds.screens.create.CreateScreen
 import com.bb.builds.screens.builds.BuildsScreen
 import kotlinx.serialization.Serializable
 
@@ -23,7 +23,7 @@ fun App() {
             startDestination = selectedRoute,
         ) {
             composable<Navigation.Build> {
-                BuildScreen(
+                CreateScreen(
                     onBuildsScreen = {
                         navHostController.navigate(Navigation.Builds)
                     }

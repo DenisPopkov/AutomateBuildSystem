@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -40,7 +41,7 @@ import com.bb.builds.domain.BuildType
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun BuildScreen(
+fun CreateScreen(
     onBuildsScreen: () -> Unit,
 ) {
     val buildOptions = getBuildOptions()
@@ -51,6 +52,7 @@ fun BuildScreen(
     Column(
         modifier = Modifier
             .statusBarsPadding()
+            .navigationBarsPadding()
             .background(color = Color.White)
             .padding(all = 16.dp)
     ) {
@@ -122,9 +124,11 @@ fun BuildScreen(
             InputBranchNameDialog(
                 onSet = { branchName ->
                     isDialogVisible = false
+                    println("efefe state=$isDialogVisible")
                 },
                 onDismissRequest = {
                     isDialogVisible = false
+                    println("efefe state=$isDialogVisible")
                 },
                 title = "Set Branch Name",
                 name = "",

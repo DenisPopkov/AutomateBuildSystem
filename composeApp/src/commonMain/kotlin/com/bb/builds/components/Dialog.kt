@@ -89,7 +89,7 @@ fun InputBranchNameDialog(
                 color = Theme.colorSystem.constMain,
             ),
             DialogButtonInfo(
-                name = "Set",
+                name = "Build",
                 onClick = {
                     onSet.invoke(fieldValue.text)
                     fieldValue = fieldValue.copy(text = "")
