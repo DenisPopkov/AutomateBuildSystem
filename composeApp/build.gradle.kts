@@ -61,11 +61,11 @@ kotlin {
 }
 
 android {
-    namespace = "com.bb.build"
+    namespace = "com.bb.builds"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.bb.build"
+        applicationId = "com.bb.builds"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -95,11 +95,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.bb.build.MainKt"
+        mainClass = "com.bb.builds.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.bb.build"
+            packageName = "com.bb.builds"
             packageVersion = "1.0.0"
         }
     }
