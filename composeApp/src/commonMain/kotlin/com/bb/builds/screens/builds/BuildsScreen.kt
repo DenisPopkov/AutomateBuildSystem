@@ -94,7 +94,7 @@ fun NoBuilds() {
             color = Color.Black,
             fontWeight = FontWeight.Bold,
             fontFamily = fontFamily,
-            fontSize = 28.sp,
+            fontSize = 24.sp,
             letterSpacing = 0.2.sp,
         )
     }

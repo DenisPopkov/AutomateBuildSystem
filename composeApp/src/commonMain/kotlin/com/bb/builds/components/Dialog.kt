@@ -3,7 +3,17 @@ package com.bb.builds.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -12,7 +22,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +56,6 @@ import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_clear_medium
 import com.bb.builds.components.theme.Theme
 import org.jetbrains.compose.resources.painterResource
-
 
 @Composable
 fun InputBranchNameDialog(
@@ -145,7 +159,7 @@ fun NeuroFieldDialog(
         ) {
             Spacer(modifier = Modifier.height(Theme.spacingSystem.s))
             Text(
-                title,
+                text = title,
                 style = TextStyle(
                     fontFamily = MavenFontFamily(),
                     fontWeight = FontWeight.SemiBold,
@@ -189,12 +203,13 @@ fun NeuroFieldDialog(
                 buttons.forEachIndexed { index, info ->
                     Box(
                         modifier = Modifier
-                            .weight(1f)
-                            .height(Theme.spacingSystem.xl),
+                            .weight(weight = 1f)
+                            .height(height = Theme.spacingSystem.xl)
+                            .clickable { info.onClick.invoke() },
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            info.name,
+                            text = info.name,
                             style = TextStyle(
                                 fontFamily = MavenFontFamily(),
                                 fontWeight = FontWeight.Normal,
@@ -211,7 +226,7 @@ fun NeuroFieldDialog(
                             modifier = Modifier
                                 .fillMaxHeight()
                                 .width(width = 1.dp)
-                                .background(Theme.colorSystem.black10),
+                                .background(color = Theme.colorSystem.black10),
                         )
                     }
                 }
@@ -253,14 +268,14 @@ fun NeuroTextField(
         ) {
             label?.let {
                 Text(
-                    label,
+                    text = label,
                     style = TextStyle(
                         fontFamily = MavenFontFamily(),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 12.sp,
                     ),
                     color = Theme.colorSystem.black70,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(weight = 1f),
                     textAlign = TextAlign.Start,
                 )
             }
@@ -278,7 +293,7 @@ fun NeuroTextField(
         }
 
         if (label != null || trailingLabel != null) {
-            Spacer(Modifier.height(Theme.spacingSystem.xxs))
+            Spacer(Modifier.height(height = Theme.spacingSystem.xxs))
         }
 
         Box {
@@ -305,9 +320,9 @@ fun NeuroTextField(
                 ).copy(
                     color = Theme.colorSystem.black70,
                 ),
-                cursorBrush = SolidColor(Theme.colorSystem.main),
+                cursorBrush = SolidColor(value = Theme.colorSystem.main),
                 modifier = Modifier
-                    .focusRequester(focusRequester)
+                    .focusRequester(focusRequester = focusRequester)
                     .onFocusChanged { focusState ->
                         onFocusChanged(focusState)
                         hasFocus = focusState.hasFocus
@@ -354,7 +369,7 @@ private fun RawField(
             .fillMaxWidth()
             .then(
                 other = if (singleLine) {
-                    Modifier.height(Theme.spacingSystem.xl)
+                    Modifier.height(height = Theme.spacingSystem.xl)
                 } else {
                     Modifier
                 },
@@ -404,9 +419,9 @@ private fun RawField(
                     painter = it,
                     onImageClick = onLeadingImageClick,
                     modifier = Modifier
-                        .wrapContentSize(Alignment.CenterStart)
-                        .size(Theme.spacingSystem.l)
-                        .align(Alignment.CenterVertically),
+                        .wrapContentSize(align = Alignment.CenterStart)
+                        .size(size = Theme.spacingSystem.l)
+                        .align(alignment = Alignment.CenterVertically),
                 )
             }
             Row(
@@ -416,7 +431,7 @@ private fun RawField(
                         bottom = 10.5.dp,
                         end = Theme.spacingSystem.xxs,
                     )
-                    .weight(1f),
+                    .weight(weight = 1f),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 innerTextField()
@@ -426,7 +441,7 @@ private fun RawField(
                     painter = it,
                     onImageClick = onTrailingImageClick,
                     modifier = Modifier
-                        .align(Alignment.CenterVertically)
+                        .align(alignment = Alignment.CenterVertically)
                         .padding(end = Theme.spacingSystem.xxs)
                         .size(size = Theme.spacingSystem.m),
                 )

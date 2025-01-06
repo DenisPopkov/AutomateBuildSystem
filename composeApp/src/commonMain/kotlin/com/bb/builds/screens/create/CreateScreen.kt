@@ -124,11 +124,9 @@ fun CreateScreen(
             InputBranchNameDialog(
                 onSet = { branchName ->
                     isDialogVisible = false
-                    println("efefe state=$isDialogVisible")
                 },
                 onDismissRequest = {
                     isDialogVisible = false
-                    println("efefe state=$isDialogVisible")
                 },
                 title = "Set Branch Name",
                 name = "",
