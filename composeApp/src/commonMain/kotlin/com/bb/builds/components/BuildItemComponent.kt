@@ -46,7 +46,7 @@ fun BuildItemComponent(
 
         Column(
             modifier = Modifier
-                .padding(start = Theme.spacingSystem.l),
+                .padding(start = Theme.spacingSystem.s),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start,
         ) {
