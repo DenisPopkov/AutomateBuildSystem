@@ -3,17 +3,7 @@ package com.bb.builds.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -22,12 +12,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -73,13 +58,11 @@ fun InputBranchNameDialog(
         )
     }
 
-    val onChange by remember {
-        mutableStateOf<(TextFieldValue) -> Unit>(
-            { textFieldValue ->
-                fieldValue = textFieldValue.copy(
-                    text = textFieldValue.text,
-                )
-            },
+    val onChange: (TextFieldValue) -> Unit = { textFieldValue ->
+        val filteredText = textFieldValue.text.lowercase()
+        fieldValue = textFieldValue.copy(
+            text = filteredText,
+            selection = TextRange(filteredText.length)
         )
     }
 
@@ -106,7 +89,6 @@ fun InputBranchNameDialog(
                 name = "Build",
                 onClick = {
                     onSet.invoke(fieldValue.text)
-                    fieldValue = fieldValue.copy(text = "")
                 },
                 style = TextStyle(
                     fontFamily = MavenFontFamily(),
@@ -155,9 +137,9 @@ fun NeuroFieldDialog(
                     color = Color.White,
                     shape = RoundedCornerShape(size = 14.dp),
                 )
-                .clip(RoundedCornerShape(size = 14.dp)),
+                .clip(shape = RoundedCornerShape(size = 14.dp)),
         ) {
-            Spacer(modifier = Modifier.height(Theme.spacingSystem.s))
+            Spacer(modifier = Modifier.height(height = Theme.spacingSystem.s))
             Text(
                 text = title,
                 style = TextStyle(
@@ -174,7 +156,7 @@ fun NeuroFieldDialog(
             Spacer(modifier = Modifier.height(Theme.spacingSystem.s))
 
             val focusRequester = remember { FocusRequester() }
-            NeuroTextField(
+            BBTextField(
                 modifier = Modifier
                     .padding(horizontal = Theme.spacingSystem.s),
                 value = fieldValue.text,
@@ -231,13 +213,12 @@ fun NeuroFieldDialog(
                     }
                 }
             }
-
         }
     }
 }
 
 @Composable
-fun NeuroTextField(
+fun BBTextField(
     value: String,
     placeholder: String,
     onValueChange: (value: TextFieldValue) -> Unit,
@@ -299,14 +280,20 @@ fun NeuroTextField(
         Box {
             BasicTextField(
                 keyboardOptions = KeyboardOptions(
-                    imeAction = imeAction,
+                    autoCorrectEnabled = false,
                     keyboardType = keyboardType,
+                    imeAction = imeAction,
                 ),
                 keyboardActions = KeyboardActions(keyboardAction),
                 value = value,
                 readOnly = !enabled,
                 onValueChange = { text ->
-                    onValueChange(TextFieldValue(text))
+                    onValueChange(
+                        TextFieldValue(
+                            text = text,
+                            selection = TextRange(text.length)
+                        )
+                    )
                 },
                 enabled = true,
                 singleLine = singleLine,

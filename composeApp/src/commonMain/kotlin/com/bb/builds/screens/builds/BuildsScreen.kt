@@ -3,6 +3,8 @@ package com.bb.builds.screens.builds
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,8 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_sparkle
+import com.bb.builds.components.BuildItemComponent
 import com.bb.builds.components.MavenFontFamily
 import com.bb.builds.components.NavMenu
+import com.bb.builds.components.theme.Theme
+import com.bb.builds.domain.BuildItem
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -42,7 +47,7 @@ fun BuildsScreen(
             letterSpacing = 0.2.sp,
         )
 
-        if (true) {
+        if (builds.isEmpty()) {
             Spacer(modifier = Modifier.weight(weight = 1f))
 
             Row(
@@ -55,7 +60,23 @@ fun BuildsScreen(
             }
 
             Spacer(modifier = Modifier.weight(weight = 1f))
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(top = Theme.spacingSystem.l)
+            ) {
+                items(builds) {
+                    BuildItemComponent(
+                        version = it.version,
+                        platformName = it.platformName,
+                        downloadLink = it.buildLink,
+                        onDownloadClick = {},
+                    )
+                }
+            }
         }
+
+        Spacer(modifier = Modifier.weight(weight = 1f))
 
         Row(
             modifier = Modifier
@@ -99,3 +120,16 @@ fun NoBuilds() {
         )
     }
 }
+
+private val builds = listOf(
+    BuildItem(
+        version = "3.5.8 (294)",
+        platformName = "Android",
+        buildLink = "",
+    ),
+    BuildItem(
+        version = "3.5.8 (296)",
+        platformName = "macOS",
+        buildLink = "",
+    ),
+)
