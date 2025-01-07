@@ -32,13 +32,14 @@ fun BuildItemComponent(
 
     Row(
         modifier = Modifier
-            .padding(start = 6.dp),
+            .padding(start = 4.dp)
+            .padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
         Image(
             modifier = Modifier
-                .size(size = 70.dp),
+                .size(size = 80.dp),
             painter = painterResource(Res.drawable.ic_neuro),
             contentDescription = null,
         )
@@ -50,9 +51,9 @@ fun BuildItemComponent(
             horizontalAlignment = Alignment.Start,
         ) {
             Text(
-                text = "Source Audio Neuro 3",
+                text = "Neuro 3",
                 color = Color.Black,
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.SemiBold,
                 fontFamily = fontFamily,
                 fontSize = 18.sp,
                 letterSpacing = 0.2.sp,
@@ -81,7 +82,7 @@ fun BuildItemComponent(
 
         Box(
             modifier = Modifier
-                .size(width = 100.dp, height = 36.dp)
+                .size(width = 90.dp, height = 36.dp)
                 .clip(shape = CircleShape)
                 .background(color = Color.LightGray.copy(alpha = 0.5f))
                 .clickable { onDownloadClick.invoke(downloadLink) },
@@ -91,7 +92,7 @@ fun BuildItemComponent(
                 modifier = Modifier
                     .padding(all = Theme.spacingSystem.xxxs),
                 text = "Install",
-                color = Color.Blue.copy(alpha = 0.7f),
+                color = Color(0xFF007AFF),
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 fontFamily = fontFamily,

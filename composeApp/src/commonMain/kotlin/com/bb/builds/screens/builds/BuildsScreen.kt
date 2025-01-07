@@ -63,7 +63,7 @@ fun BuildsScreen(
         } else {
             LazyColumn(
                 modifier = Modifier
-                    .padding(top = Theme.spacingSystem.l)
+                    .padding(top = Theme.spacingSystem.m),
             ) {
                 items(builds) {
                     BuildItemComponent(
