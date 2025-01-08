@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_dots
+import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.domain.BuildType
 import com.bb.builds.isDesktop
 import com.bb.builds.screens.create.BuildStateScreen

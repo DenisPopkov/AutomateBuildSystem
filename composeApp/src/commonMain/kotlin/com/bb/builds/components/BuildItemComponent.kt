@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_neuro
+import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
 import com.bb.builds.domain.BuildType
 import org.jetbrains.compose.resources.painterResource

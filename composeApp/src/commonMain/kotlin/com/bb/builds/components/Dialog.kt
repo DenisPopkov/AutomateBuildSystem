@@ -39,6 +39,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_clear_medium
+import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
 import org.jetbrains.compose.resources.painterResource
 

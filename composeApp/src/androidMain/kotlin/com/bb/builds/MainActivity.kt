@@ -5,14 +5,22 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.bb.builds.screens.App
 
-class MainActivity: AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
+        val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        windowInsetsController.isAppearanceLightStatusBars = true
+
         setContent { App() }
     }
 }

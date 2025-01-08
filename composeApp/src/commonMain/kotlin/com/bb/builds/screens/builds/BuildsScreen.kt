@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_sparkle
 import com.bb.builds.components.BuildItemComponent
-import com.bb.builds.components.MavenFontFamily
+import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
 import com.bb.builds.domain.BuildItem
 import org.jetbrains.compose.resources.painterResource

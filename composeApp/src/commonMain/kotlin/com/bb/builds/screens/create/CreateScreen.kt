@@ -34,7 +34,7 @@ import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import automatebuildsystem.composeapp.generated.resources.ic_windows
 import com.bb.builds.components.BuildCard
 import com.bb.builds.components.InputBranchNameDialog
-import com.bb.builds.components.MavenFontFamily
+import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.domain.BuildType
 import org.jetbrains.compose.resources.painterResource
 
