@@ -39,7 +39,7 @@ fun BuildItemComponent(
     ) {
         Image(
             modifier = Modifier
-                .size(size = 80.dp),
+                .size(size = 60.dp),
             painter = painterResource(Res.drawable.ic_neuro),
             contentDescription = null,
         )
@@ -47,15 +47,13 @@ fun BuildItemComponent(
         Column(
             modifier = Modifier
                 .padding(start = Theme.spacingSystem.s),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start,
         ) {
             Text(
-                text = "Neuro 3",
+                text = "Neuro 3 ($platformName)",
                 color = Color.Black,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = fontFamily,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 letterSpacing = 0.2.sp,
             )
 
@@ -64,16 +62,7 @@ fun BuildItemComponent(
                 color = Color.Gray,
                 fontWeight = FontWeight.Normal,
                 fontFamily = fontFamily,
-                fontSize = 14.sp,
-                letterSpacing = 0.2.sp,
-            )
-
-            Text(
-                text = platformName,
-                color = Color.Gray,
-                fontWeight = FontWeight.Normal,
-                fontFamily = fontFamily,
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 letterSpacing = 0.2.sp,
             )
         }
@@ -82,7 +71,7 @@ fun BuildItemComponent(
 
         Box(
             modifier = Modifier
-                .size(width = 90.dp, height = 36.dp)
+                .size(width = 70.dp, height = 32.dp)
                 .clip(shape = CircleShape)
                 .background(color = Color.LightGray.copy(alpha = 0.5f))
                 .clickable { onDownloadClick.invoke(downloadLink) },
@@ -91,12 +80,12 @@ fun BuildItemComponent(
             Text(
                 modifier = Modifier
                     .padding(all = Theme.spacingSystem.xxxs),
-                text = "Install",
+                text = "Send",
                 color = Color(0xFF007AFF),
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 fontFamily = fontFamily,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 letterSpacing = 0.2.sp,
             )
         }

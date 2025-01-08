@@ -2,7 +2,16 @@ package com.bb.builds.screens.builds
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
@@ -17,7 +26,6 @@ import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_sparkle
 import com.bb.builds.components.BuildItemComponent
 import com.bb.builds.components.MavenFontFamily
-import com.bb.builds.components.NavMenu
 import com.bb.builds.components.theme.Theme
 import com.bb.builds.domain.BuildItem
 import org.jetbrains.compose.resources.painterResource
@@ -74,21 +82,6 @@ fun BuildsScreen(
                     )
                 }
             }
-        }
-
-        Spacer(modifier = Modifier.weight(weight = 1f))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Spacer(modifier = Modifier.weight(weight = 1f))
-            NavMenu(
-                selectedDefaultItem = "Builds",
-                onCreateScreen = onCreateScreen,
-                onBuildsScreen = {},
-            )
-            Spacer(modifier = Modifier.weight(weight = 1f))
         }
     }
 }
