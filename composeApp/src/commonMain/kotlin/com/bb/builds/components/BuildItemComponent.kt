@@ -89,10 +89,10 @@ fun BuildItemComponent(
                 text = "Send",
                 color = Color(color = 0xFF007AFF),
                 fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
                 fontFamily = fontFamily,
                 fontSize = 14.sp,
                 letterSpacing = 0.2.sp,
+                lineHeight = 0.1.sp,
             )
         }
     }
