@@ -55,7 +55,7 @@ fun SignBuildDialog(
                 onClick = onSign,
                 style = TextStyle(
                     fontFamily = MavenFontFamily(),
-                    fontWeight = FontWeight.Normal,
+                    fontWeight = FontWeight.Medium,
                     fontSize = 17.sp,
                     lineHeight = 22.sp,
                     letterSpacing = (-0.41).sp,
@@ -117,13 +117,7 @@ fun SignDialog(
                     ) {
                         Text(
                             text = info.name,
-                            style = TextStyle(
-                                fontFamily = MavenFontFamily(),
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 17.sp,
-                                lineHeight = 22.sp,
-                                letterSpacing = (-0.41).sp,
-                            ),
+                            style = info.style,
                             color = info.color ?: Theme.colorSystem.main,
                             textAlign = TextAlign.Center,
                         )

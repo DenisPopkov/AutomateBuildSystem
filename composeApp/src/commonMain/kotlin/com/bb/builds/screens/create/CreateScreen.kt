@@ -61,7 +61,7 @@ fun CreateScreen() {
             color = Color.Black,
             fontWeight = FontWeight.Bold,
             fontFamily = fontFamily,
-            fontSize = 40.sp,
+            fontSize = 38.sp,
             letterSpacing = 0.2.sp,
         )
 
