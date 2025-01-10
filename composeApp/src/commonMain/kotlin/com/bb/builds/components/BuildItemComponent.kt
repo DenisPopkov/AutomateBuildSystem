@@ -3,7 +3,13 @@ package com.bb.builds.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -33,10 +39,10 @@ fun BuildItemComponent(
 
     Row(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(start = 4.dp)
             .padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
     ) {
         Image(
             modifier = Modifier
@@ -47,7 +53,8 @@ fun BuildItemComponent(
 
         Column(
             modifier = Modifier
-                .padding(start = Theme.spacingSystem.s),
+                .padding(start = Theme.spacingSystem.s)
+                .align(alignment = Alignment.Top),
         ) {
             Text(
                 text = "Neuro 3 ($platformName)",
@@ -68,7 +75,7 @@ fun BuildItemComponent(
             )
         }
 
-        Spacer(modifier = Modifier.weight(weight = 1f))
+        Spacer(modifier = Modifier.weight(1f))
 
         Box(
             modifier = Modifier
@@ -79,10 +86,8 @@ fun BuildItemComponent(
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                modifier = Modifier
-                    .padding(all = Theme.spacingSystem.xxxs),
                 text = "Send",
-                color = Color(0xFF007AFF),
+                color = Color(color = 0xFF007AFF),
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 fontFamily = fontFamily,
