@@ -34,18 +34,18 @@ import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import automatebuildsystem.composeapp.generated.resources.ic_windows
 import com.bb.builds.components.BuildCard
 import com.bb.builds.components.InputBranchNameDialog
+import com.bb.builds.components.SignBuildDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.domain.BuildType
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun CreateScreen(
-    onBuildsScreen: () -> Unit,
-) {
+fun CreateScreen() {
     val buildOptions = getBuildOptions()
     val fontFamily = MavenFontFamily()
 
     var isDialogVisible by remember { mutableStateOf(false) }
+    var isSignDialogVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -122,12 +122,25 @@ fun CreateScreen(
             InputBranchNameDialog(
                 onSet = { branchName ->
                     isDialogVisible = false
+                    isSignDialogVisible = true
                 },
                 onDismissRequest = {
                     isDialogVisible = false
                 },
                 title = "Set Branch Name",
                 name = "develop",
+            )
+        }
+
+        AnimatedVisibility(visible = isSignDialogVisible) {
+            SignBuildDialog(
+                onSign = {
+                    isSignDialogVisible = false
+                },
+                onDismissRequest = {
+                    isSignDialogVisible = false
+                },
+                title = "Do You Want To Sign The Build?",
             )
         }
     }

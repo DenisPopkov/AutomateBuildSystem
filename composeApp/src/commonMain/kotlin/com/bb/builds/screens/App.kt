@@ -89,12 +89,7 @@ fun App() {
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable(Navigation.Build::class.simpleName ?: "") {
-                    CreateScreen(
-                        onBuildsScreen = {
-                            navHostController.navigate(Navigation.Builds::class.simpleName ?: "")
-                            selectedRoute = Navigation.Builds
-                        }
-                    )
+                    CreateScreen()
                 }
 
                 composable(Navigation.Builds::class.simpleName ?: "") {

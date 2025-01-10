@@ -67,7 +67,7 @@ fun InputBranchNameDialog(
         )
     }
 
-    NeuroFieldDialog(
+    FieldDialog(
         title = title,
         fieldValue = fieldValue,
         onFieldConfirm = { },
@@ -114,7 +114,7 @@ fun InputBranchNameDialog(
 }
 
 @Composable
-fun NeuroFieldDialog(
+fun FieldDialog(
     title: String,
     fieldValue: TextFieldValue,
     onFieldConfirm: () -> Unit,
@@ -177,7 +177,7 @@ fun NeuroFieldDialog(
             }
 
             Spacer(modifier = Modifier.height(Theme.spacingSystem.s))
-            NeuroSeparator(height = 1.dp)
+            MainSeparator(height = 1.dp)
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -333,7 +333,7 @@ fun BBTextField(
 }
 
 @Composable
-fun NeuroSeparator(
+fun MainSeparator(
     modifier: Modifier = Modifier,
     height: Dp = 1.dp,
     color: Color = Theme.colorSystem.black5,

@@ -1,0 +1,143 @@
+package com.bb.builds.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.bb.builds.components.theme.MavenFontFamily
+import com.bb.builds.components.theme.Theme
+
+@Composable
+fun SignBuildDialog(
+    title: String,
+    onDismissRequest: () -> Unit,
+    onSign: () -> Unit,
+) {
+    SignDialog(
+        title = title,
+        onDismissRequest = onDismissRequest,
+        buttons = listOf(
+            DialogButtonInfo(
+                name = "Not Sign",
+                onClick = onDismissRequest,
+                style = TextStyle(
+                    fontFamily = MavenFontFamily(),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 17.sp,
+                    lineHeight = 22.sp,
+                    letterSpacing = (-0.41).sp,
+                ),
+                color = Theme.colorSystem.constMain,
+            ),
+            DialogButtonInfo(
+                name = "Sign",
+                onClick = onSign,
+                style = TextStyle(
+                    fontFamily = MavenFontFamily(),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 17.sp,
+                    lineHeight = 22.sp,
+                    letterSpacing = (-0.41).sp,
+                ),
+                color = Theme.colorSystem.constMain,
+                enabled = true,
+            ),
+        ),
+    )
+}
+
+@Composable
+fun SignDialog(
+    title: String,
+    onDismissRequest: () -> Unit,
+    buttons: List<DialogButtonInfo>,
+) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .width(width = 290.dp)
+                .background(
+                    color = Color.White,
+                    shape = RoundedCornerShape(size = 14.dp),
+                )
+                .clip(shape = RoundedCornerShape(size = 14.dp)),
+        ) {
+            Spacer(modifier = Modifier.height(height = Theme.spacingSystem.s))
+            Text(
+                text = title,
+                style = TextStyle(
+                    fontFamily = MavenFontFamily(),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                ),
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = Theme.spacingSystem.s),
+            )
+            Spacer(modifier = Modifier.height(Theme.spacingSystem.s))
+            MainSeparator(height = 1.dp)
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(Theme.spacingSystem.xl),
+            ) {
+                buttons.forEachIndexed { index, info ->
+                    Box(
+                        modifier = Modifier
+                            .weight(weight = 1f)
+                            .height(height = Theme.spacingSystem.xl)
+                            .clickable { info.onClick.invoke() },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = info.name,
+                            style = TextStyle(
+                                fontFamily = MavenFontFamily(),
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 17.sp,
+                                lineHeight = 22.sp,
+                                letterSpacing = (-0.41).sp,
+                            ),
+                            color = info.color ?: Theme.colorSystem.main,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                    if (index < buttons.size - 1) {
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .width(width = 1.dp)
+                                .background(color = Theme.colorSystem.black10),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
