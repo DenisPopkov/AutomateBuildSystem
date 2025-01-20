@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +37,10 @@ import com.bb.builds.components.BuildCard
 import com.bb.builds.components.InputBranchNameDialog
 import com.bb.builds.components.SignBuildDialog
 import com.bb.builds.components.theme.MavenFontFamily
+import com.bb.builds.data.KtorApiImpl
+import com.bb.builds.data.RemoteApi
 import com.bb.builds.domain.BuildType
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -46,6 +50,8 @@ fun CreateScreen() {
 
     var isDialogVisible by remember { mutableStateOf(false) }
     var isSignDialogVisible by remember { mutableStateOf(false) }
+    val remoteApi = RemoteApi(ktorApi = KtorApiImpl())
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -136,6 +142,7 @@ fun CreateScreen() {
             SignBuildDialog(
                 onSign = {
                     isSignDialogVisible = false
+                    coroutineScope.launch { remoteApi.buildMac() }
                 },
                 onDismissRequest = {
                     isSignDialogVisible = false
