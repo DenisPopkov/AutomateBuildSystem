@@ -32,10 +32,15 @@ kotlin {
     sourceSets {
         val desktopMain by getting
 
+        iosMain.dependencies {
+            implementation(libs.ktor.client.ios)
+        }
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.cio)
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -51,6 +56,9 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.jetbrains.androidx.navigation.compose)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            api(libs.koin.core)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

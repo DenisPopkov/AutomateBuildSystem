@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.bb.builds.di.initKoin
 import com.bb.builds.screens.App
 
 class MainActivity : AppCompatActivity() {
@@ -14,8 +15,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
+
+        initKoin()
 
         val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
         WindowCompat.setDecorFitsSystemWindows(window, false)

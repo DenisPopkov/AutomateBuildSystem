@@ -1,10 +1,16 @@
 package com.bb.builds.service
 
-import com.bb.builds.utils.get
-import io.ktor.client.HttpClient
-import io.ktor.http.path
+import com.bb.builds.data.RemoteApi
+import com.bb.builds.domain.BuildData
+import io.ktor.client.statement.HttpResponse
 
-class AutomateBuildSystem(private val client: HttpClient) {
-    suspend fun buildAndroid(): Result<Unit> = client
-        .get { url { path("") } }
+class AutomateBuildSystem(
+    private val remoteApi: RemoteApi,
+) {
+    suspend fun buildMac(
+        buildData: BuildData,
+    ): HttpResponse = remoteApi.buildMac(
+        buildData = buildData,
+    )
+
 }
