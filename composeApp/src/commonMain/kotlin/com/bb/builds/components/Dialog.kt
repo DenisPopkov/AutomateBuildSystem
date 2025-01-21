@@ -20,9 +20,12 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -249,93 +252,99 @@ fun BBTextField(
     onFocusChanged: (state: FocusState) -> Unit = {},
 ) {
     var hasFocus by remember { mutableStateOf(value = false) }
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+    val customTextSelectionColors = TextSelectionColors(
+        handleColor = Theme.colorSystem.main,
+        backgroundColor = Theme.colorSystem.main.copy(alpha = 0.2f)
+    )
+
+    CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
         ) {
-            label?.let {
-                Text(
-                    text = label,
-                    style = TextStyle(
-                        fontFamily = MavenFontFamily(),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 12.sp,
-                    ),
-                    color = Theme.colorSystem.black70,
-                    modifier = Modifier.weight(weight = 1f),
-                    textAlign = TextAlign.Start,
-                )
-            }
-            if (trailingLabel != null && hasFocus) {
-                Text(
-                    text = trailingLabel,
-                    style = TextStyle(
-                        fontFamily = MavenFontFamily(),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 12.sp,
-                    ),
-                    color = Theme.colorSystem.black70,
-                )
-            }
-        }
-
-        if (label != null || trailingLabel != null) {
-            Spacer(Modifier.height(height = Theme.spacingSystem.xxs))
-        }
-
-        Box {
-            BasicTextField(
-                keyboardOptions = KeyboardOptions(
-                    autoCorrect = false,
-                    keyboardType = keyboardType,
-                    imeAction = imeAction,
-                ),
-                keyboardActions = KeyboardActions(keyboardAction),
-                value = TextFieldValue(
-                    text = value,
-                    selection = TextRange(value.length)
-                ),
-                readOnly = !enabled,
-                onValueChange = { textFieldValue ->
-                    onValueChange(
-                        textFieldValue.copy(
-                            selection = TextRange(textFieldValue.text.length)
-                        )
-                    )
-                },
-                enabled = true,
-                singleLine = singleLine,
-                visualTransformation = visualTransformation,
-                textStyle = TextStyle(
-                    fontFamily = MavenFontFamily(),
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp,
-                    lineHeight = 22.2.sp,
-                    letterSpacing = (-0.5).sp,
-                ).copy(
-                    color = Theme.colorSystem.black70,
-                ),
-                cursorBrush = SolidColor(Theme.colorSystem.main),
+            Row(
                 modifier = Modifier
-                    .focusRequester(focusRequester = focusRequester)
-                    .onFocusChanged { focusState ->
-                        onFocusChanged(focusState)
-                        hasFocus = focusState.hasFocus
+                    .fillMaxWidth(),
+            ) {
+                label?.let {
+                    Text(
+                        text = label,
+                        style = TextStyle(
+                            fontFamily = MavenFontFamily(),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 12.sp,
+                        ),
+                        color = Theme.colorSystem.black70,
+                        modifier = Modifier.weight(weight = 1f),
+                        textAlign = TextAlign.Start,
+                    )
+                }
+                if (trailingLabel != null && hasFocus) {
+                    Text(
+                        text = trailingLabel,
+                        style = TextStyle(
+                            fontFamily = MavenFontFamily(),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 12.sp,
+                        ),
+                        color = Theme.colorSystem.black70,
+                    )
+                }
+            }
+
+            if (label != null || trailingLabel != null) {
+                Spacer(Modifier.height(height = Theme.spacingSystem.xxs))
+            }
+
+            Box {
+                BasicTextField(
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrectEnabled = false,
+                        keyboardType = keyboardType,
+                        imeAction = imeAction
+                    ),
+                    keyboardActions = KeyboardActions(keyboardAction),
+                    value = value,
+                    readOnly = !enabled,
+                    onValueChange = { text ->
+                        onValueChange(
+                            TextFieldValue(
+                                text = text,
+                                selection = TextRange(text.length)
+                            )
+                        )
                     },
-            ) { innerTextField ->
-                RawField(
-                    currentValue = value,
-                    placeholder = placeholder,
-                    innerTextField = innerTextField,
+                    enabled = true,
                     singleLine = singleLine,
-                    trailingImagePainter = trailingImagePainter,
-                    onTrailingImageClick = onTrailingImageClick,
-                    leadingImagePainter = leadingImagePainter,
-                    onLeadingImageClick = onLeadingImageClick,
+                    visualTransformation = visualTransformation,
+                    textStyle = TextStyle(
+                        fontFamily = MavenFontFamily(),
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp,
+                        lineHeight = 22.2.sp,
+                        letterSpacing = (-0.5).sp,
+                    ).copy(
+                        color = Theme.colorSystem.black70,
+                    ),
+                    cursorBrush = SolidColor(Theme.colorSystem.main),
+                    modifier = Modifier
+                        .focusRequester(focusRequester = focusRequester)
+                        .onFocusChanged { focusState ->
+                            onFocusChanged(focusState)
+                            hasFocus = focusState.hasFocus
+                        },
+                    decorationBox = { innerTextField ->
+                        RawField(
+                            currentValue = value,
+                            placeholder = placeholder,
+                            innerTextField = innerTextField,
+                            singleLine = singleLine,
+                            trailingImagePainter = trailingImagePainter,
+                            onTrailingImageClick = onTrailingImageClick,
+                            leadingImagePainter = leadingImagePainter,
+                            onLeadingImageClick = onLeadingImageClick,
+                        )
+                    },
                 )
             }
         }
