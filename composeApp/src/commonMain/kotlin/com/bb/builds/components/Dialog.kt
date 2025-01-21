@@ -59,76 +59,6 @@ import com.bb.builds.components.theme.Theme
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun InputBranchNameDialog(
-    title: String,
-    name: String,
-    onDismissRequest: () -> Unit,
-    onSet: (String) -> Unit,
-) {
-    var fieldValue by remember(name) {
-        mutableStateOf(
-            TextFieldValue(
-                text = name,
-                selection = TextRange(name.length),
-            ),
-        )
-    }
-
-    val onChange: (TextFieldValue) -> Unit = { textFieldValue ->
-        val filteredText = textFieldValue.text.lowercase()
-        fieldValue = textFieldValue.copy(
-            text = filteredText,
-            selection = TextRange(filteredText.length)
-        )
-    }
-
-    FieldDialog(
-        title = title,
-        fieldValue = fieldValue,
-        onFieldConfirm = { },
-        onFieldValueChanged = onChange,
-        onDismissRequest = onDismissRequest,
-        buttons = listOf(
-            DialogButtonInfo(
-                name = "Cancel",
-                onClick = onDismissRequest,
-                style = TextStyle(
-                    fontFamily = MavenFontFamily(),
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 17.sp,
-                    lineHeight = 22.sp,
-                    letterSpacing = (-0.41).sp,
-                ),
-                color = Theme.colorSystem.constMain,
-            ),
-            DialogButtonInfo(
-                name = "Build",
-                onClick = {
-                    onSet.invoke(fieldValue.text)
-                },
-                style = TextStyle(
-                    fontFamily = MavenFontFamily(),
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 17.sp,
-                    lineHeight = 22.sp,
-                    letterSpacing = (-0.41).sp,
-                ),
-                color = Theme.colorSystem.constMain,
-                enabled = true,
-            ),
-        ),
-        trailingImagePainter = if (fieldValue.text.isNotEmpty()) {
-            painterResource(Res.drawable.ic_clear_medium)
-        } else {
-            null
-        },
-        onTrailingImageClick = {
-            fieldValue = TextFieldValue()
-        },
-    )
-}
-
-@Composable
 fun FieldDialog(
     title: String,
     fieldValue: TextFieldValue,
@@ -228,6 +158,76 @@ fun FieldDialog(
 }
 
 @Composable
+fun InputBranchNameDialog(
+    title: String,
+    name: String,
+    onDismissRequest: () -> Unit,
+    onSet: (String) -> Unit,
+) {
+    var fieldValue by remember(name) {
+        mutableStateOf(
+            TextFieldValue(
+                text = name,
+                selection = TextRange(name.length),
+            ),
+        )
+    }
+
+    val onChange: (TextFieldValue) -> Unit = { textFieldValue ->
+        val filteredText = textFieldValue.text.lowercase()
+        fieldValue = textFieldValue.copy(
+            text = filteredText,
+            selection = TextRange(filteredText.length)
+        )
+    }
+
+    FieldDialog(
+        title = title,
+        fieldValue = fieldValue,
+        onFieldConfirm = { },
+        onFieldValueChanged = onChange,
+        onDismissRequest = onDismissRequest,
+        buttons = listOf(
+            DialogButtonInfo(
+                name = "Cancel",
+                onClick = onDismissRequest,
+                style = TextStyle(
+                    fontFamily = MavenFontFamily(),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 17.sp,
+                    lineHeight = 22.sp,
+                    letterSpacing = (-0.41).sp,
+                ),
+                color = Theme.colorSystem.constMain,
+            ),
+            DialogButtonInfo(
+                name = "Build",
+                onClick = {
+                    onSet.invoke(fieldValue.text)
+                },
+                style = TextStyle(
+                    fontFamily = MavenFontFamily(),
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 17.sp,
+                    lineHeight = 22.sp,
+                    letterSpacing = (-0.41).sp,
+                ),
+                color = Theme.colorSystem.constMain,
+                enabled = true,
+            ),
+        ),
+        trailingImagePainter = if (fieldValue.text.isNotEmpty()) {
+            painterResource(Res.drawable.ic_clear_medium)
+        } else {
+            null
+        },
+        onTrailingImageClick = {
+            fieldValue = TextFieldValue()
+        },
+    )
+}
+
+@Composable
 fun BBTextField(
     value: String,
     placeholder: String,
@@ -290,18 +290,20 @@ fun BBTextField(
         Box {
             BasicTextField(
                 keyboardOptions = KeyboardOptions(
-                    autoCorrectEnabled = false,
+                    autoCorrect = false,
                     keyboardType = keyboardType,
                     imeAction = imeAction,
                 ),
                 keyboardActions = KeyboardActions(keyboardAction),
-                value = value,
+                value = TextFieldValue(
+                    text = value,
+                    selection = TextRange(value.length)
+                ),
                 readOnly = !enabled,
-                onValueChange = { text ->
+                onValueChange = { textFieldValue ->
                     onValueChange(
-                        TextFieldValue(
-                            text = text,
-                            selection = TextRange(text.length)
+                        textFieldValue.copy(
+                            selection = TextRange(textFieldValue.text.length)
                         )
                     )
                 },
@@ -317,7 +319,7 @@ fun BBTextField(
                 ).copy(
                     color = Theme.colorSystem.black70,
                 ),
-                cursorBrush = SolidColor(value = Theme.colorSystem.main),
+                cursorBrush = SolidColor(Theme.colorSystem.main),
                 modifier = Modifier
                     .focusRequester(focusRequester = focusRequester)
                     .onFocusChanged { focusState ->
@@ -329,7 +331,6 @@ fun BBTextField(
                     currentValue = value,
                     placeholder = placeholder,
                     innerTextField = innerTextField,
-                    enabled = enabled,
                     singleLine = singleLine,
                     trailingImagePainter = trailingImagePainter,
                     onTrailingImageClick = onTrailingImageClick,
@@ -354,7 +355,6 @@ private fun RawField(
     currentValue: String,
     placeholder: String,
     singleLine: Boolean,
-    enabled: Boolean,
     trailingImagePainter: Painter?,
     onTrailingImageClick: () -> Unit,
     leadingImagePainter: Painter?,

@@ -7,6 +7,8 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
@@ -31,6 +33,8 @@ import kotlinx.serialization.Serializable
 fun App() {
     val navHostController = rememberNavController()
     var selectedRoute by remember { mutableStateOf<Navigation>(Navigation.Build) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    SnackbarHost(hostState = snackbarHostState)
 
     MaterialTheme {
         Scaffold(
@@ -80,6 +84,9 @@ fun App() {
                         }
                     )
                 }
+            },
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
             }
         ) { paddingValues ->
             NavHost(
@@ -89,7 +96,7 @@ fun App() {
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable(Navigation.Build::class.simpleName ?: "") {
-                    CreateScreen()
+                    CreateScreen(snackbarHostState = snackbarHostState)
                 }
 
                 composable(Navigation.Builds::class.simpleName ?: "") {

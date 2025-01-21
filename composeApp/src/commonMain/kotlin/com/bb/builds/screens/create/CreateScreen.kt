@@ -14,11 +14,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,13 +41,16 @@ import com.bb.builds.components.SignBuildDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildType
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
-fun CreateScreen() {
+fun CreateScreen(
+    snackbarHostState: SnackbarHostState,
+) {
     val viewModel = koinViewModel<CreateScreenViewModel>()
     val buildOptions = getBuildOptions()
     val fontFamily = MavenFontFamily()
@@ -52,6 +58,8 @@ fun CreateScreen() {
     var isDialogVisible by remember { mutableStateOf(false) }
     var isSignDialogVisible by remember { mutableStateOf(false) }
     var selectedBranchName by remember { mutableStateOf("develop") }
+
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -106,18 +114,22 @@ fun CreateScreen() {
             horizontalArrangement = Arrangement.spacedBy(space = 10.dp),
             verticalArrangement = Arrangement.spacedBy(space = 12.dp)
         ) {
-            items(count = buildOptions.size) {
+            items(count = buildOptions.size) { index ->
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     BuildCard(
-                        buildData = buildOptions[it],
+                        buildData = buildOptions[index],
                         onBuildClick = {
-                            isDialogVisible = true
-                        },
-                        onOptionsClick = {
-                            isDialogVisible = true
+                            val buildType = buildOptions[index].buildType
+                            if (buildType == BuildType.WINDOWS || buildType == BuildType.IOS) {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(message = "Not Available Yet")
+                                }
+                            } else {
+                                isDialogVisible = true
+                            }
                         },
                     )
                 }
