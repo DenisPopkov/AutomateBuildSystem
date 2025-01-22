@@ -16,6 +16,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,14 +33,29 @@ import automatebuildsystem.composeapp.generated.resources.ic_sparkle
 import com.bb.builds.components.BuildItemComponent
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
-import com.bb.builds.domain.BuildItem
+import com.bb.builds.domain.BuildId
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
+import kotlin.time.Duration.Companion.seconds
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
-fun BuildsScreen(
-    onCreateScreen: () -> Unit,
-) {
+fun BuildsScreen() {
+    val viewModel = koinViewModel<BuildScreenViewModel>()
+    val builds by viewModel.builds.collectAsState()
     val fontFamily = MavenFontFamily()
+    var showNoBuilds by remember { mutableStateOf(false) }
+
+    LaunchedEffect(builds.isEmpty()) {
+        if (builds.isEmpty()) {
+            delay(duration = 2.seconds)
+            showNoBuilds = true
+        } else {
+            showNoBuilds = false
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -58,13 +79,15 @@ fun BuildsScreen(
         if (builds.isEmpty()) {
             Spacer(modifier = Modifier.weight(weight = 1f))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                NoBuilds()
+            if (showNoBuilds) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    NoBuilds()
+                }
             }
 
             Spacer(modifier = Modifier.weight(weight = 1f))
@@ -77,14 +100,16 @@ fun BuildsScreen(
                     BuildItemComponent(
                         version = it.version,
                         platformName = it.platformName,
-                        downloadLink = it.buildLink,
-                        onDownloadClick = {},
+                        onSendClick = {
+                            viewModel.send(BuildId(it.id))
+                        },
                     )
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun NoBuilds() {
@@ -113,16 +138,3 @@ fun NoBuilds() {
         )
     }
 }
-
-private val builds = listOf(
-    BuildItem(
-        version = "3.5.8 (294)",
-        platformName = "Android",
-        buildLink = "",
-    ),
-    BuildItem(
-        version = "3.5.8 (296)",
-        platformName = "macOS",
-        buildLink = "",
-    ),
-)

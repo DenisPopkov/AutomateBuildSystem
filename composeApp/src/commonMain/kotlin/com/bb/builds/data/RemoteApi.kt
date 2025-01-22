@@ -1,9 +1,15 @@
 package com.bb.builds.data
 
 import com.bb.builds.domain.BuildData
+import com.bb.builds.domain.BuildId
+import com.bb.builds.domain.BuildItem
+import io.ktor.client.call.body
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 
 class RemoteApi(
     private val ktorApi: KtorApi,
@@ -25,4 +31,18 @@ class RemoteApi(
         json()
     }
 
+    suspend fun sendBuild(
+        buildId: BuildId,
+    ): HttpResponse = client.post {
+        apiUrl("send_build")
+        setBody(buildId)
+        json()
+    }
+
+    suspend fun getBuilds(): List<BuildItem> =
+        client.get {
+            apiUrl("builds")
+            contentType(ContentType.Application.Json)
+            json()
+        }.body()
 }

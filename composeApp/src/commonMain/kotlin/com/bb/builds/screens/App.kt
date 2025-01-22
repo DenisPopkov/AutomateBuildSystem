@@ -105,12 +105,7 @@ fun App() {
                 }
 
                 composable(Navigation.Builds::class.simpleName ?: "") {
-                    BuildsScreen(
-                        onCreateScreen = {
-                            navHostController.navigate(Navigation.Build::class.simpleName ?: "")
-                            selectedRoute = Navigation.Build
-                        }
-                    )
+                    BuildsScreen()
                 }
             }
         }

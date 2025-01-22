@@ -143,7 +143,7 @@ fun CreateScreen(
                     } else {
                         isDialogVisible = false
                         if (selectedBuildType == BuildType.ANDROID) {
-                            viewModel.buildMac(
+                            viewModel.build(
                                 buildData = BuildData(
                                     branchName = selectedBranchName,
                                     sign = true,
@@ -167,7 +167,7 @@ fun CreateScreen(
             SignBuildDialog(
                 onSign = {
                     isSignDialogVisible = false
-                    viewModel.buildMac(
+                    viewModel.build(
                         buildData = BuildData(
                             branchName = selectedBranchName,
                             sign = true,
@@ -177,7 +177,7 @@ fun CreateScreen(
                 },
                 onDismissRequest = {
                     isSignDialogVisible = false
-                    viewModel.buildMac(
+                    viewModel.build(
                         buildData = BuildData(
                             branchName = selectedBranchName,
                             sign = false,

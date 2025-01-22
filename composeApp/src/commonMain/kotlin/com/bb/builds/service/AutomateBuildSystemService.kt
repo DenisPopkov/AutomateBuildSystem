@@ -2,6 +2,8 @@ package com.bb.builds.service
 
 import com.bb.builds.data.RemoteApi
 import com.bb.builds.domain.BuildData
+import com.bb.builds.domain.BuildId
+import com.bb.builds.domain.BuildItem
 import io.ktor.client.statement.HttpResponse
 
 class AutomateBuildSystem(
@@ -17,6 +19,14 @@ class AutomateBuildSystem(
         buildData: BuildData,
     ): HttpResponse = remoteApi.buildAndroid(
         buildData = buildData,
+    )
+
+    suspend fun getBuilds(): List<BuildItem> = remoteApi.getBuilds()
+
+    suspend fun sendBuild(
+        buildId: BuildId,
+    ): HttpResponse = remoteApi.sendBuild(
+        buildId = buildId,
     )
 
 }

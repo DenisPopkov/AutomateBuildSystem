@@ -1,7 +1,10 @@
 package com.bb.builds.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class BuildItem(
-    val version: String,
+    val id: Int,
     val platformName: String,
-    val buildLink: String,
+    val version: String,
 )

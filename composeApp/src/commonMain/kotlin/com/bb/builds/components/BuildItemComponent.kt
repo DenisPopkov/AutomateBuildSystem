@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
@@ -32,8 +31,7 @@ import org.jetbrains.compose.resources.painterResource
 fun BuildItemComponent(
     version: String = "3.5.8 (294)",
     platformName: String = BuildType.ANDROID.buildName,
-    downloadLink: String = "",
-    onDownloadClick: (link: String) -> Unit,
+    onSendClick: () -> Unit,
 ) {
     val fontFamily = MavenFontFamily()
 
@@ -82,7 +80,7 @@ fun BuildItemComponent(
                 .size(width = 70.dp, height = 32.dp)
                 .clip(shape = CircleShape)
                 .background(color = Color.LightGray.copy(alpha = 0.5f))
-                .clickable { onDownloadClick.invoke(downloadLink) },
+                .clickable { onSendClick.invoke() },
             contentAlignment = Alignment.Center,
         ) {
             Text(
