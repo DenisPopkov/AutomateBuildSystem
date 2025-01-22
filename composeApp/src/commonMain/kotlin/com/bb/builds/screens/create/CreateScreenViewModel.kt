@@ -3,6 +3,7 @@ package com.bb.builds.screens.create
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bb.builds.domain.BuildData
+import com.bb.builds.domain.BuildType
 import com.bb.builds.service.AutomateBuildSystem
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -13,11 +14,18 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
 
     fun buildMac(
         buildData: BuildData,
+        buildType: BuildType,
     ) {
         viewModelScope.launch {
-            automateBuildSystemService.buildMac(
-                buildData = buildData,
-            )
+            when (buildType) {
+                BuildType.MACOS -> {
+                    automateBuildSystemService.buildMac(
+                        buildData = buildData,
+                    )
+                }
+
+                else -> {}
+            }
         }
     }
 

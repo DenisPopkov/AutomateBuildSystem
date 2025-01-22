@@ -1,7 +1,8 @@
 package com.bb.builds.data
 
 import com.bb.builds.domain.BuildData
-import io.ktor.client.request.*
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 
 class RemoteApi(
     private val ktorApi: KtorApi,
@@ -10,9 +11,11 @@ class RemoteApi(
     suspend fun buildMac(
         buildData: BuildData,
     ) = client.post {
-        apiUrl("build_mac")
-        setBody(buildData)
-        json()
+        runCatching {
+            apiUrl("build_mac")
+            setBody(buildData)
+            json()
+        }
     }
 
 }

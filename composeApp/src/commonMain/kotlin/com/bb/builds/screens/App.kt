@@ -1,5 +1,6 @@
 package com.bb.builds.screens
 
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
@@ -86,7 +87,11 @@ fun App() {
                 }
             },
             snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState)
+                SnackbarHost(
+                    modifier = Modifier
+                        .imePadding(),
+                    hostState = snackbarHostState,
+                )
             }
         ) { paddingValues ->
             NavHost(

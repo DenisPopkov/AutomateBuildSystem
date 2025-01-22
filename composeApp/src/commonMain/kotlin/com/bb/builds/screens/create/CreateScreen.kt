@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,11 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
-import automatebuildsystem.composeapp.generated.resources.ic_android
-import automatebuildsystem.composeapp.generated.resources.ic_ios
-import automatebuildsystem.composeapp.generated.resources.ic_macos
 import automatebuildsystem.composeapp.generated.resources.ic_neuro
-import automatebuildsystem.composeapp.generated.resources.ic_windows
 import com.bb.builds.components.BuildCard
 import com.bb.builds.components.InputBranchNameDialog
 import com.bb.builds.components.SignBuildDialog
@@ -56,6 +51,7 @@ fun CreateScreen(
     val fontFamily = MavenFontFamily()
 
     var isDialogVisible by remember { mutableStateOf(false) }
+    var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
     var isSignDialogVisible by remember { mutableStateOf(false) }
     var selectedBranchName by remember { mutableStateOf("develop") }
 
@@ -125,9 +121,10 @@ fun CreateScreen(
                             val buildType = buildOptions[index].buildType
                             if (buildType == BuildType.WINDOWS || buildType == BuildType.IOS) {
                                 coroutineScope.launch {
-                                    snackbarHostState.showSnackbar(message = "Not Available Yet")
+                                    snackbarHostState.showSnackbar(message = "Not available yet")
                                 }
                             } else {
+                                selectedBuildType = buildOptions[index].buildType
                                 isDialogVisible = true
                             }
                         },
@@ -139,9 +136,15 @@ fun CreateScreen(
         AnimatedVisibility(visible = isDialogVisible) {
             InputBranchNameDialog(
                 onSet = { branchName ->
-                    isDialogVisible = false
-                    isSignDialogVisible = true
-                    selectedBranchName = branchName
+                    if (branchName.length < MIN_BRANCH_LENGHT) {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(message = "Branch name incorrect")
+                        }
+                    } else {
+                        isDialogVisible = false
+                        isSignDialogVisible = true
+                        selectedBranchName = branchName
+                    }
                 },
                 onDismissRequest = {
                     isDialogVisible = false
@@ -158,7 +161,8 @@ fun CreateScreen(
                         buildData = BuildData(
                             branchName = selectedBranchName,
                             sign = true,
-                        )
+                        ),
+                        buildType = selectedBuildType,
                     )
                 },
                 onDismissRequest = {
@@ -167,7 +171,8 @@ fun CreateScreen(
                         buildData = BuildData(
                             branchName = selectedBranchName,
                             sign = false,
-                        )
+                        ),
+                        buildType = selectedBuildType,
                     )
                 },
                 title = "Do You Want To Sign The Build?",
@@ -175,30 +180,3 @@ fun CreateScreen(
         }
     }
 }
-
-private fun getBuildOptions() = listOf(
-    BuildStateScreen.Build(
-        buildItemId = 0,
-        buildType = BuildType.ANDROID,
-        buildIcon = Res.drawable.ic_android,
-        buildItemCardColor = Color(color = 0xFF32BE71),
-    ),
-    BuildStateScreen.Build(
-        buildItemId = 1,
-        buildType = BuildType.IOS,
-        buildIcon = Res.drawable.ic_ios,
-        buildItemCardColor = Color(color = 0xFF007CFF),
-    ),
-    BuildStateScreen.Build(
-        buildItemId = 2,
-        buildType = BuildType.MACOS,
-        buildIcon = Res.drawable.ic_macos,
-        buildItemCardColor = Color(color = 0xFFB9B9B9),
-    ),
-    BuildStateScreen.Build(
-        buildItemId = 3,
-        buildType = BuildType.WINDOWS,
-        buildIcon = Res.drawable.ic_windows,
-        buildItemCardColor = Color(color = 0xFFFF7D60),
-    ),
-)
