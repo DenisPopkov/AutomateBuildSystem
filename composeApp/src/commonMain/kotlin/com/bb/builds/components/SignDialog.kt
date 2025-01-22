@@ -1,7 +1,6 @@
 package com.bb.builds.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -111,8 +110,7 @@ fun SignDialog(
                     Box(
                         modifier = Modifier
                             .weight(weight = 1f)
-                            .height(height = Theme.spacingSystem.xl)
-                            .clickable { info.onClick.invoke() },
+                            .height(height = Theme.spacingSystem.xl),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(

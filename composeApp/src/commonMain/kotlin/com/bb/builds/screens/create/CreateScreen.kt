@@ -147,7 +147,6 @@ fun CreateScreen(
                     isDialogVisible = false
                 },
                 title = "Set Branch Name",
-                name = "develop",
             )
         }
 

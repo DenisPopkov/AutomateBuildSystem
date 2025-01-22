@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -42,12 +41,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -64,15 +61,9 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun FieldDialog(
     title: String,
-    fieldValue: TextFieldValue,
-    onFieldConfirm: () -> Unit,
-    onFieldValueChanged: (value: TextFieldValue) -> Unit,
-    onDismissRequest: () -> Unit,
     buttons: List<DialogButtonInfo>,
     label: String? = null,
-    trailingLabel: String? = null,
-    trailingImagePainter: Painter? = null,
-    onTrailingImageClick: () -> Unit = {},
+    onDismissRequest: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -105,33 +96,30 @@ fun FieldDialog(
             Spacer(modifier = Modifier.height(Theme.spacingSystem.s))
 
             val focusRequester = remember { FocusRequester() }
-            BBTextField(
-                modifier = Modifier
-                    .padding(horizontal = Theme.spacingSystem.s),
-                value = fieldValue.text,
-                placeholder = "",
-                onValueChange = onFieldValueChanged,
-                trailingImagePainter = trailingImagePainter,
-                onTrailingImageClick = onTrailingImageClick,
-                imeAction = ImeAction.Done,
-                keyboardAction = { onFieldConfirm() },
-                trailingLabel = trailingLabel,
-                label = label,
-                focusRequester = focusRequester,
-            )
 
             LaunchedEffect(Unit) {
                 focusRequester.requestFocus()
             }
 
+            BBTextField(
+                modifier = Modifier
+                    .padding(horizontal = Theme.spacingSystem.s),
+                imeAction = ImeAction.Done,
+                label = label,
+                onValueChange = {  },
+                focusRequester = focusRequester,
+            )
+
             Spacer(modifier = Modifier.height(Theme.spacingSystem.s))
+
             MainSeparator(height = 1.dp)
+
             Row(
                 Modifier
                     .fillMaxWidth()
                     .height(Theme.spacingSystem.xl),
             ) {
-                buttons.forEachIndexed { index, info ->
+                buttons.forEachIndexed { _, info ->
                     Box(
                         modifier = Modifier
                             .weight(weight = 1f)
@@ -146,14 +134,13 @@ fun FieldDialog(
                             textAlign = TextAlign.Center,
                         )
                     }
-                    if (index < buttons.size - 1) {
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .width(width = 1.dp)
-                                .background(color = Theme.colorSystem.black10),
-                        )
-                    }
+
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(width = 1.dp)
+                            .background(color = Theme.colorSystem.black10),
+                    )
                 }
             }
         }
@@ -163,32 +150,11 @@ fun FieldDialog(
 @Composable
 fun InputBranchNameDialog(
     title: String,
-    name: String,
     onDismissRequest: () -> Unit,
     onSet: (String) -> Unit,
 ) {
-    var fieldValue by remember(name) {
-        mutableStateOf(
-            TextFieldValue(
-                text = name,
-                selection = TextRange(name.length),
-            ),
-        )
-    }
-
-    val onChange: (TextFieldValue) -> Unit = { textFieldValue ->
-        val filteredText = textFieldValue.text.lowercase()
-        fieldValue = textFieldValue.copy(
-            text = filteredText,
-            selection = TextRange(filteredText.length)
-        )
-    }
-
     FieldDialog(
         title = title,
-        fieldValue = fieldValue,
-        onFieldConfirm = { },
-        onFieldValueChanged = onChange,
         onDismissRequest = onDismissRequest,
         buttons = listOf(
             DialogButtonInfo(
@@ -206,7 +172,7 @@ fun InputBranchNameDialog(
             DialogButtonInfo(
                 name = "Build",
                 onClick = {
-                    onSet.invoke(fieldValue.text)
+                    onSet.invoke(branchName)
                 },
                 style = TextStyle(
                     fontFamily = MavenFontFamily(),
@@ -219,35 +185,18 @@ fun InputBranchNameDialog(
                 enabled = true,
             ),
         ),
-        trailingImagePainter = if (fieldValue.text.isNotEmpty()) {
-            painterResource(Res.drawable.ic_clear_medium)
-        } else {
-            null
-        },
-        onTrailingImageClick = {
-            fieldValue = TextFieldValue()
-        },
     )
 }
 
 @Composable
 fun BBTextField(
-    value: String,
-    placeholder: String,
-    onValueChange: (value: TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
-    singleLine: Boolean = true,
-    enabled: Boolean = true,
     label: String? = null,
-    trailingLabel: String? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    trailingImagePainter: Painter? = null,
-    leadingImagePainter: Painter? = null,
-    onLeadingImageClick: () -> Unit = {},
-    onTrailingImageClick: () -> Unit = {},
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
     focusRequester: FocusRequester = FocusRequester(),
+    onValueChange: (String) -> Unit,
     keyboardAction: KeyboardActionScope.() -> Unit = {},
     onFocusChanged: (state: FocusState) -> Unit = {},
 ) {
@@ -256,6 +205,8 @@ fun BBTextField(
         handleColor = Theme.colorSystem.main,
         backgroundColor = Theme.colorSystem.main.copy(alpha = 0.2f)
     )
+
+    var selectedBranch by remember { mutableStateOf("") }
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         Column(
@@ -279,21 +230,6 @@ fun BBTextField(
                         textAlign = TextAlign.Start,
                     )
                 }
-                if (trailingLabel != null && hasFocus) {
-                    Text(
-                        text = trailingLabel,
-                        style = TextStyle(
-                            fontFamily = MavenFontFamily(),
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 12.sp,
-                        ),
-                        color = Theme.colorSystem.black70,
-                    )
-                }
-            }
-
-            if (label != null || trailingLabel != null) {
-                Spacer(Modifier.height(height = Theme.spacingSystem.xxs))
             }
 
             Box {
@@ -304,18 +240,14 @@ fun BBTextField(
                         imeAction = imeAction
                     ),
                     keyboardActions = KeyboardActions(keyboardAction),
-                    value = value,
-                    readOnly = !enabled,
+                    value = selectedBranch,
+                    readOnly = false,
                     onValueChange = { text ->
-                        onValueChange(
-                            TextFieldValue(
-                                text = text,
-                                selection = TextRange(text.length)
-                            )
-                        )
+                        selectedBranch = text
+                        onValueChange.invoke(text)
                     },
                     enabled = true,
-                    singleLine = singleLine,
+                    singleLine = true,
                     visualTransformation = visualTransformation,
                     textStyle = TextStyle(
                         fontFamily = MavenFontFamily(),
@@ -335,14 +267,15 @@ fun BBTextField(
                         },
                     decorationBox = { innerTextField ->
                         RawField(
-                            currentValue = value,
-                            placeholder = placeholder,
                             innerTextField = innerTextField,
-                            singleLine = singleLine,
-                            trailingImagePainter = trailingImagePainter,
-                            onTrailingImageClick = onTrailingImageClick,
-                            leadingImagePainter = leadingImagePainter,
-                            onLeadingImageClick = onLeadingImageClick,
+                            trailingImagePainter = if (selectedBranch.isNotEmpty()) {
+                                painterResource(Res.drawable.ic_clear_medium)
+                            } else {
+                                null
+                            },
+                            onTrailingImageClick = {
+                                selectedBranch = ""
+                            },
                         )
                     },
                 )
@@ -361,75 +294,25 @@ fun MainSeparator(
 @Suppress("CognitiveComplexMethod")
 @Composable
 private fun RawField(
-    currentValue: String,
-    placeholder: String,
-    singleLine: Boolean,
     trailingImagePainter: Painter?,
     onTrailingImageClick: () -> Unit,
-    leadingImagePainter: Painter?,
-    onLeadingImageClick: () -> Unit,
     innerTextField: @Composable () -> Unit,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .then(
-                other = if (singleLine) {
-                    Modifier.height(height = Theme.spacingSystem.xl)
-                } else {
-                    Modifier
-                },
-            )
+            .height(height = Theme.spacingSystem.xl)
             .background(
                 color = Theme.colorSystem.black10,
                 shape = RoundedCornerShape(Theme.spacingSystem.xxs),
             )
-            .padding(
-                start = if (leadingImagePainter == null) {
-                    Theme.spacingSystem.s
-                } else {
-                    Theme.spacingSystem.xxs
-                },
-            )
-            .run { if (singleLine) this else padding(end = Theme.spacingSystem.s) },
+            .padding(start = Theme.spacingSystem.s),
         contentAlignment = Alignment.CenterStart,
     ) {
-        if (currentValue.isEmpty()) {
-            Text(
-                modifier = Modifier
-                    .padding(
-                        start = if (leadingImagePainter == null) {
-                            0.dp
-                        } else {
-                            Theme.spacingSystem.l
-                        },
-                    ),
-                text = placeholder,
-                style = TextStyle(
-                    fontFamily = MavenFontFamily(),
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp,
-                    lineHeight = 22.2.sp,
-                    letterSpacing = (-0.5).sp,
-                ),
-                color = Color.Black,
-            )
-        }
-
         Row(
             modifier = Modifier
                 .padding(),
         ) {
-            leadingImagePainter?.let {
-                TrailingImage(
-                    painter = it,
-                    onImageClick = onLeadingImageClick,
-                    modifier = Modifier
-                        .wrapContentSize(align = Alignment.CenterStart)
-                        .size(size = Theme.spacingSystem.l)
-                        .align(alignment = Alignment.CenterVertically),
-                )
-            }
             Row(
                 modifier = Modifier
                     .padding(
@@ -442,6 +325,7 @@ private fun RawField(
             ) {
                 innerTextField()
             }
+
             trailingImagePainter?.let {
                 TrailingImage(
                     painter = it,
