@@ -13,4 +13,10 @@ class AutomateBuildSystem(
         buildData = buildData,
     )
 
+    suspend fun buildAndroid(
+        buildData: BuildData,
+    ): HttpResponse = remoteApi.buildAndroid(
+        buildData = buildData,
+    )
+
 }

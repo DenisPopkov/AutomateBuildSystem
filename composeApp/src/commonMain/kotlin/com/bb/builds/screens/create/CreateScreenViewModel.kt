@@ -24,6 +24,12 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
                     )
                 }
 
+                BuildType.ANDROID -> {
+                    automateBuildSystemService.buildAndroid(
+                        buildData = buildData,
+                    )
+                }
+
                 else -> {}
             }
         }

@@ -142,7 +142,17 @@ fun CreateScreen(
                         }
                     } else {
                         isDialogVisible = false
-                        isSignDialogVisible = true
+                        if (selectedBuildType == BuildType.ANDROID) {
+                            viewModel.buildMac(
+                                buildData = BuildData(
+                                    branchName = selectedBranchName,
+                                    sign = true,
+                                ),
+                                buildType = selectedBuildType,
+                            )
+                        } else {
+                            isSignDialogVisible = true
+                        }
                         selectedBranchName = branchName
                     }
                 },
