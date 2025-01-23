@@ -105,7 +105,9 @@ fun App() {
                 }
 
                 composable(Navigation.Builds::class.simpleName ?: "") {
-                    BuildsScreen()
+                    BuildsScreen(
+                        snackbarHostState = snackbarHostState,
+                    )
                 }
             }
         }
