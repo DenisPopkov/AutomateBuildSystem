@@ -36,6 +36,12 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
                     )
                 }
 
+                BuildType.IOS -> {
+                    automateBuildSystemService.buildIOS(
+                        buildData = buildData,
+                    )
+                }
+
                 else -> {}
             }
         }

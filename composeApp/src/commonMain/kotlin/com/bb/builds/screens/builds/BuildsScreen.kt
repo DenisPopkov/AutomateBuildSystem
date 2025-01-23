@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +37,7 @@ import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
 import com.bb.builds.domain.BuildId
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -42,11 +45,14 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
-fun BuildsScreen() {
+fun BuildsScreen(
+    snackbarHostState: SnackbarHostState,
+) {
     val viewModel = koinViewModel<BuildScreenViewModel>()
     val builds by viewModel.builds.collectAsState()
     val fontFamily = MavenFontFamily()
     var showNoBuilds by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(builds.isEmpty()) {
         if (builds.isEmpty()) {
@@ -101,7 +107,10 @@ fun BuildsScreen() {
                         version = it.version,
                         platformName = it.platformName,
                         onSendClick = {
-                            viewModel.send(BuildId(it.id))
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(message = "Sending...")
+                                viewModel.send(BuildId(it.id))
+                            }
                         },
                     )
                 }

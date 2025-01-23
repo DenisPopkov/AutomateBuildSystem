@@ -31,6 +31,14 @@ class RemoteApi(
         json()
     }
 
+    suspend fun buildIOS(
+        buildData: BuildData,
+    ): HttpResponse = client.post {
+        apiUrl("build_ios")
+        setBody(buildData)
+        json()
+    }
+
     suspend fun sendBuild(
         buildId: BuildId,
     ): HttpResponse = client.post {

@@ -153,6 +153,9 @@ fun CreateScreen(
                         } else {
                             isSignDialogVisible = true
                         }
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(message = "Building...")
+                        }
                         selectedBranchName = branchName
                     }
                 },

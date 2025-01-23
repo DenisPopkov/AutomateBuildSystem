@@ -6,11 +6,4 @@ enum class BuildType(val buildName: String) {
     MACOS(buildName = "macOS"),
     WINDOWS(buildName = "Windows"),
     ;
-
-    companion object {
-        fun getBuildType(platformName: String): BuildType {
-            return entries.firstOrNull { it.buildName.equals(platformName, ignoreCase = true) }
-                ?: throw IllegalArgumentException("Unknown platform name: $platformName")
-        }
-    }
 }
