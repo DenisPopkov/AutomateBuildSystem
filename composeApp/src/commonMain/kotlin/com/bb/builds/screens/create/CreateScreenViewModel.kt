@@ -18,6 +18,13 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
     private val _builds = MutableStateFlow<List<BuildItem>>(listOf())
     val builds = _builds.asStateFlow()
 
+    private val _branches = MutableStateFlow<List<String>>(listOf())
+    val branches = _branches.asStateFlow()
+
+    init {
+        getBranches()
+    }
+
     fun build(
         buildData: BuildData,
         buildType: BuildType,
@@ -49,6 +56,10 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
 
     fun restartServer() = viewModelScope.launch {
         automateBuildSystemService.reloadServer()
+    }
+
+    private fun getBranches() = viewModelScope.launch {
+        _branches.value = automateBuildSystemService.getBranches().branches
     }
 
 }

@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,10 +33,10 @@ import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import com.bb.builds.components.BuildCard
-import com.bb.builds.components.InputBranchNameDialog
-import com.bb.builds.components.ResetBuildDialog
+import com.bb.builds.components.dialogs.InputBranchNameDialog
+import com.bb.builds.components.dialogs.ResetBuildDialog
 import com.bb.builds.components.ResetServerCard
-import com.bb.builds.components.SignBuildDialog
+import com.bb.builds.components.dialogs.SignBuildDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildType
@@ -58,6 +59,8 @@ fun CreateScreen(
     var isSignDialogVisible by remember { mutableStateOf(false) }
     var isResetDialogVisible by remember { mutableStateOf(false) }
     var selectedBranchName by remember { mutableStateOf("develop") }
+
+    val branches by viewModel.branches.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -145,35 +148,33 @@ fun CreateScreen(
         )
 
         AnimatedVisibility(visible = isDialogVisible) {
+            val isMobile =
+                selectedBuildType == BuildType.ANDROID || selectedBuildType == BuildType.IOS
             InputBranchNameDialog(
+                buildButtonText = if (isMobile) "Build" else "Select",
                 onSet = { branchName ->
-                    if (branchName.length < MIN_BRANCH_LENGHT) {
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(message = "Branch name incorrect")
-                        }
+                    isDialogVisible = false
+                    if (selectedBuildType == BuildType.ANDROID) {
+                        viewModel.build(
+                            buildData = BuildData(
+                                branchName = selectedBranchName,
+                                sign = true,
+                            ),
+                            buildType = selectedBuildType,
+                        )
                     } else {
-                        isDialogVisible = false
-                        if (selectedBuildType == BuildType.ANDROID) {
-                            viewModel.build(
-                                buildData = BuildData(
-                                    branchName = selectedBranchName,
-                                    sign = true,
-                                ),
-                                buildType = selectedBuildType,
-                            )
-                        } else {
-                            isSignDialogVisible = true
-                        }
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(message = "Building...")
-                        }
-                        selectedBranchName = branchName
+                        isSignDialogVisible = true
                     }
+                    coroutineScope.launch {
+                        if (isMobile)
+                            snackbarHostState.showSnackbar(message = "Building...")
+                    }
+                    selectedBranchName = branchName
                 },
+                branches = branches,
                 onDismissRequest = {
                     isDialogVisible = false
                 },
-                title = "Set Branch Name",
             )
         }
 
@@ -181,6 +182,9 @@ fun CreateScreen(
             SignBuildDialog(
                 onSign = {
                     isSignDialogVisible = false
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = "Building...")
+                    }
                     viewModel.build(
                         buildData = BuildData(
                             branchName = selectedBranchName,

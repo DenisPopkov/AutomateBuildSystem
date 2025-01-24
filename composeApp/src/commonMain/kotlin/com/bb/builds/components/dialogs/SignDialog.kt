@@ -1,4 +1,4 @@
-package com.bb.builds.components
+package com.bb.builds.components.dialogs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

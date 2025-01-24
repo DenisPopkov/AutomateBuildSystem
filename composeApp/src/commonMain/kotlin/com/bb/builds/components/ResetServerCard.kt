@@ -1,17 +1,17 @@
 package com.bb.builds.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,17 +20,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import automatebuildsystem.composeapp.generated.resources.Res
-import automatebuildsystem.composeapp.generated.resources.ic_retry
 import com.bb.builds.components.theme.MavenFontFamily
+import com.bb.builds.components.theme.Theme
 import com.bb.builds.isDesktop
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-private const val MOBILE_CARD_HEIGHT = 90
+private const val MOBILE_CARD_HEIGHT = 120
 private const val MOBILE_CARD_WIDTH = 380
 
-private const val DESKTOP_CARD_HEIGHT = 120
+private const val DESKTOP_CARD_HEIGHT = 150
 private const val DESKTOP_CARD_WIDTH = 440
 
 @Preview
@@ -49,33 +47,29 @@ fun ResetServerCard(
             .size(width = cardWidth.dp, height = cardHeight.dp)
             .clip(shape = RoundedCornerShape(size = 18.dp))
             .clickable { onResetClick.invoke() }
-            .background(color = Color.Black.copy(alpha = 0.5f))
+            .background(color = Theme.colorSystem.main.copy(alpha = 0.5f))
             .padding(all = 12.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
         ) {
-            Row(
+            Icon(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "Reload server",
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = fontFamily,
-                    fontSize = 20.sp,
-                )
+                    .size(size = 30.dp),
+                imageVector = Icons.Filled.Settings,
+                contentDescription = null,
+                tint = Color.White,
+            )
 
-                Image(
-                    modifier = Modifier
-                        .padding(start = 12.dp)
-                        .size(size = 18.dp),
-                    painter = painterResource(Res.drawable.ic_retry),
-                    contentDescription = null,
-                )
-            }
+            Spacer(modifier = Modifier.weight(weight = 1f))
+
+            Text(
+                text = "Restart server",
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = fontFamily,
+                fontSize = 17.sp,
+            )
         }
     }
 }

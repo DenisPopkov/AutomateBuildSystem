@@ -1,4 +1,4 @@
-package com.bb.builds.components
+package com.bb.builds.components.dialogs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,7 +22,6 @@ import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,31 +47,34 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_clear_medium
+import com.bb.builds.components.FilterableDropdownMenu
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun InputBranchNameDialog(
-    title: String,
+    buildButtonText: String,
+    branches: List<String>,
     onDismissRequest: () -> Unit,
     onSet: (String) -> Unit,
 ) {
     FieldDialog(
-        title = title,
         onDismissRequest = onDismissRequest,
+        buildButtonText = buildButtonText,
+        branches = branches,
         onConfirm = { branchName -> onSet(branchName) }
     )
 }
 
 @Composable
 fun FieldDialog(
-    title: String,
+    buildButtonText: String,
+    branches: List<String>,
     onDismissRequest: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
     var textFieldValue by remember { mutableStateOf("") }
-    val focusRequester = remember { FocusRequester() }
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -88,35 +90,22 @@ fun FieldDialog(
                 )
                 .clip(shape = RoundedCornerShape(size = 14.dp))
         ) {
-            Spacer(modifier = Modifier.height(height = 16.dp))
-
-            Text(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                text = title,
-                style = TextStyle(
-                    fontFamily = MavenFontFamily(),
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 16.sp,
-                    lineHeight = 20.sp,
-                ),
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-            )
-
             Spacer(modifier = Modifier.height(height = 8.dp))
 
-            LaunchedEffect(key1 = Unit) {
-                focusRequester.requestFocus()
-            }
-
-            BBTextField(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                imeAction = ImeAction.Done,
-                focusRequester = focusRequester,
-                onValueChange = { textFieldValue = it },
+            var selectedIndex by remember { mutableStateOf(value = -1) }
+            FilterableDropdownMenu(
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                label = "Choose Branch",
+                items = branches,
+                onItemSelected = { index, item ->
+                    selectedIndex = index
+                    textFieldValue = item
+                },
+                selectedIndex = selectedIndex,
             )
 
-            Spacer(modifier = Modifier.height(height = 16.dp))
+            Spacer(modifier = Modifier.height(height = 12.dp))
 
             Divider(thickness = 1.dp, color = Color(0x1A000000))
 
@@ -160,7 +149,7 @@ fun FieldDialog(
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = "Build",
+                        text = buildButtonText,
                         style = TextStyle(
                             fontFamily = MavenFontFamily(),
                             fontWeight = FontWeight.Medium,
@@ -179,6 +168,7 @@ fun FieldDialog(
 @Composable
 fun BBTextField(
     modifier: Modifier = Modifier,
+    selectedValue: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -186,7 +176,7 @@ fun BBTextField(
     onValueChange: (String) -> Unit,
     onFocusChanged: (state: FocusState) -> Unit = {},
 ) {
-    var textFieldValue by remember { mutableStateOf("") }
+    var textFieldValue by remember { mutableStateOf(selectedValue) }
     val customTextSelectionColors = TextSelectionColors(
         handleColor = Theme.colorSystem.main,
         backgroundColor = Theme.colorSystem.main.copy(alpha = 0.2f)
@@ -242,7 +232,12 @@ fun BBTextField(
                         modifier = Modifier
                             .align(alignment = Alignment.CenterEnd)
                             .clip(shape = CircleShape)
-                            .clickable(onClick = { textFieldValue = "" })
+                            .clickable(
+                                onClick = {
+                                    textFieldValue = ""
+                                    onValueChange.invoke(textFieldValue)
+                                },
+                            )
                             .padding(all = 8.dp),
                         painter = painterResource(Res.drawable.ic_clear_medium),
                         contentDescription = null,

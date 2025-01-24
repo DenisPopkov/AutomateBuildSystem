@@ -1,6 +1,7 @@
 package com.bb.builds.service
 
 import com.bb.builds.data.RemoteApi
+import com.bb.builds.domain.Branches
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildId
 import com.bb.builds.domain.BuildItem
@@ -36,5 +37,7 @@ class AutomateBuildSystem(
     )
 
     suspend fun reloadServer(): HttpResponse = remoteApi.reloadServer()
+
+    suspend fun getBranches(): Branches = remoteApi.getBranches()
 
 }

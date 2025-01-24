@@ -1,5 +1,6 @@
 package com.bb.builds.data
 
+import com.bb.builds.domain.Branches
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildId
 import com.bb.builds.domain.BuildItem
@@ -50,6 +51,13 @@ class RemoteApi(
     suspend fun getBuilds(): List<BuildItem> =
         client.get {
             apiUrl("builds")
+            contentType(ContentType.Application.Json)
+            json()
+        }.body()
+
+    suspend fun getBranches(): Branches =
+        client.get {
+            apiUrl("remote_branches")
             contentType(ContentType.Application.Json)
             json()
         }.body()
