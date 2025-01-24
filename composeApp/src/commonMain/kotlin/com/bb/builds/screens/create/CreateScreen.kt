@@ -32,7 +32,7 @@ import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import com.bb.builds.components.BuildCard
 import com.bb.builds.components.InputBranchNameDialog
-import com.bb.builds.components.ResetDialog
+import com.bb.builds.components.ResetBuildDialog
 import com.bb.builds.components.ResetServerCard
 import com.bb.builds.components.SignBuildDialog
 import com.bb.builds.components.theme.MavenFontFamily
@@ -203,7 +203,7 @@ fun CreateScreen(
         }
 
         AnimatedVisibility(visible = isResetDialogVisible) {
-            ResetDialog(
+            ResetBuildDialog(
                 onReset = {
                     isResetDialogVisible = false
 
