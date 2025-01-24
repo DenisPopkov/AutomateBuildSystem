@@ -35,4 +35,6 @@ class AutomateBuildSystem(
         buildId = buildId,
     )
 
+    suspend fun reloadServer(): HttpResponse = remoteApi.reloadServer()
+
 }

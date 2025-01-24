@@ -32,6 +32,8 @@ import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import com.bb.builds.components.BuildCard
 import com.bb.builds.components.InputBranchNameDialog
+import com.bb.builds.components.ResetDialog
+import com.bb.builds.components.ResetServerCard
 import com.bb.builds.components.SignBuildDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.domain.BuildData
@@ -53,6 +55,7 @@ fun CreateScreen(
     var isDialogVisible by remember { mutableStateOf(false) }
     var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
     var isSignDialogVisible by remember { mutableStateOf(false) }
+    var isResetDialogVisible by remember { mutableStateOf(false) }
     var selectedBranchName by remember { mutableStateOf("develop") }
 
     val coroutineScope = rememberCoroutineScope()
@@ -72,7 +75,7 @@ fun CreateScreen(
             fontWeight = FontWeight.Bold,
             fontFamily = fontFamily,
             fontSize = 38.sp,
-            letterSpacing = 0.2.sp,
+            letterSpacing = 0.1.sp,
         )
 
         Row(
@@ -104,8 +107,7 @@ fun CreateScreen(
 
         LazyVerticalGrid(
             modifier = Modifier
-                .padding(top = 4.dp)
-                .size(size = 410.dp),
+                .padding(top = 4.dp),
             columns = GridCells.Fixed(count = 2),
             horizontalArrangement = Arrangement.spacedBy(space = 10.dp),
             verticalArrangement = Arrangement.spacedBy(space = 12.dp)
@@ -132,6 +134,14 @@ fun CreateScreen(
                 }
             }
         }
+
+        ResetServerCard(
+            modifier = Modifier
+                .padding(top = 12.dp),
+            onResetClick = {
+                isResetDialogVisible = true
+            }
+        )
 
         AnimatedVisibility(visible = isDialogVisible) {
             InputBranchNameDialog(
@@ -189,6 +199,23 @@ fun CreateScreen(
                     )
                 },
                 title = "Do You Want To Sign The Build?",
+            )
+        }
+
+        AnimatedVisibility(visible = isResetDialogVisible) {
+            ResetDialog(
+                onReset = {
+                    isResetDialogVisible = false
+
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = "Server reloading...")
+                        viewModel.restartServer()
+                    }
+                },
+                onDismissRequest = {
+                    isResetDialogVisible = false
+                },
+                title = "Do You Want To Reload Server?",
             )
         }
     }

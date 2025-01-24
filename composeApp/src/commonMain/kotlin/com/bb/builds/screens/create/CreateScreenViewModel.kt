@@ -47,7 +47,8 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    suspend fun getBuilds(): List<BuildItem> =
-        automateBuildSystemService.getBuilds()
+    fun restartServer() = viewModelScope.launch {
+        automateBuildSystemService.reloadServer()
+    }
 
 }
