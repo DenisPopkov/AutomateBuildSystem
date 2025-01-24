@@ -3,6 +3,7 @@ package com.bb.builds.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,10 +27,10 @@ import com.bb.builds.isDesktop
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-private const val MOBILE_CARD_HEIGHT = 120
+private const val MOBILE_CARD_HEIGHT = 90
 private const val MOBILE_CARD_WIDTH = 380
 
-private const val DESKTOP_CARD_HEIGHT = 150
+private const val DESKTOP_CARD_HEIGHT = 120
 private const val DESKTOP_CARD_WIDTH = 440
 
 @Preview
@@ -48,7 +49,7 @@ fun ResetServerCard(
             .size(width = cardWidth.dp, height = cardHeight.dp)
             .clip(shape = RoundedCornerShape(size = 18.dp))
             .clickable { onResetClick.invoke() }
-            .background(color = Color(0xFF000000).copy(alpha = 0.8f))
+            .background(color = Color.Black.copy(alpha = 0.5f))
             .padding(all = 12.dp)
     ) {
         Column(
@@ -56,21 +57,23 @@ fun ResetServerCard(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Image(
-                    painter = painterResource(Res.drawable.ic_retry),
-                    contentDescription = null,
-                )
-
                 Text(
-                    modifier = Modifier
-                        .padding(start = 12.dp),
                     text = "Reload server",
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = fontFamily,
-                    fontSize = 17.sp,
+                    fontSize = 20.sp,
+                )
+
+                Image(
+                    modifier = Modifier
+                        .padding(start = 12.dp)
+                        .size(size = 18.dp),
+                    painter = painterResource(Res.drawable.ic_retry),
+                    contentDescription = null,
                 )
             }
         }

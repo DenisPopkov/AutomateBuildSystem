@@ -32,11 +32,13 @@ import com.bb.builds.components.theme.Theme
 @Composable
 fun ResetBuildDialog(
     title: String,
+    description: String,
     onDismissRequest: () -> Unit,
     onReset: () -> Unit
 ) {
     ResetDialog(
         title = title,
+        description = description,
         onDismissRequest = onDismissRequest,
         onReset = onReset,
     )
@@ -45,6 +47,7 @@ fun ResetBuildDialog(
 @Composable
 fun ResetDialog(
     title: String,
+    description: String,
     onDismissRequest: () -> Unit,
     onReset: () -> Unit
 ) {
@@ -70,6 +73,20 @@ fun ResetDialog(
                     fontFamily = MavenFontFamily(),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
+                    lineHeight = 20.sp
+                ),
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = Theme.spacingSystem.s)
+            )
+            Spacer(modifier = Modifier.height(height = Theme.spacingSystem.s))
+
+            Text(
+                text = description,
+                style = TextStyle(
+                    fontFamily = MavenFontFamily(),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
                     lineHeight = 20.sp
                 ),
                 color = Color.Black,

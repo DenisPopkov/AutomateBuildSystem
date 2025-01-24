@@ -18,7 +18,7 @@ class RemoteApi(
     suspend fun buildMac(
         buildData: BuildData,
     ): HttpResponse = client.post {
-        apiUrl("build_macos")
+        apiUrl("build_mac")
         setBody(buildData)
         json()
     }

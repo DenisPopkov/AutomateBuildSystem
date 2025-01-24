@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.SnackbarHostState
@@ -107,14 +108,14 @@ fun CreateScreen(
 
         LazyVerticalGrid(
             modifier = Modifier
-                .padding(top = 4.dp),
+                .padding(top = 4.dp)
+                .width(width = 400.dp),
             columns = GridCells.Fixed(count = 2),
             horizontalArrangement = Arrangement.spacedBy(space = 10.dp),
             verticalArrangement = Arrangement.spacedBy(space = 12.dp)
         ) {
             items(count = buildOptions.size) { index ->
                 Box(
-                    modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     BuildCard(
@@ -216,6 +217,7 @@ fun CreateScreen(
                     isResetDialogVisible = false
                 },
                 title = "Do You Want To Reload Server?",
+                description = "All builds will be stopped, and the server will be reloaded. After the reload, you can start the builds again."
             )
         }
     }
