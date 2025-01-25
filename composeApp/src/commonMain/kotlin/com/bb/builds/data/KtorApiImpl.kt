@@ -12,10 +12,7 @@ import kotlinx.serialization.json.Json
 
 class KtorApiImpl : KtorApi {
 
-    // for adb "http://10.0.2.2:5001"
-    // for real device "http://127.0.0.1:5001"
-    // for ios "http://192.168.0.15:5001"
-    private val prodUrl = "http://10.0.2.2:5001"
+    private val prodUrl = "https://5a45-143-198-25-149.ngrok-free.app"
 
     override val client = HttpClient {
         install(ContentNegotiation) {

@@ -57,21 +57,6 @@ fun InputBranchNameDialog(
     buildButtonText: String,
     branches: List<String>,
     onDismissRequest: () -> Unit,
-    onSet: (String) -> Unit,
-) {
-    FieldDialog(
-        onDismissRequest = onDismissRequest,
-        buildButtonText = buildButtonText,
-        branches = branches,
-        onConfirm = { branchName -> onSet(branchName) }
-    )
-}
-
-@Composable
-fun FieldDialog(
-    buildButtonText: String,
-    branches: List<String>,
-    onDismissRequest: () -> Unit,
     onConfirm: (String) -> Unit,
 ) {
     var textFieldValue by remember { mutableStateOf("") }

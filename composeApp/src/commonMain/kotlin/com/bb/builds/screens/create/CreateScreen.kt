@@ -58,7 +58,7 @@ fun CreateScreen(
     var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
     var isSignDialogVisible by remember { mutableStateOf(false) }
     var isResetDialogVisible by remember { mutableStateOf(false) }
-    var selectedBranchName by remember { mutableStateOf("develop") }
+    var selectedBranchName by remember { mutableStateOf("") }
 
     val branches by viewModel.branches.collectAsState()
 
@@ -152,8 +152,9 @@ fun CreateScreen(
                 selectedBuildType == BuildType.ANDROID || selectedBuildType == BuildType.IOS
             InputBranchNameDialog(
                 buildButtonText = if (isMobile) "Build" else "Select",
-                onSet = { branchName ->
+                onConfirm = { branchName ->
                     isDialogVisible = false
+                    selectedBranchName = branchName
                     if (selectedBuildType == BuildType.ANDROID) {
                         viewModel.build(
                             buildData = BuildData(
@@ -169,7 +170,6 @@ fun CreateScreen(
                         if (isMobile)
                             snackbarHostState.showSnackbar(message = "Building...")
                     }
-                    selectedBranchName = branchName
                 },
                 branches = branches,
                 onDismissRequest = {
