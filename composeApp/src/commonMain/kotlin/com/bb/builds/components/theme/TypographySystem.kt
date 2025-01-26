@@ -18,3 +18,8 @@ fun MavenFontFamily() = FontFamily(
     Font(Res.font.MavenPro_Medium, weight = FontWeight.Medium),
     Font(Res.font.MavenPro_Semibold, weight = FontWeight.SemiBold),
 )
+
+@Composable
+fun SfFontFamily() = FontFamily(
+    Font(Res.font.Sf_Pro_Medium, weight = FontWeight.Bold),
+)

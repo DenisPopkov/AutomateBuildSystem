@@ -37,21 +37,21 @@ import com.bb.builds.components.dialogs.InputBranchNameDialog
 import com.bb.builds.components.dialogs.ResetBuildDialog
 import com.bb.builds.components.dialogs.SignBuildDialog
 import com.bb.builds.components.theme.MavenFontFamily
+import com.bb.builds.components.theme.SfFontFamily
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildType
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun CreateScreen(
+    viewModel: CreateScreenViewModel,
     snackbarHostState: SnackbarHostState,
 ) {
-    val viewModel = koinViewModel<CreateScreenViewModel>()
     val buildOptions = getBuildOptions()
     val fontFamily = MavenFontFamily()
+    val sfFontFamily = SfFontFamily()
 
     var isDialogVisible by remember { mutableStateOf(false) }
     var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
@@ -76,15 +76,15 @@ fun CreateScreen(
             text = "Create Build",
             color = Color.Black,
             fontWeight = FontWeight.Bold,
-            fontFamily = fontFamily,
-            fontSize = 38.sp,
-            letterSpacing = 0.1.sp,
+            fontFamily = sfFontFamily,
+            fontSize = 32.sp,
+            letterSpacing = 0.2.sp,
         )
 
         Row(
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .padding(top = 24.dp)
+                .padding(top = 20.dp)
                 .padding(start = 4.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,

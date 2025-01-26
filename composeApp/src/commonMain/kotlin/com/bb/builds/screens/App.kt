@@ -26,9 +26,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bb.builds.components.theme.Theme
+import com.bb.builds.screens.builds.BuildScreenViewModel
 import com.bb.builds.screens.builds.BuildsScreen
 import com.bb.builds.screens.create.CreateScreen
+import com.bb.builds.screens.create.CreateScreenViewModel
 import kotlinx.serialization.Serializable
+import org.koin.compose.getKoin
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun App() {
@@ -36,6 +40,9 @@ fun App() {
     var selectedRoute by remember { mutableStateOf<Navigation>(Navigation.Build) }
     val snackbarHostState = remember { SnackbarHostState() }
     SnackbarHost(hostState = snackbarHostState)
+
+    val buildViewModel = koinViewModel<BuildScreenViewModel>()
+    val createViewModel = koinViewModel<CreateScreenViewModel>()
 
     MaterialTheme {
         Scaffold(
@@ -101,11 +108,15 @@ fun App() {
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable(Navigation.Build::class.simpleName ?: "") {
-                    CreateScreen(snackbarHostState = snackbarHostState)
+                    CreateScreen(
+                        viewModel = createViewModel,
+                        snackbarHostState = snackbarHostState
+                    )
                 }
 
                 composable(Navigation.Builds::class.simpleName ?: "") {
                     BuildsScreen(
+                        viewModel = buildViewModel,
                         snackbarHostState = snackbarHostState,
                     )
                 }

@@ -7,12 +7,16 @@ import com.bb.builds.domain.BuildItem
 import com.bb.builds.service.AutomateBuildSystem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class BuildScreenViewModel : ViewModel(), KoinComponent {
     private val automateBuildSystemService: AutomateBuildSystem by inject()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
 
     private val _builds = MutableStateFlow<List<BuildItem>>(listOf())
     val builds = _builds.asStateFlow()
@@ -29,7 +33,11 @@ class BuildScreenViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    private suspend fun getBuilds(): List<BuildItem> =
-        automateBuildSystemService.getBuilds()
+    private suspend fun getBuilds(): List<BuildItem> {
+        _isLoading.update { true }
+        val builds = automateBuildSystemService.getBuilds()
+        _isLoading.update { false }
+        return builds
+    }
 
 }
