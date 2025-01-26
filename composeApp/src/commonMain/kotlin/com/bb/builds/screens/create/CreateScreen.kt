@@ -35,7 +35,6 @@ import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import com.bb.builds.components.BuildCard
 import com.bb.builds.components.dialogs.InputBranchNameDialog
 import com.bb.builds.components.dialogs.ResetBuildDialog
-import com.bb.builds.components.ResetServerCard
 import com.bb.builds.components.dialogs.SignBuildDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.domain.BuildData
@@ -139,14 +138,6 @@ fun CreateScreen(
             }
         }
 
-        ResetServerCard(
-            modifier = Modifier
-                .padding(top = 12.dp),
-            onResetClick = {
-                isResetDialogVisible = true
-            }
-        )
-
         AnimatedVisibility(visible = isDialogVisible) {
             val isMobile =
                 selectedBuildType == BuildType.ANDROID || selectedBuildType == BuildType.IOS
@@ -213,15 +204,14 @@ fun CreateScreen(
                     isResetDialogVisible = false
 
                     coroutineScope.launch {
-                        snackbarHostState.showSnackbar(message = "Server reloading...")
-                        viewModel.restartServer()
+                        snackbarHostState.showSnackbar(message = "Build stopping...")
                     }
                 },
                 onDismissRequest = {
                     isResetDialogVisible = false
                 },
-                title = "Do You Want To Reload Server?",
-                description = "All builds will be stopped, and the server will be reloaded. After the reload, you can start the builds again."
+                title = "Do You Want To Stop Build?",
+                description = "This build will be stopped. Afterward, you can restart it."
             )
         }
     }

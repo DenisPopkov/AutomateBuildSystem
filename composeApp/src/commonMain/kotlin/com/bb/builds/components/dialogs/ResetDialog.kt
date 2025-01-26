@@ -139,7 +139,7 @@ fun ResetDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Reload",
+                        text = "Stop",
                         style = TextStyle(
                             fontFamily = MavenFontFamily(),
                             fontWeight = FontWeight.Medium,

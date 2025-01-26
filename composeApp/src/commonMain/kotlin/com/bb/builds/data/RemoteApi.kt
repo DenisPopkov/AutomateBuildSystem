@@ -62,10 +62,4 @@ class RemoteApi(
             json()
         }.body()
 
-    suspend fun reloadServer() =
-        client.post {
-            apiUrl("restart_server")
-            contentType(ContentType.Application.Json)
-            json()
-        }
 }

@@ -54,10 +54,6 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    fun restartServer() = viewModelScope.launch {
-        automateBuildSystemService.reloadServer()
-    }
-
     private fun getBranches() = viewModelScope.launch {
         _branches.value = automateBuildSystemService.getBranches().branches
     }
