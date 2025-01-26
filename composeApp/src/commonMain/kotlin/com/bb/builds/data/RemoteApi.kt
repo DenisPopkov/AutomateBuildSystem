@@ -11,6 +11,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import kotlinx.serialization.builtins.serializer
 
 class RemoteApi(
     private val ktorApi: KtorApi,
@@ -59,6 +60,15 @@ class RemoteApi(
         client.get {
             apiUrl("remote_branches")
             contentType(ContentType.Application.Json)
+            json()
+        }.body()
+
+    suspend fun stopProcess(
+        processName: String,
+    ): Branches =
+        client.post {
+            apiUrl("stop_process")
+            setBody(processName)
             json()
         }.body()
 
