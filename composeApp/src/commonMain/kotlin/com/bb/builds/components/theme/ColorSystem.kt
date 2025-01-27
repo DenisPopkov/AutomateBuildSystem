@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.Color
 @Suppress("MagicNumber")
 data class ColorSystem(
     val main: Color = Color(0xFFFF5B20),
-    val constMain: Color = Color(0xFFFF5B20),
     val gray3: Color = Color(0xFF828282),
     val flamingo: Color = Color(0xFFFE2C55),
     val flamingo30: Color = Color(0x4DFE2C55),

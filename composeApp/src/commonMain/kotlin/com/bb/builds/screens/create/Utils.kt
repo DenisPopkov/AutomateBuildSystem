@@ -8,8 +8,6 @@ import automatebuildsystem.composeapp.generated.resources.ic_macos
 import automatebuildsystem.composeapp.generated.resources.ic_windows
 import com.bb.builds.domain.BuildType
 
-internal val MIN_BRANCH_LENGHT = 4
-
 internal fun getBuildOptions() = listOf(
     BuildStateScreen.Build(
         buildItemId = 0,

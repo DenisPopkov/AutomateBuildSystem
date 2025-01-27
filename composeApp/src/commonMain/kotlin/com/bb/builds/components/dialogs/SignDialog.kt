@@ -104,7 +104,7 @@ fun SignDialog(
                             lineHeight = 22.sp,
                             letterSpacing = (-0.41).sp
                         ),
-                        color = Theme.colorSystem.constMain,
+                        color = Theme.colorSystem.main,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -130,7 +130,7 @@ fun SignDialog(
                             lineHeight = 22.sp,
                             letterSpacing = (-0.41).sp
                         ),
-                        color = Theme.colorSystem.constMain,
+                        color = Theme.colorSystem.main,
                         textAlign = TextAlign.Center
                     )
                 }

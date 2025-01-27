@@ -3,10 +3,12 @@ package com.bb.builds.screens.create
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -15,8 +17,12 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Icon
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,6 +40,8 @@ import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import com.bb.builds.components.BuildCard
+import com.bb.builds.components.OptionsDropdownMenuContent
+import com.bb.builds.components.SettingsDropdownMenuContent
 import com.bb.builds.components.dialogs.InputBranchNameDialog
 import com.bb.builds.components.dialogs.ResetBuildDialog
 import com.bb.builds.components.dialogs.SignBuildDialog
@@ -42,7 +51,6 @@ import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildType
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
-import org.koin.core.annotation.KoinExperimentalAPI
 
 @Composable
 fun CreateScreen(
@@ -58,6 +66,8 @@ fun CreateScreen(
     var isSignDialogVisible by remember { mutableStateOf(false) }
     var isResetDialogVisible by remember { mutableStateOf(false) }
     var selectedBranchName by remember { mutableStateOf("") }
+    var isSettingsDropdownExpanded by remember { mutableStateOf(false) }
+    var isOptionsDropdownExpanded by remember { mutableStateOf(false) }
 
     val branches by viewModel.branches.collectAsState()
 
@@ -70,16 +80,62 @@ fun CreateScreen(
             .background(color = Color.White)
             .padding(all = 16.dp)
     ) {
-        Text(
-            modifier = Modifier
-                .padding(start = 4.dp),
-            text = "Create Build",
-            color = Color.Black,
-            fontWeight = FontWeight.Bold,
-            fontFamily = sfFontFamily,
-            fontSize = 32.sp,
-            letterSpacing = 0.2.sp,
+        SettingsDropdownMenuContent(
+            expanded = isSettingsDropdownExpanded,
+            onDismissRequest = { isSettingsDropdownExpanded = false },
+            onThemeChangeClick = {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar("Not available now")
+                }
+            },
         )
+
+        OptionsDropdownMenuContent(
+            expanded = isOptionsDropdownExpanded,
+            onDismissRequest = { isOptionsDropdownExpanded = false },
+            onStopBuildClick = {
+                isResetDialogVisible = true
+            },
+            onOpenLogsClick = {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar("Not available now")
+                }
+            }
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(start = 4.dp),
+                text = "Create Build",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontFamily = sfFontFamily,
+                fontSize = 32.sp,
+                letterSpacing = 0.2.sp,
+            )
+
+            Spacer(modifier = Modifier.weight(weight = 1f))
+
+            Box(
+                modifier = Modifier
+                    .size(size = 30.dp)
+                    .clip(shape = CircleShape)
+                    .clickable { isSettingsDropdownExpanded = true },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(size = 26.dp),
+                    imageVector = Icons.Filled.Settings,
+                    tint = Color(0xFF007AFF),
+                    contentDescription = null,
+                )
+            }
+        }
 
         Row(
             modifier = Modifier
@@ -133,6 +189,9 @@ fun CreateScreen(
                                 isDialogVisible = true
                             }
                         },
+                        onOptionsClick = {
+                            isOptionsDropdownExpanded = true
+                        }
                     )
                 }
             }
@@ -202,13 +261,16 @@ fun CreateScreen(
             ResetBuildDialog(
                 onReset = {
                     isResetDialogVisible = false
+                    isOptionsDropdownExpanded = false
 
                     coroutineScope.launch {
+                        viewModel.stopBuild(selectedBuildType)
                         snackbarHostState.showSnackbar(message = "Build stopping...")
                     }
                 },
                 onDismissRequest = {
                     isResetDialogVisible = false
+                    isOptionsDropdownExpanded = false
                 },
                 title = "Do You Want To Stop Build?",
                 description = "This build will be stopped. Afterward, you can restart it."

@@ -40,7 +40,8 @@ private const val DESKTOP_CARD_WIDTH = 220
 @Composable
 fun BuildCard(
     buildData: BuildStateScreen.Build,
-    onBuildClick: () -> Unit = {},
+    onBuildClick: () -> Unit,
+    onOptionsClick: () -> Unit,
 ) {
     val fontFamily = MavenFontFamily()
 
@@ -83,7 +84,8 @@ fun BuildCard(
                     modifier = Modifier
                         .size(size = 28.dp)
                         .clip(shape = CircleShape)
-                        .background(color = Color.White.copy(alpha = 0.2f)),
+                        .background(color = Color.White.copy(alpha = 0.2f))
+                        .clickable { onOptionsClick.invoke() },
                     contentAlignment = Alignment.Center,
                 ) {
                     Image(

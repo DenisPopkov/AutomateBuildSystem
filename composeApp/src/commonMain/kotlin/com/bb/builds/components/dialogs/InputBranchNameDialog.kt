@@ -114,7 +114,7 @@ fun InputBranchNameDialog(
                             fontSize = 17.sp,
                             lineHeight = 22.sp,
                         ),
-                        color = Theme.colorSystem.constMain,
+                        color = Theme.colorSystem.main,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -141,7 +141,7 @@ fun InputBranchNameDialog(
                             fontSize = 17.sp,
                             lineHeight = 22.sp,
                         ),
-                        color = Theme.colorSystem.constMain,
+                        color = Theme.colorSystem.main,
                         textAlign = TextAlign.Center,
                     )
                 }
