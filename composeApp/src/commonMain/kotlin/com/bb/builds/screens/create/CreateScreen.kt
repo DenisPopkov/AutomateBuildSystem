@@ -67,7 +67,6 @@ fun CreateScreen(
     var isResetDialogVisible by remember { mutableStateOf(false) }
     var selectedBranchName by remember { mutableStateOf("") }
     var isSettingsDropdownExpanded by remember { mutableStateOf(false) }
-    var isOptionsDropdownExpanded by remember { mutableStateOf(false) }
 
     val branches by viewModel.branches.collectAsState()
 
@@ -80,29 +79,6 @@ fun CreateScreen(
             .background(color = Color.White)
             .padding(all = 16.dp)
     ) {
-        SettingsDropdownMenuContent(
-            expanded = isSettingsDropdownExpanded,
-            onDismissRequest = { isSettingsDropdownExpanded = false },
-            onThemeChangeClick = {
-                coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Not available now")
-                }
-            },
-        )
-
-        OptionsDropdownMenuContent(
-            expanded = isOptionsDropdownExpanded,
-            onDismissRequest = { isOptionsDropdownExpanded = false },
-            onStopBuildClick = {
-                isResetDialogVisible = true
-            },
-            onOpenLogsClick = {
-                coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Not available now")
-                }
-            }
-        )
-
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -120,20 +96,32 @@ fun CreateScreen(
 
             Spacer(modifier = Modifier.weight(weight = 1f))
 
-            Box(
-                modifier = Modifier
-                    .size(size = 30.dp)
-                    .clip(shape = CircleShape)
-                    .clickable { isSettingsDropdownExpanded = true },
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(size = 26.dp),
-                    imageVector = Icons.Filled.Settings,
-                    tint = Color(0xFF007AFF),
-                    contentDescription = null,
+            Box {
+                SettingsDropdownMenuContent(
+                    expanded = isSettingsDropdownExpanded,
+                    onDismissRequest = { isSettingsDropdownExpanded = false },
+                    onThemeChangeClick = {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar("Not available now")
+                        }
+                    },
                 )
+
+                Box(
+                    modifier = Modifier
+                        .size(size = 30.dp)
+                        .clip(shape = CircleShape)
+                        .clickable { isSettingsDropdownExpanded = true },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(size = 26.dp),
+                        imageVector = Icons.Filled.Settings,
+                        tint = Color(0xFF007AFF),
+                        contentDescription = null,
+                    )
+                }
             }
         }
 
@@ -177,6 +165,7 @@ fun CreateScreen(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     BuildCard(
+                        snackbarHostState = snackbarHostState,
                         buildData = buildOptions[index],
                         onBuildClick = {
                             val buildType = buildOptions[index].buildType
@@ -190,7 +179,7 @@ fun CreateScreen(
                             }
                         },
                         onOptionsClick = {
-                            isOptionsDropdownExpanded = true
+                            isResetDialogVisible = true
                         }
                     )
                 }
@@ -261,7 +250,6 @@ fun CreateScreen(
             ResetBuildDialog(
                 onReset = {
                     isResetDialogVisible = false
-                    isOptionsDropdownExpanded = false
 
                     coroutineScope.launch {
                         viewModel.stopBuild(selectedBuildType)
@@ -270,7 +258,6 @@ fun CreateScreen(
                 },
                 onDismissRequest = {
                     isResetDialogVisible = false
-                    isOptionsDropdownExpanded = false
                 },
                 title = "Do You Want To Stop Build?",
                 description = "This build will be stopped. Afterward, you can restart it."
