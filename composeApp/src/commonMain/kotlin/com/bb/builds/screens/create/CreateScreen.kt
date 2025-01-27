@@ -236,6 +236,9 @@ fun CreateScreen(
                 },
                 onCancel = {
                     isSignDialogVisible = false
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(message = "Building...")
+                    }
                     viewModel.build(
                         buildData = BuildData(
                             branchName = selectedBranchName,
