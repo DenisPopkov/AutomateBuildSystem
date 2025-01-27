@@ -40,11 +40,10 @@ import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import com.bb.builds.components.BuildCard
-import com.bb.builds.components.OptionsDropdownMenuContent
 import com.bb.builds.components.SettingsDropdownMenuContent
 import com.bb.builds.components.dialogs.InputBranchNameDialog
 import com.bb.builds.components.dialogs.ResetBuildDialog
-import com.bb.builds.components.dialogs.SignBuildDialog
+import com.bb.builds.components.dialogs.SignDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.SfFontFamily
 import com.bb.builds.domain.BuildData
@@ -218,7 +217,7 @@ fun CreateScreen(
         }
 
         AnimatedVisibility(visible = isSignDialogVisible) {
-            SignBuildDialog(
+            SignDialog(
                 onSign = {
                     isSignDialogVisible = false
                     coroutineScope.launch {
@@ -233,6 +232,9 @@ fun CreateScreen(
                     )
                 },
                 onDismissRequest = {
+                    isSignDialogVisible = false
+                },
+                onCancel = {
                     isSignDialogVisible = false
                     viewModel.build(
                         buildData = BuildData(

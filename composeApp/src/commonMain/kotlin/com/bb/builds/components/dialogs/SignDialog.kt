@@ -30,23 +30,11 @@ import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
 
 @Composable
-fun SignBuildDialog(
-    title: String,
-    onDismissRequest: () -> Unit,
-    onSign: () -> Unit
-) {
-    SignDialog(
-        title = title,
-        onDismissRequest = onDismissRequest,
-        onSign = onSign
-    )
-}
-
-@Composable
 fun SignDialog(
     title: String,
     onDismissRequest: () -> Unit,
-    onSign: () -> Unit
+    onSign: () -> Unit,
+    onCancel: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -92,7 +80,7 @@ fun SignDialog(
                     modifier = Modifier
                         .weight(weight = 1f)
                         .fillMaxHeight()
-                        .clickable(onClick = onDismissRequest),
+                        .clickable(onClick = onCancel),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
