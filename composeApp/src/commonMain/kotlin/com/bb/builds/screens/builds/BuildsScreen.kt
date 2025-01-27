@@ -22,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,10 +31,10 @@ import com.bb.builds.components.BuildItemComponent
 import com.bb.builds.components.LoadingScreen
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.SfFontFamily
+import com.bb.builds.components.theme.Theme
 import com.bb.builds.domain.BuildId
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
-import org.koin.core.annotation.KoinExperimentalAPI
 
 @Composable
 fun BuildsScreen(
@@ -52,7 +51,7 @@ fun BuildsScreen(
             .statusBarsPadding()
             .navigationBarsPadding()
             .fillMaxSize()
-            .background(color = Color.White)
+            .background(color = Theme.colorSystem.white100)
             .padding(all = 16.dp)
     ) {
         if (isLoading) {
@@ -63,7 +62,7 @@ fun BuildsScreen(
             modifier = Modifier
                 .padding(start = 4.dp),
             text = "Builds",
-            color = Color.Black,
+            color = Theme.colorSystem.black100,
             fontWeight = FontWeight.Bold,
             fontFamily = sfFontFamily,
             fontSize = 32.sp,
@@ -127,7 +126,7 @@ fun NoBuilds() {
             modifier = Modifier
                 .padding(top = 12.dp),
             text = "No Builds Yet",
-            color = Color.Black,
+            color = Theme.colorSystem.black100,
             fontWeight = FontWeight.Bold,
             fontFamily = fontFamily,
             fontSize = 24.sp,

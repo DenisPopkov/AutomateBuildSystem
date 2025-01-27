@@ -31,5 +31,7 @@ data class ColorSystem(
     val black40: Color = Color(0x66000000),
     val black70: Color = Color(0xB3000000),
     val black80: Color = Color(0xCC000000),
+    val black100: Color = Color(0xFF000000),
     val sheet: Color = Color(0xFF252525),
+    val settings: Color = Color(0xFF007AFF),
 )

@@ -33,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,6 +45,7 @@ import com.bb.builds.components.dialogs.ResetBuildDialog
 import com.bb.builds.components.dialogs.SignDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.SfFontFamily
+import com.bb.builds.components.theme.Theme
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildType
 import kotlinx.coroutines.launch
@@ -59,6 +59,7 @@ fun CreateScreen(
     val buildOptions = getBuildOptions()
     val fontFamily = MavenFontFamily()
     val sfFontFamily = SfFontFamily()
+    val colors = Theme.colorSystem
 
     var isDialogVisible by remember { mutableStateOf(false) }
     var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
@@ -75,7 +76,7 @@ fun CreateScreen(
         modifier = Modifier
             .statusBarsPadding()
             .navigationBarsPadding()
-            .background(color = Color.White)
+            .background(color = colors.white100)
             .padding(all = 16.dp)
     ) {
         Row(
@@ -86,7 +87,7 @@ fun CreateScreen(
                 modifier = Modifier
                     .padding(start = 4.dp),
                 text = "Create Build",
-                color = Color.Black,
+                color = colors.black100,
                 fontWeight = FontWeight.Bold,
                 fontFamily = sfFontFamily,
                 fontSize = 32.sp,
@@ -117,7 +118,7 @@ fun CreateScreen(
                         modifier = Modifier
                             .size(size = 26.dp),
                         imageVector = Icons.Filled.Settings,
-                        tint = Color(0xFF007AFF),
+                        tint = colors.settings,
                         contentDescription = null,
                     )
                 }
@@ -143,7 +144,7 @@ fun CreateScreen(
                 modifier = Modifier
                     .padding(start = 12.dp),
                 text = "Neuro 3",
-                color = Color.Black,
+                color = colors.black100,
                 fontWeight = FontWeight.Bold,
                 fontFamily = fontFamily,
                 fontSize = 24.sp,
