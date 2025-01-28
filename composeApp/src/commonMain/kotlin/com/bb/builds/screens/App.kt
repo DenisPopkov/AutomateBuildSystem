@@ -94,8 +94,6 @@ fun App() {
     LaunchedEffect(bottomState.currentValue) {
         if (bottomState.currentValue == ModalBottomSheetValue.Hidden) {
             keyboardController?.hide()
-            selectedItemText = ""
-            searchQuery = ""
         }
     }
 

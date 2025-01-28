@@ -63,7 +63,7 @@ fun SignDialog(
                     fontSize = 16.sp,
                     lineHeight = 20.sp
                 ),
-                color = Color.Black,
+                color = colors.black100,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = Theme.spacingSystem.s)
             )
