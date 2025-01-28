@@ -49,7 +49,7 @@ import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_clear_medium
 import com.bb.builds.components.FilterableDropdownMenu
 import com.bb.builds.components.theme.MavenFontFamily
-import com.bb.builds.components.theme.Theme
+import com.bb.builds.components.theme.getColorSystem
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -60,6 +60,7 @@ fun InputBranchNameDialog(
     onConfirm: (String) -> Unit,
 ) {
     var textFieldValue by remember { mutableStateOf("") }
+    val colors = getColorSystem()
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -70,7 +71,7 @@ fun InputBranchNameDialog(
             modifier = Modifier
                 .width(width = 290.dp)
                 .background(
-                    color = Color.White,
+                    color = colors.white100,
                     shape = RoundedCornerShape(size = 14.dp),
                 )
                 .clip(shape = RoundedCornerShape(size = 14.dp))
@@ -114,7 +115,7 @@ fun InputBranchNameDialog(
                             fontSize = 17.sp,
                             lineHeight = 22.sp,
                         ),
-                        color = Theme.colorSystem.main,
+                        color = colors.main,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -141,7 +142,7 @@ fun InputBranchNameDialog(
                             fontSize = 17.sp,
                             lineHeight = 22.sp,
                         ),
-                        color = Theme.colorSystem.main,
+                        color = colors.main,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -161,10 +162,11 @@ fun BBTextField(
     onValueChange: (String) -> Unit,
     onFocusChanged: (state: FocusState) -> Unit = {},
 ) {
+    val colors = getColorSystem()
     var textFieldValue by remember { mutableStateOf(selectedValue) }
     val customTextSelectionColors = TextSelectionColors(
-        handleColor = Theme.colorSystem.main,
-        backgroundColor = Theme.colorSystem.main.copy(alpha = 0.2f)
+        handleColor = colors.main,
+        backgroundColor = colors.main.copy(alpha = 0.2f)
     )
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
@@ -176,7 +178,7 @@ fun BBTextField(
                     .fillMaxWidth()
                     .height(height = 44.dp)
                     .background(
-                        color = Theme.colorSystem.black10,
+                        color = colors.black10,
                         shape = RoundedCornerShape(size = 8.dp)
                     )
                     .padding(start = 16.dp),
@@ -206,10 +208,10 @@ fun BBTextField(
                         fontSize = 16.sp,
                         lineHeight = 22.2.sp,
                         letterSpacing = (-0.5).sp,
-                        color = Theme.colorSystem.black70,
+                        color = colors.black100,
                         textAlign = TextAlign.Start
                     ),
-                    cursorBrush = SolidColor(Theme.colorSystem.main),
+                    cursorBrush = SolidColor(colors.main),
                 )
 
                 if (textFieldValue.isNotEmpty()) {
@@ -226,7 +228,7 @@ fun BBTextField(
                             .padding(all = 8.dp),
                         painter = painterResource(Res.drawable.ic_clear_medium),
                         contentDescription = null,
-                        tint = Theme.colorSystem.black70,
+                        tint = colors.black70,
                     )
                 }
             }

@@ -1,6 +1,7 @@
 package com.bb.builds.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bb.builds.components.theme.MavenFontFamily
+import com.bb.builds.components.theme.getColorSystem
 
 @Composable
 fun SettingsDropdownMenuContent(
@@ -29,12 +31,14 @@ fun SettingsDropdownMenuContent(
         medium = RoundedCornerShape(size = 12.dp),
         large = RoundedCornerShape(size = 0.dp),
     )
+    val colors = getColorSystem()
 
     MaterialTheme(shapes = shapes) {
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = onDismissRequest,
             modifier = Modifier
+                .background(color = colors.white100)
                 .border(
                     border = BorderStroke(
                         width = 1.dp,
@@ -49,6 +53,7 @@ fun SettingsDropdownMenuContent(
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
+                    color = colors.black100,
                 )
             }
         }
@@ -68,12 +73,16 @@ fun OptionsDropdownMenuContent(
         medium = RoundedCornerShape(size = 12.dp),
         large = RoundedCornerShape(size = 0.dp),
     )
+    val colors = getColorSystem()
 
-    MaterialTheme(shapes = shapes) {
+    MaterialTheme(
+        shapes = shapes,
+    ) {
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = onDismissRequest,
             modifier = Modifier
+                .background(color = colors.white100)
                 .border(
                     border = BorderStroke(
                         width = 1.dp,
@@ -88,6 +97,7 @@ fun OptionsDropdownMenuContent(
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
+                    color = colors.black100,
                 )
             }
 
@@ -99,6 +109,7 @@ fun OptionsDropdownMenuContent(
                     fontFamily = fontFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
+                    color = colors.black100,
                 )
             }
         }

@@ -10,10 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.bb.builds.components.theme.Theme
+import com.bb.builds.components.theme.getColorSystem
 
 @Composable
 fun LoadingScreen() {
+    val colors = getColorSystem()
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -29,7 +31,7 @@ fun LoadingScreen() {
                 modifier = Modifier
                     .size(size = 20.dp),
                 strokeWidth = 3.dp,
-                color = Theme.colorSystem.main,
+                color = colors.main,
             )
         }
         Spacer(modifier = Modifier.weight(weight = 1f))

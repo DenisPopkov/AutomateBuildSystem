@@ -4,6 +4,7 @@ import com.bb.builds.domain.Branches
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildId
 import com.bb.builds.domain.BuildItem
+import com.bb.builds.domain.Process
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -11,7 +12,6 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import kotlinx.serialization.builtins.serializer
 
 class RemoteApi(
     private val ktorApi: KtorApi,
@@ -64,11 +64,11 @@ class RemoteApi(
         }.body()
 
     suspend fun stopProcess(
-        processName: String,
+        process: Process,
     ): Branches =
         client.post {
             apiUrl("stop_process")
-            setBody(processName)
+            setBody(process)
             json()
         }.body()
 

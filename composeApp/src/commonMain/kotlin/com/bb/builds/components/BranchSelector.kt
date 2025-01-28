@@ -1,6 +1,7 @@
 package com.bb.builds.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,11 +35,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.bb.builds.components.dialogs.BBTextField
-import com.bb.builds.components.theme.Theme
+import com.bb.builds.components.theme.MavenFontFamily
+import com.bb.builds.components.theme.getColorSystem
 
 @Composable
 fun <T> FilterableDropdownMenu(
@@ -63,6 +69,7 @@ fun <T> FilterableDropdownMenu(
     var selectedItemText by remember { mutableStateOf("") }
     val filteredItems =
         items.filter { selectedItemToString(it).contains(searchQuery, ignoreCase = true) }
+    val colors = getColorSystem()
 
     Box(
         modifier = modifier
@@ -71,10 +78,24 @@ fun <T> FilterableDropdownMenu(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            label = { Text(text = label) },
+            label = {
+                Text(
+                    text = label,
+                    color = colors.black100,
+                )
+            },
             value = selectedItemText,
             enabled = enabled,
             singleLine = true,
+            textStyle = TextStyle(
+                fontFamily = MavenFontFamily(),
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp,
+                lineHeight = 22.2.sp,
+                letterSpacing = (-0.5).sp,
+                color = colors.black100,
+                textAlign = TextAlign.Start
+            ),
             trailingIcon = {
                 val icon = if (expanded) {
                     Icons.Filled.ArrowDropUp
@@ -112,14 +133,18 @@ fun <T> FilterableDropdownMenu(
         ) {
             Surface(
                 modifier = Modifier
-                    .padding(top = 86.dp),
+                    .padding(top = 86.dp)
+                    .background(color = colors.white100),
                 shape = RoundedCornerShape(size = 12.dp),
                 border = BorderStroke(
                     width = 1.dp,
                     color = Color.LightGray,
                 )
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .background(color = colors.white100),
+                ) {
                     BBTextField(
                         modifier = Modifier
                             .width(width = 266.dp)
@@ -171,9 +196,10 @@ fun LargeDropdownMenuItem(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
+    val colors = getColorSystem()
     val contentColor = when {
         !enabled -> MaterialTheme.colors.onSurface.copy(alpha = 0f)
-        selected -> Theme.colorSystem.main
+        selected -> colors.main
         else -> MaterialTheme.colors.onSurface.copy(alpha = 1f)
     }
 
@@ -189,6 +215,7 @@ fun LargeDropdownMenuItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.body2,
+                color = colors.black100,
             )
         }
     }

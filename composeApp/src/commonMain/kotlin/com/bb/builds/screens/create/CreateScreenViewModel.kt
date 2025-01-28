@@ -59,7 +59,7 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
         buildType: BuildType,
     ) {
         viewModelScope.launch {
-            if (buildType != BuildType.ANDROID || buildType != BuildType.IOS) {
+            if (buildType == BuildType.WINDOWS || buildType == BuildType.MACOS) {
                 automateBuildSystemService.stopProcess(getBuildScript(buildType, false))
                 automateBuildSystemService.stopProcess(getBuildScript(buildType, true))
             } else {

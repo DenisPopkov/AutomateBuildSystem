@@ -33,12 +33,6 @@ class BuildScreenViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    fun stopProcess(processName: String) {
-        viewModelScope.launch {
-            automateBuildSystemService.stopProcess(processName)
-        }
-    }
-
     private suspend fun getBuilds(): List<BuildItem> {
         _isLoading.update { true }
         val builds = automateBuildSystemService.getBuilds()

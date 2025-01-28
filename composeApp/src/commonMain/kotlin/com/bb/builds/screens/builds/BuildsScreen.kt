@@ -31,7 +31,7 @@ import com.bb.builds.components.BuildItemComponent
 import com.bb.builds.components.LoadingScreen
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.SfFontFamily
-import com.bb.builds.components.theme.Theme
+import com.bb.builds.components.theme.getColorSystem
 import com.bb.builds.domain.BuildId
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -46,12 +46,14 @@ fun BuildsScreen(
     val sfFontFamily = SfFontFamily()
     val coroutineScope = rememberCoroutineScope()
 
+    val colors = getColorSystem()
+
     Column(
         modifier = Modifier
             .statusBarsPadding()
             .navigationBarsPadding()
             .fillMaxSize()
-            .background(color = Theme.colorSystem.white100)
+            .background(color = colors.white100)
             .padding(all = 16.dp)
     ) {
         if (isLoading) {
@@ -62,7 +64,7 @@ fun BuildsScreen(
             modifier = Modifier
                 .padding(start = 4.dp),
             text = "Builds",
-            color = Theme.colorSystem.black100,
+            color = colors.black100,
             fontWeight = FontWeight.Bold,
             fontFamily = sfFontFamily,
             fontSize = 32.sp,
@@ -110,6 +112,7 @@ fun BuildsScreen(
 @Composable
 fun NoBuilds() {
     val fontFamily = MavenFontFamily()
+    val colors = getColorSystem()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -126,7 +129,7 @@ fun NoBuilds() {
             modifier = Modifier
                 .padding(top = 12.dp),
             text = "No Builds Yet",
-            color = Theme.colorSystem.black100,
+            color = colors.black100,
             fontWeight = FontWeight.Bold,
             fontFamily = fontFamily,
             fontSize = 24.sp,

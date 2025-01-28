@@ -28,6 +28,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
+import com.bb.builds.components.theme.getColorSystem
 
 @Composable
 fun SignDialog(
@@ -36,6 +37,8 @@ fun SignDialog(
     onSign: () -> Unit,
     onCancel: () -> Unit,
 ) {
+    val colors = getColorSystem()
+
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -45,7 +48,7 @@ fun SignDialog(
             modifier = Modifier
                 .width(width = 290.dp)
                 .background(
-                    color = Color.White,
+                    color = colors.white100,
                     shape = RoundedCornerShape(size = 14.dp)
                 )
                 .clip(shape = RoundedCornerShape(size = 14.dp))
@@ -92,7 +95,7 @@ fun SignDialog(
                             lineHeight = 22.sp,
                             letterSpacing = (-0.41).sp
                         ),
-                        color = Theme.colorSystem.main,
+                        color = colors.main,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -100,7 +103,7 @@ fun SignDialog(
                     modifier = Modifier
                         .fillMaxHeight()
                         .width(width = 1.dp)
-                        .background(color = Theme.colorSystem.black10)
+                        .background(color = colors.black10)
                 )
                 Box(
                     modifier = Modifier
@@ -118,7 +121,7 @@ fun SignDialog(
                             lineHeight = 22.sp,
                             letterSpacing = (-0.41).sp
                         ),
-                        color = Theme.colorSystem.main,
+                        color = colors.main,
                         textAlign = TextAlign.Center
                     )
                 }

@@ -3,6 +3,7 @@ package com.bb.builds.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
+import com.bb.builds.components.theme.getColorSystem
 import com.bb.builds.domain.BuildType
 import org.jetbrains.compose.resources.painterResource
 
@@ -33,6 +35,7 @@ fun BuildItemComponent(
     platformName: String = BuildType.ANDROID.buildName,
     onSendClick: () -> Unit,
 ) {
+    val colors = getColorSystem()
     val fontFamily = MavenFontFamily()
 
     Row(
@@ -56,7 +59,7 @@ fun BuildItemComponent(
         ) {
             Text(
                 text = "Neuro 3 ($platformName)",
-                color = Color.Black,
+                color = colors.black100,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = fontFamily,
                 fontSize = 16.sp,
@@ -79,13 +82,13 @@ fun BuildItemComponent(
             modifier = Modifier
                 .size(width = 70.dp, height = 32.dp)
                 .clip(shape = CircleShape)
-                .background(color = Color.LightGray.copy(alpha = 0.5f))
+                .background(color = Color.LightGray.copy(alpha = if (isSystemInDarkTheme()) 0.2f else 0.5f))
                 .clickable { onSendClick.invoke() },
             contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = "Send",
-                color = Color(color = 0xFF007AFF),
+                color = colors.settings,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = fontFamily,
                 fontSize = 14.sp,

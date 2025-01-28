@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -45,7 +46,7 @@ import com.bb.builds.components.dialogs.ResetBuildDialog
 import com.bb.builds.components.dialogs.SignDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.SfFontFamily
-import com.bb.builds.components.theme.Theme
+import com.bb.builds.components.theme.getColorSystem
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildType
 import kotlinx.coroutines.launch
@@ -59,7 +60,7 @@ fun CreateScreen(
     val buildOptions = getBuildOptions()
     val fontFamily = MavenFontFamily()
     val sfFontFamily = SfFontFamily()
-    val colors = Theme.colorSystem
+    val colors = getColorSystem()
 
     var isDialogVisible by remember { mutableStateOf(false) }
     var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
@@ -76,6 +77,7 @@ fun CreateScreen(
         modifier = Modifier
             .statusBarsPadding()
             .navigationBarsPadding()
+            .fillMaxSize()
             .background(color = colors.white100)
             .padding(all = 16.dp)
     ) {

@@ -1,8 +1,10 @@
 package com.bb.builds.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -26,12 +28,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.bb.builds.components.theme.Theme
+import com.bb.builds.components.theme.getColorSystem
 import com.bb.builds.screens.builds.BuildScreenViewModel
 import com.bb.builds.screens.builds.BuildsScreen
 import com.bb.builds.screens.create.CreateScreen
 import com.bb.builds.screens.create.CreateScreenViewModel
 import kotlinx.serialization.Serializable
-import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -43,14 +45,17 @@ fun App() {
 
     val buildViewModel = koinViewModel<BuildScreenViewModel>()
     val createViewModel = koinViewModel<CreateScreenViewModel>()
+    val colors = getColorSystem()
 
     MaterialTheme {
         Scaffold(
             modifier = Modifier
-                .navigationBarsPadding(),
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .background(color = colors.white100),
             bottomBar = {
                 BottomNavigation(
-                    backgroundColor = Color.Transparent,
+                    backgroundColor = colors.white100,
                     elevation = 0.dp,
                 ) {
                     BottomNavigationItem(
@@ -63,12 +68,17 @@ fun App() {
                             }
                             selectedRoute = Navigation.Build
                         },
-                        label = { Text("Create") },
+                        label = {
+                            Text(
+                                text = "Create",
+                                color = colors.black100,
+                            )
+                        },
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = "Create",
-                                tint = if (selectedRoute is Navigation.Build) Theme.colorSystem.main else Color.Gray
+                                tint = if (selectedRoute is Navigation.Build) colors.main else Color.Gray
                             )
                         }
                     )
@@ -82,12 +92,17 @@ fun App() {
                             }
                             selectedRoute = Navigation.Builds
                         },
-                        label = { Text("Builds") },
+                        label = {
+                            Text(
+                                text = "Builds",
+                                color = colors.black100,
+                            )
+                        },
                         icon = {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.List,
                                 contentDescription = "Builds",
-                                tint = if (selectedRoute is Navigation.Builds) Theme.colorSystem.main else Color.Gray
+                                tint = if (selectedRoute is Navigation.Builds) colors.main else Color.Gray
                             )
                         }
                     )

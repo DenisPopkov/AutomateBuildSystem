@@ -13,12 +13,13 @@ enum class BuildType(val buildName: String) {
     ;
 }
 
-fun getBuildScript(buildType: BuildType, sign: Boolean = false): String {
-    return when (buildType) {
-        ANDROID -> "./build_android.sh"
-        IOS -> "./build_ios.sh"
-        MACOS -> if (sign) "./build_mac_signed.sh" else "./build_mac_no_sign.sh"
-        WINDOWS -> "./build_windows.sh"
-    }
+fun getBuildScript(buildType: BuildType, sign: Boolean = false): Process {
+    return Process(
+        processName = when (buildType) {
+            ANDROID -> "sh ./build_android.sh"
+            IOS -> "sh ./build_ios.sh"
+            MACOS -> if (sign) "sh ./build_mac_signed.sh" else "sh ./build_mac_no_sign.sh"
+            WINDOWS -> "sh ./build_windows.sh"
+        }
+    )
 }
-

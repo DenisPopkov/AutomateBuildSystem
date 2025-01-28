@@ -28,6 +28,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
+import com.bb.builds.components.theme.getColorSystem
 
 @Composable
 fun ResetBuildDialog(
@@ -51,6 +52,8 @@ fun ResetDialog(
     onDismissRequest: () -> Unit,
     onReset: () -> Unit
 ) {
+    val colors = getColorSystem()
+
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -60,7 +63,7 @@ fun ResetDialog(
             modifier = Modifier
                 .width(width = 290.dp)
                 .background(
-                    color = Color.White,
+                    color = colors.white100,
                     shape = RoundedCornerShape(size = 14.dp)
                 )
                 .clip(shape = RoundedCornerShape(size = 14.dp))
@@ -75,7 +78,7 @@ fun ResetDialog(
                     fontSize = 16.sp,
                     lineHeight = 20.sp
                 ),
-                color = Color.Black,
+                color = colors.black100,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = Theme.spacingSystem.s)
             )
@@ -89,7 +92,7 @@ fun ResetDialog(
                     fontSize = 14.sp,
                     lineHeight = 20.sp
                 ),
-                color = Color.Black,
+                color = colors.black100,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = Theme.spacingSystem.s)
             )
@@ -121,7 +124,7 @@ fun ResetDialog(
                             lineHeight = 22.sp,
                             letterSpacing = (-0.41).sp
                         ),
-                        color = Theme.colorSystem.main,
+                        color = colors.main,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -129,7 +132,7 @@ fun ResetDialog(
                     modifier = Modifier
                         .fillMaxHeight()
                         .width(width = 1.dp)
-                        .background(color = Theme.colorSystem.black10)
+                        .background(color = colors.black10)
                 )
                 Box(
                     modifier = Modifier
@@ -147,7 +150,7 @@ fun ResetDialog(
                             lineHeight = 22.sp,
                             letterSpacing = (-0.41).sp
                         ),
-                        color = Theme.colorSystem.main,
+                        color = colors.main,
                         textAlign = TextAlign.Center
                     )
                 }
