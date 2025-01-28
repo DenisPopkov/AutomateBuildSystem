@@ -322,7 +322,6 @@ fun App() {
                 ) {
                     composable(Navigation.Build::class.simpleName ?: "") {
                         CreateScreen(
-                            viewModel = createViewModel,
                             snackbarHostState = snackbarHostState,
                             updateSelectedBuildType = {
                                 selectedBuildType = it
@@ -330,7 +329,6 @@ fun App() {
                             showSelectBranchBottomSheet = {
                                 coroutineScope.launch { bottomState.show() }
                             },
-                            selectedBuildType = selectedBuildType,
                         )
 
                         AnimatedVisibility(visible = isSignDialogVisible) {

@@ -50,10 +50,8 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun CreateScreen(
-    viewModel: CreateScreenViewModel,
     updateSelectedBuildType: (BuildType) -> Unit,
     showSelectBranchBottomSheet: () -> Unit,
-    selectedBuildType: BuildType,
     snackbarHostState: SnackbarHostState,
 ) {
     val buildOptions = getBuildOptions()
@@ -96,9 +94,7 @@ fun CreateScreen(
                     expanded = isSettingsDropdownExpanded,
                     onDismissRequest = { isSettingsDropdownExpanded = false },
                     onThemeChangeClick = {
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar("Not available now")
-                        }
+
                     },
                 )
 
@@ -165,9 +161,7 @@ fun CreateScreen(
                         onBuildClick = {
                             val buildType = buildOptions[index].buildType
                             if (buildType == BuildType.WINDOWS || buildType == BuildType.IOS) {
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar(message = "Not available yet")
-                                }
+
                             } else {
                                 updateSelectedBuildType.invoke(buildOptions[index].buildType)
                                 showSelectBranchBottomSheet.invoke()
@@ -184,10 +178,9 @@ fun CreateScreen(
         AnimatedVisibility(visible = isResetDialogVisible) {
             ResetBuildDialog(
                 onReset = {
-                    isResetDialogVisible = false
+//                    isResetDialogVisible = false
 
                     coroutineScope.launch {
-                        snackbarHostState.showSnackbar("Not available now")
 //                        viewModel.stopBuild(selectedBuildType)
 //                        snackbarHostState.showSnackbar(message = "Build stopping...")
                     }
