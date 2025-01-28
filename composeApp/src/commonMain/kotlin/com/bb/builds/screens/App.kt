@@ -87,6 +87,13 @@ fun App() {
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true,
     )
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(bottomState.currentValue) {
+        if (bottomState.currentValue == ModalBottomSheetValue.Hidden) {
+            keyboardController?.hide()
+        }
+    }
 
     var searchQuery by remember { mutableStateOf("") }
     var selectedItemText by remember { mutableStateOf("") }
@@ -95,8 +102,6 @@ fun App() {
     val coroutineScope = rememberCoroutineScope()
 
     var isSignDialogVisible by remember { mutableStateOf(false) }
-
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     val filteredItems =
         branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
