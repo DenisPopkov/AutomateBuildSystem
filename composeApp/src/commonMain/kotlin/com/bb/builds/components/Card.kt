@@ -99,9 +99,9 @@ fun BuildCard(
                             onOptionsClick.invoke()
                         },
                         onOpenLogsClick = {
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar("Not available now")
-                            }
+//                            coroutineScope.launch {
+//                                snackbarHostState.showSnackbar("Not available now")
+//                            }
                         }
                     )
 

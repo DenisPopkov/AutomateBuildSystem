@@ -168,7 +168,7 @@ fun CreateScreen(
                             }
                         },
                         onOptionsClick = {
-                            isResetDialogVisible = true
+//                            isResetDialogVisible = true
                         }
                     )
                 }
