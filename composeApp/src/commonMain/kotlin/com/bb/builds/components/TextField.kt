@@ -17,10 +17,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,7 +42,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun BBTextField(
     modifier: Modifier = Modifier,
-    selectedValue: String,
+    textFieldValue: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     imeAction: ImeAction = ImeAction.Default,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -56,7 +52,6 @@ fun BBTextField(
     placeholder: String = ""
 ) {
     val colors = getColorSystem()
-    var textFieldValue by remember { mutableStateOf(selectedValue) }
     val customTextSelectionColors = TextSelectionColors(
         handleColor = colors.main,
         backgroundColor = colors.main.copy(alpha = 0.2f)
@@ -90,7 +85,6 @@ fun BBTextField(
                     ),
                     value = textFieldValue,
                     onValueChange = {
-                        textFieldValue = it
                         onValueChange(it)
                     },
                     singleLine = true,
@@ -129,8 +123,7 @@ fun BBTextField(
                             .clip(shape = CircleShape)
                             .clickable(
                                 onClick = {
-                                    textFieldValue = ""
-                                    onValueChange.invoke(textFieldValue)
+                                    onValueChange.invoke("")
                                 },
                             )
                             .padding(all = 8.dp),

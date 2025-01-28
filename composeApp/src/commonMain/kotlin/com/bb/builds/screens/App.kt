@@ -88,15 +88,17 @@ fun App() {
         skipHalfExpanded = true,
     )
     val keyboardController = LocalSoftwareKeyboardController.current
+    var searchQuery by remember { mutableStateOf("") }
+    var selectedItemText by remember { mutableStateOf("") }
 
     LaunchedEffect(bottomState.currentValue) {
         if (bottomState.currentValue == ModalBottomSheetValue.Hidden) {
             keyboardController?.hide()
+            selectedItemText = ""
+            searchQuery = ""
         }
     }
 
-    var searchQuery by remember { mutableStateOf("") }
-    var selectedItemText by remember { mutableStateOf("") }
     val branches by createViewModel.branches.collectAsState()
     var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
     val coroutineScope = rememberCoroutineScope()
@@ -151,6 +153,8 @@ fun App() {
                                     coroutineScope.launch {
                                         bottomState.hide()
                                         keyboardController?.hide()
+                                        selectedItemText = ""
+                                        searchQuery = ""
                                     }
                                 },
                             contentAlignment = Alignment.Center,
@@ -212,8 +216,8 @@ fun App() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = Theme.spacingSystem.m),
-                        selectedValue = searchQuery,
                         onValueChange = { searchQuery = it },
+                        textFieldValue = searchQuery,
                         placeholder = "Select branch"
                     )
 
