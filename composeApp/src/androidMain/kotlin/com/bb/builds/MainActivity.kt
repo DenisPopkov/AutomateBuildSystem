@@ -9,6 +9,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.bb.builds.di.initKoin
 import com.bb.builds.screens.App
+import org.koin.core.context.stopKoin
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,4 +26,10 @@ class MainActivity : AppCompatActivity() {
 
         setContent { App() }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopKoin()
+    }
+
 }
