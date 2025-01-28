@@ -101,7 +101,7 @@ fun OptionsDropdownMenuContent(
                 )
             }
 
-            Divider(thickness = 1.dp, color = Color(0x1A000000))
+            Divider(thickness = 1.dp, color = colors.black20)
 
             DropdownMenuItem(onClick = onOpenLogsClick) {
                 Text(

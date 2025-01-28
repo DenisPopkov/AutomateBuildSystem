@@ -1,16 +1,12 @@
-package com.bb.builds.components.dialogs
+package com.bb.builds.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -18,7 +14,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.Icon
-import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -33,7 +28,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -43,113 +37,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_clear_medium
-import com.bb.builds.components.FilterableDropdownMenu
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.getColorSystem
 import org.jetbrains.compose.resources.painterResource
-
-@Composable
-fun InputBranchNameDialog(
-    buildButtonText: String,
-    branches: List<String>,
-    onDismissRequest: () -> Unit,
-    onConfirm: (String) -> Unit,
-) {
-    var textFieldValue by remember { mutableStateOf("") }
-    val colors = getColorSystem()
-
-    Dialog(
-        onDismissRequest = onDismissRequest,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .width(width = 290.dp)
-                .background(
-                    color = colors.white100,
-                    shape = RoundedCornerShape(size = 14.dp),
-                )
-                .clip(shape = RoundedCornerShape(size = 14.dp))
-        ) {
-            Spacer(modifier = Modifier.height(height = 8.dp))
-
-            var selectedIndex by remember { mutableStateOf(value = -1) }
-            FilterableDropdownMenu(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                label = "Choose Branch",
-                items = branches,
-                onItemSelected = { index, item ->
-                    selectedIndex = index
-                    textFieldValue = item
-                },
-                selectedIndex = selectedIndex,
-            )
-
-            Spacer(modifier = Modifier.height(height = 12.dp))
-
-            Divider(thickness = 1.dp, color = Color(0x1A000000))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(height = 48.dp),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .weight(weight = 1f)
-                        .fillMaxHeight()
-                        .clickable(onClick = onDismissRequest),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "Cancel",
-                        style = TextStyle(
-                            fontFamily = MavenFontFamily(),
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 17.sp,
-                            lineHeight = 22.sp,
-                        ),
-                        color = colors.main,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-
-                Divider(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(width = 1.dp),
-                    color = Color(0x1A000000)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .weight(weight = 1f)
-                        .fillMaxHeight()
-                        .clickable { onConfirm(textFieldValue) },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = buildButtonText,
-                        style = TextStyle(
-                            fontFamily = MavenFontFamily(),
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 17.sp,
-                            lineHeight = 22.sp,
-                        ),
-                        color = colors.main,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun BBTextField(
@@ -161,6 +53,7 @@ fun BBTextField(
     focusRequester: FocusRequester = FocusRequester(),
     onValueChange: (String) -> Unit,
     onFocusChanged: (state: FocusState) -> Unit = {},
+    placeholder: String = ""
 ) {
     val colors = getColorSystem()
     var textFieldValue by remember { mutableStateOf(selectedValue) }
@@ -208,11 +101,26 @@ fun BBTextField(
                         fontSize = 16.sp,
                         lineHeight = 22.2.sp,
                         letterSpacing = (-0.5).sp,
-                        color = colors.black100,
+                        color = colors.black70,
                         textAlign = TextAlign.Start
                     ),
                     cursorBrush = SolidColor(colors.main),
                 )
+
+                if (textFieldValue.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        style = TextStyle(
+                            fontFamily = MavenFontFamily(),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp,
+                            lineHeight = 22.2.sp,
+                            letterSpacing = (-0.5).sp,
+                            color = colors.black40,
+                            textAlign = TextAlign.Start
+                        ),
+                    )
+                }
 
                 if (textFieldValue.isNotEmpty()) {
                     Icon(

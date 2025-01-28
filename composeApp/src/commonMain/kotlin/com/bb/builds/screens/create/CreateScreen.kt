@@ -25,7 +25,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,13 +40,10 @@ import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import com.bb.builds.components.BuildCard
 import com.bb.builds.components.SettingsDropdownMenuContent
-import com.bb.builds.components.dialogs.InputBranchNameDialog
 import com.bb.builds.components.dialogs.ResetBuildDialog
-import com.bb.builds.components.dialogs.SignDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.SfFontFamily
 import com.bb.builds.components.theme.getColorSystem
-import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildType
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -55,6 +51,9 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun CreateScreen(
     viewModel: CreateScreenViewModel,
+    updateSelectedBuildType: (BuildType) -> Unit,
+    showSelectBranchBottomSheet: () -> Unit,
+    selectedBuildType: BuildType,
     snackbarHostState: SnackbarHostState,
 ) {
     val buildOptions = getBuildOptions()
@@ -62,14 +61,8 @@ fun CreateScreen(
     val sfFontFamily = SfFontFamily()
     val colors = getColorSystem()
 
-    var isDialogVisible by remember { mutableStateOf(false) }
-    var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
-    var isSignDialogVisible by remember { mutableStateOf(false) }
     var isResetDialogVisible by remember { mutableStateOf(false) }
-    var selectedBranchName by remember { mutableStateOf("") }
     var isSettingsDropdownExpanded by remember { mutableStateOf(false) }
-
-    val branches by viewModel.branches.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -176,8 +169,8 @@ fun CreateScreen(
                                     snackbarHostState.showSnackbar(message = "Not available yet")
                                 }
                             } else {
-                                selectedBuildType = buildOptions[index].buildType
-                                isDialogVisible = true
+                                updateSelectedBuildType.invoke(buildOptions[index].buildType)
+                                showSelectBranchBottomSheet.invoke()
                             }
                         },
                         onOptionsClick = {
@@ -186,72 +179,6 @@ fun CreateScreen(
                     )
                 }
             }
-        }
-
-        AnimatedVisibility(visible = isDialogVisible) {
-            val isMobile =
-                selectedBuildType == BuildType.ANDROID || selectedBuildType == BuildType.IOS
-            InputBranchNameDialog(
-                buildButtonText = if (isMobile) "Build" else "Select",
-                onConfirm = { branchName ->
-                    isDialogVisible = false
-                    selectedBranchName = branchName
-                    if (selectedBuildType == BuildType.ANDROID) {
-                        viewModel.build(
-                            buildData = BuildData(
-                                branchName = selectedBranchName,
-                                sign = true,
-                            ),
-                            buildType = selectedBuildType,
-                        )
-                    } else {
-                        isSignDialogVisible = true
-                    }
-                    coroutineScope.launch {
-                        if (isMobile)
-                            snackbarHostState.showSnackbar(message = "Building...")
-                    }
-                },
-                branches = branches,
-                onDismissRequest = {
-                    isDialogVisible = false
-                },
-            )
-        }
-
-        AnimatedVisibility(visible = isSignDialogVisible) {
-            SignDialog(
-                onSign = {
-                    isSignDialogVisible = false
-                    coroutineScope.launch {
-                        snackbarHostState.showSnackbar(message = "Building...")
-                    }
-                    viewModel.build(
-                        buildData = BuildData(
-                            branchName = selectedBranchName,
-                            sign = true,
-                        ),
-                        buildType = selectedBuildType,
-                    )
-                },
-                onDismissRequest = {
-                    isSignDialogVisible = false
-                },
-                onCancel = {
-                    isSignDialogVisible = false
-                    coroutineScope.launch {
-                        snackbarHostState.showSnackbar(message = "Building...")
-                    }
-                    viewModel.build(
-                        buildData = BuildData(
-                            branchName = selectedBranchName,
-                            sign = false,
-                        ),
-                        buildType = selectedBuildType,
-                    )
-                },
-                title = "Do You Want To Sign The Build?",
-            )
         }
 
         AnimatedVisibility(visible = isResetDialogVisible) {

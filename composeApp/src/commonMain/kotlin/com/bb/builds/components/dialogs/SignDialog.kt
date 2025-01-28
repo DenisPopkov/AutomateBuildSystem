@@ -71,7 +71,7 @@ fun SignDialog(
 
             Divider(
                 thickness = 1.dp,
-                color = Color(color = 0x1A000000)
+                color = colors.black20
             )
 
             Row(
