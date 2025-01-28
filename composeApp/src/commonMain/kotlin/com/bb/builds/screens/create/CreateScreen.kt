@@ -187,8 +187,9 @@ fun CreateScreen(
                     isResetDialogVisible = false
 
                     coroutineScope.launch {
-                        viewModel.stopBuild(selectedBuildType)
-                        snackbarHostState.showSnackbar(message = "Build stopping...")
+                        snackbarHostState.showSnackbar("Not available now")
+//                        viewModel.stopBuild(selectedBuildType)
+//                        snackbarHostState.showSnackbar(message = "Build stopping...")
                     }
                 },
                 onDismissRequest = {
