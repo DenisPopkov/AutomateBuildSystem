@@ -76,7 +76,6 @@ fun App() {
     val navHostController = rememberNavController()
     var selectedRoute by remember { mutableStateOf<Navigation>(Navigation.Build) }
     val snackbarHostState = remember { SnackbarHostState() }
-    SnackbarHost(hostState = snackbarHostState)
 
     val buildViewModel = koinViewModel<BuildScreenViewModel>()
     val createViewModel = koinViewModel<CreateScreenViewModel>()

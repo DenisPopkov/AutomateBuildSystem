@@ -94,7 +94,9 @@ fun CreateScreen(
                     expanded = isSettingsDropdownExpanded,
                     onDismissRequest = { isSettingsDropdownExpanded = false },
                     onThemeChangeClick = {
-
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(message = "Not available now")
+                        }
                     },
                 )
 
@@ -160,8 +162,10 @@ fun CreateScreen(
                         buildData = buildOptions[index],
                         onBuildClick = {
                             val buildType = buildOptions[index].buildType
-                            if (buildType == BuildType.WINDOWS || buildType == BuildType.IOS) {
-
+                            if (buildType == BuildType.WINDOWS) {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(message = "Not available now")
+                                }
                             } else {
                                 updateSelectedBuildType.invoke(buildOptions[index].buildType)
                                 showSelectBranchBottomSheet.invoke()
