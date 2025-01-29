@@ -109,6 +109,12 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.bb.builds"
             packageVersion = "1.0.0"
+
+            macOS {
+                iconFile.set(project.file("icon.icns"))
+            }
+
+            packageName = "Build Build!"
         }
     }
 }
