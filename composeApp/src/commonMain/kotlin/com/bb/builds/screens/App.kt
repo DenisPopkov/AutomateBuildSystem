@@ -339,7 +339,7 @@ fun App() {
                                 onSign = {
                                     isSignDialogVisible = false
                                     coroutineScope.launch {
-
+                                        snackbarHostState.showSnackbar(message = "Building...")
                                     }
                                     createViewModel.build(
                                         buildData = BuildData(
