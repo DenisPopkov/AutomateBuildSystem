@@ -67,7 +67,6 @@ fun CreateScreen(
     Column(
         modifier = Modifier
             .statusBarsPadding()
-            .navigationBarsPadding()
             .fillMaxSize()
             .background(color = colors.white100)
             .padding(all = 16.dp)

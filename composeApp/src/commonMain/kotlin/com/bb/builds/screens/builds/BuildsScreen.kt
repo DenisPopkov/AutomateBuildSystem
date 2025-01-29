@@ -52,7 +52,6 @@ fun BuildsScreen(
     Column(
         modifier = Modifier
             .statusBarsPadding()
-            .navigationBarsPadding()
             .fillMaxSize()
             .background(color = colors.white100)
             .padding(horizontal = Theme.spacingSystem.s)
