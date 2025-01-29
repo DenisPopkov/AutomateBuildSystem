@@ -80,13 +80,13 @@ fun BuildsScreen(
         } else {
             LazyColumn(
                 modifier = Modifier
-                    .padding(top = 20.dp),
+                    .padding(top = 16.dp),
             ) {
                 item {
                     Text(
                         modifier = Modifier
                             .padding(start = 4.dp)
-                            .padding(vertical = Theme.spacingSystem.s),
+                            .padding(bottom = 20.dp),
                         text = "Builds",
                         color = colors.black100,
                         fontWeight = FontWeight.Bold,
