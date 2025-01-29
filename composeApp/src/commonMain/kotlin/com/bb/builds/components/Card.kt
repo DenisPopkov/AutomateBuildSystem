@@ -33,7 +33,6 @@ import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.domain.BuildType
 import com.bb.builds.isDesktop
 import com.bb.builds.screens.create.BuildStateScreen
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -92,25 +91,28 @@ fun BuildCard(
                 Spacer(modifier = Modifier.weight(weight = 1f))
 
                 Box {
-                    OptionsDropdownMenuContent(
-                        expanded = isOptionsDropdownExpanded,
-                        onDismissRequest = { isOptionsDropdownExpanded = false },
-                        onStopBuildClick = {
-                            onOptionsClick.invoke()
-                        },
-                        onOpenLogsClick = {
-//                            coroutineScope.launch {
-//                                snackbarHostState.showSnackbar("Not available now")
-//                            }
-                        }
-                    )
+//                    OptionsDropdownMenuContent(
+//                        expanded = isOptionsDropdownExpanded,
+//                        onDismissRequest = { isOptionsDropdownExpanded = false },
+//                        onStopBuildClick = {
+//                            onOptionsClick.invoke()
+//                        },
+//                        onOpenLogsClick = {
+////                            coroutineScope.launch {
+////                                snackbarHostState.showSnackbar("Not available now")
+////                            }
+//                        }
+//                    )
 
                     Box(
                         modifier = Modifier
                             .size(size = 28.dp)
                             .clip(shape = CircleShape)
                             .background(color = Color.White.copy(alpha = 0.2f))
-                            .clickable { isOptionsDropdownExpanded = true },
+                            .clickable {
+                                onOptionsClick.invoke()
+//                                isOptionsDropdownExpanded = true
+                            },
                         contentAlignment = Alignment.Center,
                     ) {
                         Image(

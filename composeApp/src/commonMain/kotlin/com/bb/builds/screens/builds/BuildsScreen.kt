@@ -31,6 +31,7 @@ import com.bb.builds.components.BuildItemComponent
 import com.bb.builds.components.LoadingScreen
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.SfFontFamily
+import com.bb.builds.components.theme.Theme
 import com.bb.builds.components.theme.getColorSystem
 import com.bb.builds.domain.BuildId
 import kotlinx.coroutines.launch
@@ -54,22 +55,12 @@ fun BuildsScreen(
             .navigationBarsPadding()
             .fillMaxSize()
             .background(color = colors.white100)
-            .padding(all = 16.dp)
+            .padding(horizontal = Theme.spacingSystem.s)
+            .padding(bottom = Theme.spacingSystem.m),
     ) {
         if (isLoading) {
             LoadingScreen()
         }
-
-        Text(
-            modifier = Modifier
-                .padding(start = 4.dp),
-            text = "Builds",
-            color = colors.black100,
-            fontWeight = FontWeight.Bold,
-            fontFamily = sfFontFamily,
-            fontSize = 32.sp,
-            letterSpacing = 0.2.sp,
-        )
 
         if (builds.isEmpty()) {
             Spacer(modifier = Modifier.weight(weight = 1f))
@@ -91,6 +82,20 @@ fun BuildsScreen(
                 modifier = Modifier
                     .padding(top = 20.dp),
             ) {
+                item {
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 4.dp)
+                            .padding(vertical = Theme.spacingSystem.s),
+                        text = "Builds",
+                        color = colors.black100,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = sfFontFamily,
+                        fontSize = 32.sp,
+                        letterSpacing = 0.2.sp,
+                    )
+                }
+
                 items(builds) {
                     BuildItemComponent(
                         version = it.version,

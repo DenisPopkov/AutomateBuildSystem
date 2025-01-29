@@ -41,7 +41,6 @@ import automatebuildsystem.composeapp.generated.resources.ic_neuro
 import com.bb.builds.components.BuildCard
 import com.bb.builds.components.SettingsDropdownMenuContent
 import com.bb.builds.components.dialogs.ResetBuildDialog
-import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.SfFontFamily
 import com.bb.builds.components.theme.getColorSystem
 import com.bb.builds.domain.BuildType
@@ -50,19 +49,20 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun CreateScreen(
+    viewModel: CreateScreenViewModel,
     updateSelectedBuildType: (BuildType) -> Unit,
     showSelectBranchBottomSheet: () -> Unit,
+    selectedBuildType: BuildType,
     snackbarHostState: SnackbarHostState,
 ) {
     val buildOptions = getBuildOptions()
-    val fontFamily = MavenFontFamily()
     val sfFontFamily = SfFontFamily()
     val colors = getColorSystem()
 
+    val coroutineScope = rememberCoroutineScope()
+
     var isResetDialogVisible by remember { mutableStateOf(false) }
     var isSettingsDropdownExpanded by remember { mutableStateOf(false) }
-
-    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -139,9 +139,9 @@ fun CreateScreen(
                 text = "Neuro 3",
                 color = colors.black100,
                 fontWeight = FontWeight.Bold,
-                fontFamily = fontFamily,
+                fontFamily = sfFontFamily,
                 fontSize = 24.sp,
-                letterSpacing = 0.3.sp,
+                letterSpacing = 0.2.sp,
             )
         }
 
@@ -172,6 +172,9 @@ fun CreateScreen(
                             }
                         },
                         onOptionsClick = {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(message = "Not available now")
+                            }
 //                            isResetDialogVisible = true
                         }
                     )
@@ -182,11 +185,11 @@ fun CreateScreen(
         AnimatedVisibility(visible = isResetDialogVisible) {
             ResetBuildDialog(
                 onReset = {
-//                    isResetDialogVisible = false
+                    isResetDialogVisible = false
 
                     coroutineScope.launch {
-//                        viewModel.stopBuild(selectedBuildType)
-//                        snackbarHostState.showSnackbar(message = "Build stopping...")
+                        viewModel.stopBuild(selectedBuildType)
+                        snackbarHostState.showSnackbar(message = "Build stopping...")
                     }
                 },
                 onDismissRequest = {

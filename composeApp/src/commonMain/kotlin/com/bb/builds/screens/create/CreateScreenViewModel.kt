@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildItem
 import com.bb.builds.domain.BuildType
-import com.bb.builds.domain.getBuildScript
 import com.bb.builds.service.AutomateBuildSystem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -64,10 +63,10 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
     ) {
         viewModelScope.launch {
             if (buildType == BuildType.WINDOWS || buildType == BuildType.MACOS) {
-                automateBuildSystemService.stopProcess(getBuildScript(buildType, false))
-                automateBuildSystemService.stopProcess(getBuildScript(buildType, true))
+                automateBuildSystemService.stopProcess()
+                automateBuildSystemService.stopProcess()
             } else {
-                automateBuildSystemService.stopProcess(getBuildScript(buildType, true))
+                automateBuildSystemService.stopProcess()
             }
         }
     }

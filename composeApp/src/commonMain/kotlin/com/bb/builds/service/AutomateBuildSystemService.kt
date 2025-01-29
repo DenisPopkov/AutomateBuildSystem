@@ -5,7 +5,6 @@ import com.bb.builds.domain.Branches
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildId
 import com.bb.builds.domain.BuildItem
-import com.bb.builds.domain.Process
 import io.ktor.client.statement.HttpResponse
 
 class AutomateBuildSystem(
@@ -39,9 +38,5 @@ class AutomateBuildSystem(
 
     suspend fun getBranches(): Branches = remoteApi.getBranches()
 
-    suspend fun stopProcess(
-        process: Process,
-    ) = remoteApi.stopProcess(
-        process = process,
-    )
+    suspend fun stopProcess() = remoteApi.stopProcess()
 }

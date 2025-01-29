@@ -175,21 +175,25 @@ fun App() {
                             modifier = Modifier
                                 .clickable {
                                     coroutineScope.launch {
-                                        bottomState.hide()
-                                        keyboardController?.hide()
-                                        if (!isMobile) {
-                                            isSignDialogVisible = true
-                                        } else {
-                                            coroutineScope.launch {
-                                                isBuilding = true
-                                                createViewModel.build(
-                                                    buildData = BuildData(
-                                                        branchName = selectedItemText,
-                                                        sign = true,
-                                                    ),
-                                                    buildType = selectedBuildType,
-                                                )
+                                        if (selectedItemText.isNotEmpty()) {
+                                            bottomState.hide()
+                                            keyboardController?.hide()
+                                            if (!isMobile) {
+                                                isSignDialogVisible = true
+                                            } else {
+                                                coroutineScope.launch {
+                                                    isBuilding = true
+                                                    createViewModel.build(
+                                                        buildData = BuildData(
+                                                            branchName = selectedItemText,
+                                                            sign = true,
+                                                        ),
+                                                        buildType = selectedBuildType,
+                                                    )
+                                                }
                                             }
+                                        } else {
+                                            snackbarHostState.showSnackbar("Branch not selected")
                                         }
                                     }
                                 },
@@ -323,6 +327,8 @@ fun App() {
                             updateSelectedBuildType = {
                                 selectedBuildType = it
                             },
+                            viewModel = createViewModel,
+                            selectedBuildType = selectedBuildType,
                             showSelectBranchBottomSheet = {
                                 coroutineScope.launch { bottomState.show() }
                             },
