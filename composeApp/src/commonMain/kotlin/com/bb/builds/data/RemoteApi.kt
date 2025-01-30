@@ -63,10 +63,4 @@ class RemoteApi(
             json()
         }.body()
 
-    suspend fun stopProcess(): Branches =
-        client.post {
-            apiUrl("stop_process")
-            json()
-        }.body()
-
 }

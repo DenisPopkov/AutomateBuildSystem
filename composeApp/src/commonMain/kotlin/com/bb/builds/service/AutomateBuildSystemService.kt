@@ -38,5 +38,4 @@ class AutomateBuildSystem(
 
     suspend fun getBranches(): Branches = remoteApi.getBranches()
 
-    suspend fun stopProcess() = remoteApi.stopProcess()
 }

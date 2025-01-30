@@ -62,12 +62,7 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
         buildType: BuildType,
     ) {
         viewModelScope.launch {
-            if (buildType == BuildType.WINDOWS || buildType == BuildType.MACOS) {
-                automateBuildSystemService.stopProcess()
-                automateBuildSystemService.stopProcess()
-            } else {
-                automateBuildSystemService.stopProcess()
-            }
+
         }
     }
 
