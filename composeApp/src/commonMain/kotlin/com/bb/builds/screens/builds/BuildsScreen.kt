@@ -1,5 +1,6 @@
 package com.bb.builds.screens.builds
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -19,7 +19,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +32,7 @@ import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_sparkle
 import com.bb.builds.components.BuildItemComponent
 import com.bb.builds.components.LoadingScreen
+import com.bb.builds.components.dialogs.ApproveDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.SfFontFamily
 import com.bb.builds.components.theme.Theme
@@ -47,6 +51,9 @@ fun BuildsScreen(
     val sfFontFamily = SfFontFamily()
     val coroutineScope = rememberCoroutineScope()
 
+    var isApproveDialogVisible by remember { mutableStateOf(false) }
+    var currentBuildId by remember { mutableStateOf<BuildId?>(null) }
+
     val colors = getColorSystem()
 
     Column(
@@ -59,6 +66,26 @@ fun BuildsScreen(
     ) {
         if (isLoading) {
             LoadingScreen()
+        }
+
+        AnimatedVisibility(visible = isApproveDialogVisible) {
+            ApproveDialog(
+                title =  "Are You Sure You Want to Send the Build?",
+                onDismissRequest = {
+                    isApproveDialogVisible = false
+                },
+                onCancel = {
+                    isApproveDialogVisible = false
+                },
+                onSend = {
+                    coroutineScope.launch {
+                        currentBuildId?.let {
+                            snackbarHostState.showSnackbar(message = "Sending...")
+                            viewModel.send(it)
+                        }
+                    }
+                }
+            )
         }
 
         if (builds.isEmpty()) {
@@ -99,11 +126,10 @@ fun BuildsScreen(
                     BuildItemComponent(
                         version = it.version,
                         platformName = it.platformName,
+                        date = it.date,
                         onSendClick = {
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar(message = "Sending...")
-                                viewModel.send(BuildId(it.id))
-                            }
+                            currentBuildId = BuildId(buildId = it.id)
+                            isApproveDialogVisible = true
                         },
                     )
                 }

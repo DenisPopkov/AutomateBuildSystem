@@ -1,6 +1,9 @@
 package com.bb.builds.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -130,6 +133,7 @@ fun App() {
                         .imePadding()
                         .navigationBarsPadding()
                         .padding(all = Theme.spacingSystem.s),
+                    horizontalAlignment = Alignment.Start,
                 ) {
                     Box(
                         modifier = Modifier
@@ -137,6 +141,12 @@ fun App() {
                             .clip(shape = CircleShape)
                             .background(color = Color.LightGray)
                             .align(alignment = Alignment.CenterHorizontally)
+                            .clickable {
+                                coroutineScope.launch {
+                                    keyboardController?.hide()
+                                    bottomState.hide()
+                                }
+                            }
                     )
 
                     Row(
@@ -171,45 +181,51 @@ fun App() {
 
                         Spacer(modifier = Modifier.weight(1f))
 
-                        Box(
-                            modifier = Modifier
-                                .clickable {
-                                    coroutineScope.launch {
-                                        if (selectedItemText.isNotEmpty()) {
-                                            bottomState.hide()
-                                            keyboardController?.hide()
-                                            if (!isMobile) {
-                                                isSignDialogVisible = true
-                                            } else {
-                                                coroutineScope.launch {
-                                                    isBuilding = true
-                                                    createViewModel.build(
-                                                        buildData = BuildData(
-                                                            branchName = selectedItemText,
-                                                            sign = true,
-                                                        ),
-                                                        buildType = selectedBuildType,
-                                                    )
-                                                }
-                                            }
-                                        } else {
-                                            snackbarHostState.showSnackbar("Branch not selected")
-                                        }
-                                    }
-                                },
-                            contentAlignment = Alignment.Center,
+                        AnimatedVisibility(
+                            visible = selectedItemText.isNotEmpty(),
+                            enter = fadeIn(animationSpec = spring()),
+                            exit = fadeOut(animationSpec = spring())
                         ) {
-                            Text(
-                                text = if (isMobile) "Build" else "Select",
-                                style = TextStyle(
-                                    fontFamily = MavenFontFamily(),
-                                    fontWeight = FontWeight.Medium,
-                                    fontSize = 17.sp,
-                                    lineHeight = 22.sp,
-                                ),
-                                color = colors.main,
-                                textAlign = TextAlign.Center,
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .clickable {
+                                        coroutineScope.launch {
+                                            if (selectedItemText.isNotEmpty()) {
+                                                bottomState.hide()
+                                                keyboardController?.hide()
+                                                if (!isMobile) {
+                                                    isSignDialogVisible = true
+                                                } else {
+                                                    coroutineScope.launch {
+                                                        isBuilding = true
+                                                        createViewModel.build(
+                                                            buildData = BuildData(
+                                                                branchName = selectedItemText,
+                                                                sign = true,
+                                                            ),
+                                                            buildType = selectedBuildType,
+                                                        )
+                                                    }
+                                                }
+                                            } else {
+                                                snackbarHostState.showSnackbar("Branch not selected")
+                                            }
+                                        }
+                                    },
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text(
+                                    text = if (isMobile) "Build" else "Select",
+                                    style = TextStyle(
+                                        fontFamily = MavenFontFamily(),
+                                        fontWeight = FontWeight.Medium,
+                                        fontSize = 17.sp,
+                                        lineHeight = 22.sp,
+                                    ),
+                                    color = colors.main,
+                                    textAlign = TextAlign.Center,
+                                )
+                            }
                         }
                     }
 
@@ -327,8 +343,6 @@ fun App() {
                             updateSelectedBuildType = {
                                 selectedBuildType = it
                             },
-                            viewModel = createViewModel,
-                            selectedBuildType = selectedBuildType,
                             showSelectBranchBottomSheet = {
                                 coroutineScope.launch { bottomState.show() }
                             },

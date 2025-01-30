@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -49,10 +48,8 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun CreateScreen(
-    viewModel: CreateScreenViewModel,
     updateSelectedBuildType: (BuildType) -> Unit,
     showSelectBranchBottomSheet: () -> Unit,
-    selectedBuildType: BuildType,
     snackbarHostState: SnackbarHostState,
 ) {
     val buildOptions = getBuildOptions()
@@ -187,7 +184,6 @@ fun CreateScreen(
                     isResetDialogVisible = false
 
                     coroutineScope.launch {
-                        viewModel.stopBuild(selectedBuildType)
                         snackbarHostState.showSnackbar(message = "Build stopping...")
                     }
                 },

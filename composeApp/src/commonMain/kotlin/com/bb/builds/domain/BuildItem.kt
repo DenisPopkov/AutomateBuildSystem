@@ -7,4 +7,5 @@ data class BuildItem(
     val id: Int,
     val platformName: String,
     val version: String,
+    val date: String,
 )

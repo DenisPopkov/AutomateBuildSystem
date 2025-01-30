@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
-import automatebuildsystem.composeapp.generated.resources.ic_neuro
+import automatebuildsystem.composeapp.generated.resources.ic_android
+import automatebuildsystem.composeapp.generated.resources.ic_macos
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
 import com.bb.builds.components.theme.getColorSystem
@@ -32,6 +34,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun BuildItemComponent(
     version: String = "3.5.8 (294)",
+    date: String = "30.01.24",
     platformName: String = BuildType.ANDROID.buildName,
     onSendClick: () -> Unit,
 ) {
@@ -45,12 +48,49 @@ fun BuildItemComponent(
             .padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Image(
-            modifier = Modifier
-                .size(size = 60.dp),
-            painter = painterResource(Res.drawable.ic_neuro),
-            contentDescription = null,
-        )
+        when (platformName) {
+            BuildType.ANDROID.buildName -> {
+                Box(
+                    modifier = Modifier
+                        .size(size = 60.dp)
+                        .clip(shape = RoundedCornerShape(size = 10.dp))
+                        .background(color = Color(0xFF32BE71)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .size(size = 32.dp),
+                        painter = painterResource(Res.drawable.ic_android),
+                        contentDescription = null,
+                    )
+                }
+            }
+
+            BuildType.MACOS.buildName -> {
+                Box(
+                    modifier = Modifier
+                        .size(size = 60.dp)
+                        .clip(shape = RoundedCornerShape(size = 10.dp))
+                        .background(color = Color(0xFFB9B9B9)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .size(size = 32.dp),
+                        painter = painterResource(Res.drawable.ic_macos),
+                        contentDescription = null,
+                    )
+                }
+            }
+
+            BuildType.WINDOWS.buildName -> {
+
+            }
+
+            else ->  {
+
+            }
+        }
 
         Column(
             modifier = Modifier
@@ -58,7 +98,7 @@ fun BuildItemComponent(
                 .align(alignment = Alignment.Top),
         ) {
             Text(
-                text = "Neuro 3 ($platformName)",
+                text = "$platformName $version",
                 color = colors.black100,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = fontFamily,
@@ -67,7 +107,7 @@ fun BuildItemComponent(
             )
 
             Text(
-                text = "Version $version",
+                text = "by $date",
                 color = Color.Gray,
                 fontWeight = FontWeight.Normal,
                 fontFamily = fontFamily,

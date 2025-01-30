@@ -3,7 +3,6 @@ package com.bb.builds.screens.create
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bb.builds.domain.BuildData
-import com.bb.builds.domain.BuildItem
 import com.bb.builds.domain.BuildType
 import com.bb.builds.service.AutomateBuildSystem
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,9 +14,6 @@ import org.koin.core.component.inject
 
 class CreateScreenViewModel : ViewModel(), KoinComponent {
     private val automateBuildSystemService: AutomateBuildSystem by inject()
-
-    private val _builds = MutableStateFlow<List<BuildItem>>(listOf())
-    val builds = _builds.asStateFlow()
 
     private val _branches = MutableStateFlow<List<String>>(listOf())
     val branches = _branches.asStateFlow()
@@ -55,14 +51,6 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
 
                 else -> {}
             }
-        }
-    }
-
-    fun stopBuild(
-        buildType: BuildType,
-    ) {
-        viewModelScope.launch {
-
         }
     }
 
