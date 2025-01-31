@@ -59,7 +59,7 @@ fun BuildItemComponent(
                 ) {
                     Image(
                         modifier = Modifier
-                            .size(size = 32.dp),
+                            .size(size = 40.dp),
                         painter = painterResource(Res.drawable.ic_android),
                         contentDescription = null,
                     )
@@ -76,7 +76,7 @@ fun BuildItemComponent(
                 ) {
                     Image(
                         modifier = Modifier
-                            .size(size = 32.dp),
+                            .size(size = 38.dp),
                         painter = painterResource(Res.drawable.ic_macos),
                         contentDescription = null,
                     )
