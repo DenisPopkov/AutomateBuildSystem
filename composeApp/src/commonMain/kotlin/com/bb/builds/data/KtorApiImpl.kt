@@ -3,7 +3,7 @@ package com.bb.builds.data
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.http.ContentType.Application.Json
+import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
@@ -32,6 +32,6 @@ class KtorApiImpl : KtorApi {
     }
 
     override fun HttpRequestBuilder.json() {
-        contentType(Json)
+        contentType(ContentType.Application.Json)
     }
 }

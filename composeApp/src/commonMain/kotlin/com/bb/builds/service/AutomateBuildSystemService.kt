@@ -8,34 +8,23 @@ import com.bb.builds.domain.BuildItem
 import io.ktor.client.statement.HttpResponse
 
 class AutomateBuildSystem(
-    private val remoteApi: RemoteApi,
+    private val remoteApi: RemoteApi
 ) {
-    suspend fun buildMac(
-        buildData: BuildData,
-    ): HttpResponse = remoteApi.buildMac(
-        buildData = buildData,
-    )
+    suspend fun buildMac(buildData: BuildData): HttpResponse? =
+        remoteApi.buildMac(buildData)
 
-    suspend fun buildAndroid(
-        buildData: BuildData,
-    ): HttpResponse = remoteApi.buildAndroid(
-        buildData = buildData,
-    )
+    suspend fun buildAndroid(buildData: BuildData): HttpResponse? =
+        remoteApi.buildAndroid(buildData)
 
-    suspend fun buildIOS(
-        buildData: BuildData,
-    ): HttpResponse = remoteApi.buildIOS(
-        buildData = buildData,
-    )
+    suspend fun buildIOS(buildData: BuildData): HttpResponse? =
+        remoteApi.buildIOS(buildData)
 
-    suspend fun getBuilds(): List<BuildItem> = remoteApi.getBuilds()
+    suspend fun getBuilds(): List<BuildItem>? =
+        remoteApi.getBuilds()
 
-    suspend fun sendBuild(
-        buildId: BuildId,
-    ): HttpResponse = remoteApi.sendBuild(
-        buildId = buildId,
-    )
+    suspend fun sendBuild(buildId: BuildId): HttpResponse? =
+        remoteApi.sendBuild(buildId)
 
-    suspend fun getBranches(): Branches = remoteApi.getBranches()
-
+    suspend fun getBranches(): Branches? =
+        remoteApi.getBranches()
 }

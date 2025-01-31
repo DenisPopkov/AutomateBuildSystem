@@ -37,7 +37,7 @@ class BuildScreenViewModel : ViewModel(), KoinComponent {
         _isLoading.update { true }
         val builds = automateBuildSystemService.getBuilds()
         _isLoading.update { false }
-        return builds
+        return builds ?: emptyList()
     }
 
 }

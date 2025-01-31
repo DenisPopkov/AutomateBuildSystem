@@ -128,7 +128,7 @@ fun BuildItemComponent(
         ) {
             Text(
                 text = "Send",
-                color = colors.settings,
+                color = colors.settings.copy(alpha = 0.9f),
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = fontFamily,
                 fontSize = 14.sp,

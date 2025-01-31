@@ -56,7 +56,7 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
 
     private fun getBranches() = viewModelScope.launch {
         _isLoading.update { true }
-        _branches.value = automateBuildSystemService.getBranches().branches
+        _branches.value = automateBuildSystemService.getBranches()?.branches ?: emptyList()
         _isLoading.update { false }
     }
 

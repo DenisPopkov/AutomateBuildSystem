@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 data class BuildData(
     val branchName: String,
     val sign: Boolean,
+    val bumpVersion: Boolean,
 )

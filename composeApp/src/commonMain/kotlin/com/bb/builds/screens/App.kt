@@ -58,6 +58,7 @@ import androidx.navigation.compose.rememberNavController
 import com.bb.builds.components.BBTextField
 import com.bb.builds.components.BranchItem
 import com.bb.builds.components.LoadingScreen
+import com.bb.builds.components.dialogs.BumpDialog
 import com.bb.builds.components.dialogs.SignDialog
 import com.bb.builds.components.theme.MavenFontFamily
 import com.bb.builds.components.theme.Theme
@@ -104,6 +105,8 @@ fun App() {
     val coroutineScope = rememberCoroutineScope()
 
     var isSignDialogVisible by remember { mutableStateOf(false) }
+    var isBumpDialogVisible by remember { mutableStateOf(false) }
+    var isSign by remember { mutableStateOf(false) }
 
     val filteredItems =
         branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
@@ -190,25 +193,12 @@ fun App() {
                                 modifier = Modifier
                                     .clickable {
                                         coroutineScope.launch {
-                                            if (selectedItemText.isNotEmpty()) {
-                                                bottomState.hide()
-                                                keyboardController?.hide()
-                                                if (!isMobile) {
-                                                    isSignDialogVisible = true
-                                                } else {
-                                                    coroutineScope.launch {
-                                                        isBuilding = true
-                                                        createViewModel.build(
-                                                            buildData = BuildData(
-                                                                branchName = selectedItemText,
-                                                                sign = true,
-                                                            ),
-                                                            buildType = selectedBuildType,
-                                                        )
-                                                    }
-                                                }
+                                            bottomState.hide()
+                                            keyboardController?.hide()
+                                            if (!isMobile) {
+                                                isSignDialogVisible = true
                                             } else {
-                                                snackbarHostState.showSnackbar("Branch not selected")
+                                                isBumpDialogVisible = true
                                             }
                                         }
                                     },
@@ -348,34 +338,53 @@ fun App() {
                             },
                         )
 
+                        AnimatedVisibility(visible = isBumpDialogVisible) {
+                            BumpDialog(
+                                onBump = {
+                                    isBumpDialogVisible = false
+                                    isBuilding = true
+                                    createViewModel.build(
+                                        buildData = BuildData(
+                                            branchName = selectedItemText,
+                                            sign = isSign,
+                                            bumpVersion = true,
+                                        ),
+                                        buildType = selectedBuildType,
+                                    )
+                                },
+                                onDismissRequest = {
+                                    isBumpDialogVisible = false
+                                },
+                                onCancel = {
+                                    isBumpDialogVisible = false
+                                    isBuilding = true
+                                    createViewModel.build(
+                                        buildData = BuildData(
+                                            branchName = selectedItemText,
+                                            sign = isSign,
+                                            bumpVersion = false,
+                                        ),
+                                        buildType = selectedBuildType,
+                                    )
+                                },
+                                title = "Do You Want To Bump Version?",
+                            )
+                        }
+
                         AnimatedVisibility(visible = isSignDialogVisible) {
                             SignDialog(
                                 onSign = {
                                     isSignDialogVisible = false
-                                    coroutineScope.launch {
-                                        snackbarHostState.showSnackbar(message = "Building...")
-                                    }
-                                    createViewModel.build(
-                                        buildData = BuildData(
-                                            branchName = selectedItemText,
-                                            sign = true,
-                                        ),
-                                        buildType = selectedBuildType,
-                                    )
+                                    isBumpDialogVisible = true
+                                    isSign = true
                                 },
                                 onDismissRequest = {
                                     isSignDialogVisible = false
                                 },
                                 onCancel = {
                                     isSignDialogVisible = false
-                                    isBuilding = true
-                                    createViewModel.build(
-                                        buildData = BuildData(
-                                            branchName = selectedItemText,
-                                            sign = false,
-                                        ),
-                                        buildType = selectedBuildType,
-                                    )
+                                    isBumpDialogVisible = true
+                                    isSign = false
                                 },
                                 title = "Do You Want To Sign The Build?",
                             )

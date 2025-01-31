@@ -107,7 +107,7 @@ fun CreateScreen(
                         modifier = Modifier
                             .size(size = 26.dp),
                         imageVector = Icons.Filled.Settings,
-                        tint = colors.settings,
+                        tint = colors.settings.copy(alpha = 0.9f),
                         contentDescription = null,
                     )
                 }
