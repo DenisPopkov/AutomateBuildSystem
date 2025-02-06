@@ -364,7 +364,7 @@ fun App() {
 
                                     when (selectedBuildType) {
                                         BuildType.ANDROID -> isBundleOrApkDialogVisible = true
-                                        BuildType.MACOS -> isSign = true
+                                        BuildType.MACOS -> isSignDialogVisible = true
                                         BuildType.WINDOWS -> {}
 
                                         else -> {} // for iOS empty condition
@@ -383,7 +383,7 @@ fun App() {
 
                                     when (selectedBuildType) {
                                         BuildType.ANDROID -> isBundleOrApkDialogVisible = true
-                                        BuildType.MACOS -> isSign = true
+                                        BuildType.MACOS -> isSignDialogVisible = true
                                         BuildType.WINDOWS -> {}
 
                                         else -> {} // for iOS empty condition
