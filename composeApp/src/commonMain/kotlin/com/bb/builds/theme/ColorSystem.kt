@@ -1,4 +1,4 @@
-package com.bb.builds.components.theme
+package com.bb.builds.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable

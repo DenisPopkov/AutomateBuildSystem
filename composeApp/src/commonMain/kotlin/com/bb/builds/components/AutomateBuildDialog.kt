@@ -1,4 +1,4 @@
-package com.bb.builds.components.dialogs
+package com.bb.builds.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,15 +25,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.bb.builds.components.theme.MavenFontFamily
-import com.bb.builds.components.theme.Theme
-import com.bb.builds.components.theme.getColorSystem
+import com.bb.builds.theme.MavenFontFamily
+import com.bb.builds.theme.Theme
+import com.bb.builds.theme.getColorSystem
 
 @Composable
-fun ApproveDialog(
+fun AutomateBuildDialog(
     title: String,
+    approveButtonText: String,
+    cancelButtonText: String = "Cancel",
     onDismissRequest: () -> Unit,
-    onSend: () -> Unit,
+    onApprove: () -> Unit,
     onCancel: () -> Unit,
 ) {
     val colors = getColorSystem()
@@ -86,7 +88,7 @@ fun ApproveDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = cancelButtonText,
                         style = TextStyle(
                             fontFamily = MavenFontFamily(),
                             fontWeight = FontWeight.Normal,
@@ -108,11 +110,11 @@ fun ApproveDialog(
                     modifier = Modifier
                         .weight(weight = 1f)
                         .fillMaxHeight()
-                        .clickable(onClick = onSend),
+                        .clickable(onClick = onApprove),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Send",
+                        text = approveButtonText,
                         style = TextStyle(
                             fontFamily = MavenFontFamily(),
                             fontWeight = FontWeight.Medium,

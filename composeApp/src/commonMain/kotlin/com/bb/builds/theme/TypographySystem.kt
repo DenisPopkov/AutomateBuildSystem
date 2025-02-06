@@ -1,4 +1,4 @@
-package com.bb.builds.components.theme
+package com.bb.builds.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily

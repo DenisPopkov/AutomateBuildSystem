@@ -14,9 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bb.builds.components.theme.MavenFontFamily
-import com.bb.builds.components.theme.Theme
-import com.bb.builds.components.theme.getColorSystem
+import com.bb.builds.theme.MavenFontFamily
+import com.bb.builds.theme.Theme
+import com.bb.builds.theme.getColorSystem
 
 @Composable
 fun BranchItem(

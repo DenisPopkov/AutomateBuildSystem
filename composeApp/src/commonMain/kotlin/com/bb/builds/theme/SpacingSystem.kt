@@ -1,4 +1,4 @@
-package com.bb.builds.components.theme
+package com.bb.builds.theme
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp

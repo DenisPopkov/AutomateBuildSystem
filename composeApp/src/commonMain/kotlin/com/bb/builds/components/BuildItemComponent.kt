@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_android
 import automatebuildsystem.composeapp.generated.resources.ic_macos
-import com.bb.builds.components.theme.MavenFontFamily
-import com.bb.builds.components.theme.Theme
-import com.bb.builds.components.theme.getColorSystem
+import com.bb.builds.theme.MavenFontFamily
+import com.bb.builds.theme.Theme
+import com.bb.builds.theme.getColorSystem
 import com.bb.builds.domain.BuildType
 import org.jetbrains.compose.resources.painterResource
 

@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_clear_medium
-import com.bb.builds.components.theme.MavenFontFamily
-import com.bb.builds.components.theme.getColorSystem
+import com.bb.builds.theme.MavenFontFamily
+import com.bb.builds.theme.getColorSystem
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

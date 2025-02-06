@@ -30,13 +30,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_sparkle
+import com.bb.builds.components.AutomateBuildDialog
 import com.bb.builds.components.BuildItemComponent
 import com.bb.builds.components.LoadingScreen
-import com.bb.builds.components.dialogs.ApproveDialog
-import com.bb.builds.components.theme.MavenFontFamily
-import com.bb.builds.components.theme.SfFontFamily
-import com.bb.builds.components.theme.Theme
-import com.bb.builds.components.theme.getColorSystem
+import com.bb.builds.theme.MavenFontFamily
+import com.bb.builds.theme.SfFontFamily
+import com.bb.builds.theme.Theme
+import com.bb.builds.theme.getColorSystem
 import com.bb.builds.domain.BuildId
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -69,15 +69,16 @@ fun BuildsScreen(
         }
 
         AnimatedVisibility(visible = isApproveDialogVisible) {
-            ApproveDialog(
+            AutomateBuildDialog(
                 title =  "Are You Sure You Want to Send the Build?",
+                approveButtonText = "Send",
                 onDismissRequest = {
                     isApproveDialogVisible = false
                 },
                 onCancel = {
                     isApproveDialogVisible = false
                 },
-                onSend = {
+                onApprove = {
                     coroutineScope.launch {
                         currentBuildId?.let {
                             snackbarHostState.showSnackbar(message = "Sending...")

@@ -55,20 +55,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.bb.builds.components.AutomateBuildDialog
 import com.bb.builds.components.BBTextField
 import com.bb.builds.components.BranchItem
 import com.bb.builds.components.LoadingScreen
-import com.bb.builds.components.dialogs.BumpDialog
-import com.bb.builds.components.dialogs.SignDialog
-import com.bb.builds.components.theme.MavenFontFamily
-import com.bb.builds.components.theme.Theme
-import com.bb.builds.components.theme.getColorSystem
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildType
 import com.bb.builds.screens.builds.BuildScreenViewModel
 import com.bb.builds.screens.builds.BuildsScreen
 import com.bb.builds.screens.create.CreateScreen
 import com.bb.builds.screens.create.CreateScreenViewModel
+import com.bb.builds.theme.MavenFontFamily
+import com.bb.builds.theme.Theme
+import com.bb.builds.theme.getColorSystem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -83,16 +82,33 @@ fun App() {
 
     val buildViewModel = koinViewModel<BuildScreenViewModel>()
     val createViewModel = koinViewModel<CreateScreenViewModel>()
-    val colors = getColorSystem()
 
-    val isLoading by createViewModel.isLoading.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+    val colors = getColorSystem()
     val bottomState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true,
     )
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    val isLoading by createViewModel.isLoading.collectAsState()
+    val branches by createViewModel.branches.collectAsState()
+
     var searchQuery by remember { mutableStateOf("") }
     var selectedItemText by remember { mutableStateOf("") }
+    var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
+
+    var isSignDialogVisible by remember { mutableStateOf(false) }
+    var isBumpDialogVisible by remember { mutableStateOf(false) }
+    var isBundleOrApkDialogVisible by remember { mutableStateOf(false) }
+
+    var isSign by remember { mutableStateOf(false) }
+    var isBump by remember { mutableStateOf(false) }
+    var isBundleToBuild by remember { mutableStateOf(false) }
+
+    val filteredItems = branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
+    val isMobile = selectedBuildType == BuildType.ANDROID || selectedBuildType == BuildType.IOS
+    var isBuilding by remember { mutableStateOf(false) }
 
     LaunchedEffect(bottomState.currentValue) {
         if (bottomState.currentValue == ModalBottomSheetValue.Hidden) {
@@ -100,28 +116,28 @@ fun App() {
         }
     }
 
-    val branches by createViewModel.branches.collectAsState()
-    var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
-    val coroutineScope = rememberCoroutineScope()
-
-    var isSignDialogVisible by remember { mutableStateOf(false) }
-    var isBumpDialogVisible by remember { mutableStateOf(false) }
-    var isSign by remember { mutableStateOf(false) }
-
-    val filteredItems =
-        branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
-
-    val isMobile =
-        selectedBuildType == BuildType.ANDROID || selectedBuildType == BuildType.IOS
-
-    var isBuilding by remember { mutableStateOf(false) }
-
     LaunchedEffect(isBuilding) {
         if (isBuilding) {
             keyboardController?.hide()
             snackbarHostState.showSnackbar(message = "Building...")
-            delay(duration = 2.seconds)
+
+            createViewModel.build(
+                buildData = BuildData(
+                    branchName = selectedItemText,
+                    bumpVersion = isBump,
+                    isBundleToBuild = isBundleToBuild,
+                    sign = isSign,
+                ),
+                buildType = selectedBuildType,
+            )
+
+            delay(duration = 5.seconds)
+
+            // Clearing old states
             isBuilding = false
+            isSign = false
+            isBump = false
+            isBundleToBuild = false
         }
     }
 
@@ -195,17 +211,20 @@ fun App() {
                                         coroutineScope.launch {
                                             bottomState.hide()
                                             keyboardController?.hide()
-                                            if (!isMobile) {
-                                                isSignDialogVisible = true
-                                            } else {
-                                                isBumpDialogVisible = true
+
+                                            when (selectedBuildType) {
+                                                BuildType.IOS -> isBuilding = true
+                                                BuildType.ANDROID, BuildType.MACOS -> isBumpDialogVisible =
+                                                    true
+
+                                                else -> {} // for Windows in future
                                             }
                                         }
                                     },
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text(
-                                    text = if (isMobile) "Build" else "Select",
+                                    text = if (selectedBuildType == BuildType.IOS) "Build" else "Select",
                                     style = TextStyle(
                                         fontFamily = MavenFontFamily(),
                                         fontWeight = FontWeight.Medium,
@@ -239,9 +258,7 @@ fun App() {
                                     branch = item,
                                     branchColor = if (item == selectedItemText) colors.main else colors.black100,
                                     showDivider = filteredItems.lastIndex != index,
-                                    onSelectBranchClick = {
-                                        selectedItemText = it
-                                    }
+                                    onSelectBranchClick = { selectedItemText = it },
                                 )
                             }
                         }
@@ -285,6 +302,7 @@ fun App() {
                                 )
                             }
                         )
+
                         BottomNavigationItem(
                             selected = selectedRoute is Navigation.Builds,
                             onClick = {
@@ -330,63 +348,99 @@ fun App() {
                     composable(Navigation.Build::class.simpleName ?: "") {
                         CreateScreen(
                             snackbarHostState = snackbarHostState,
-                            updateSelectedBuildType = {
-                                selectedBuildType = it
-                            },
-                            showSelectBranchBottomSheet = {
-                                coroutineScope.launch { bottomState.show() }
-                            },
+                            updateSelectedBuildType = { selectedBuildType = it },
+                            showSelectBranchBottomSheet = { coroutineScope.launch { bottomState.show() } },
                         )
 
+                        // for all targets, except iOS
                         AnimatedVisibility(visible = isBumpDialogVisible) {
-                            BumpDialog(
-                                onBump = {
+                            AutomateBuildDialog(
+                                title = "Do You Want To Bump Version?",
+                                approveButtonText = "Bump",
+                                cancelButtonText = "Not bump",
+                                onApprove = {
+                                    isBump = true
                                     isBumpDialogVisible = false
-                                    isBuilding = true
-                                    createViewModel.build(
-                                        buildData = BuildData(
-                                            branchName = selectedItemText,
-                                            sign = isSign,
-                                            bumpVersion = true,
-                                        ),
-                                        buildType = selectedBuildType,
-                                    )
+
+                                    when (selectedBuildType) {
+                                        BuildType.ANDROID -> isBundleOrApkDialogVisible = true
+                                        BuildType.MACOS -> isSign = true
+                                        BuildType.WINDOWS -> {}
+
+                                        else -> {} // for iOS empty condition
+                                    }
                                 },
                                 onDismissRequest = {
                                     isBumpDialogVisible = false
+                                    isBuilding = false
+                                    isSign = false
+                                    isBump = false
+                                    isBundleToBuild = false
                                 },
                                 onCancel = {
+                                    isBump = false
                                     isBumpDialogVisible = false
-                                    isBuilding = true
-                                    createViewModel.build(
-                                        buildData = BuildData(
-                                            branchName = selectedItemText,
-                                            sign = isSign,
-                                            bumpVersion = false,
-                                        ),
-                                        buildType = selectedBuildType,
-                                    )
+
+                                    when (selectedBuildType) {
+                                        BuildType.ANDROID -> isBundleOrApkDialogVisible = true
+                                        BuildType.MACOS -> isSign = true
+                                        BuildType.WINDOWS -> {}
+
+                                        else -> {} // for iOS empty condition
+                                    }
                                 },
-                                title = "Do You Want To Bump Version?",
                             )
                         }
 
+                        // for macOS, and Windows in future
                         AnimatedVisibility(visible = isSignDialogVisible) {
-                            SignDialog(
-                                onSign = {
+                            AutomateBuildDialog(
+                                title = "Do You Want To Sign The Build?",
+                                approveButtonText = "Sign",
+                                cancelButtonText = "Not sign",
+                                onApprove = {
                                     isSignDialogVisible = false
-                                    isBumpDialogVisible = true
                                     isSign = true
+                                    isBuilding = true
                                 },
                                 onDismissRequest = {
                                     isSignDialogVisible = false
+                                    isBuilding = false
+                                    isSign = false
+                                    isBump = false
+                                    isBundleToBuild = false
                                 },
                                 onCancel = {
                                     isSignDialogVisible = false
-                                    isBumpDialogVisible = true
                                     isSign = false
+                                    isBuilding = true
                                 },
-                                title = "Do You Want To Sign The Build?",
+                            )
+                        }
+
+                        // Last step for Android
+                        AnimatedVisibility(visible = isBundleOrApkDialogVisible) {
+                            AutomateBuildDialog(
+                                title = "Do You Want To Build APK or Bundle?",
+                                approveButtonText = "APK",
+                                cancelButtonText = "Bundle",
+                                onApprove = {
+                                    isBundleOrApkDialogVisible = false
+                                    isBundleToBuild = false
+                                    isBuilding = true
+                                },
+                                onDismissRequest = {
+                                    isBundleOrApkDialogVisible = false
+                                    isBuilding = false
+                                    isSign = false
+                                    isBump = false
+                                    isBundleToBuild = false
+                                },
+                                onCancel = {
+                                    isBundleOrApkDialogVisible = false
+                                    isBundleToBuild = true
+                                    isBuilding = true
+                                },
                             )
                         }
                     }

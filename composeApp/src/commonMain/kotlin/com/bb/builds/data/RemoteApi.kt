@@ -53,6 +53,15 @@ class RemoteApi(
             }
         }.getOrNull()
 
+    suspend fun buildBundleAndroid(buildData: BuildData): HttpResponse? =
+        runCatching {
+            client.post {
+                apiUrl("build_bundle_android")
+                setBody(buildData)
+                json()
+            }
+        }.getOrNull()
+
     suspend fun buildIOS(buildData: BuildData): HttpResponse? =
         runCatching {
             client.post {

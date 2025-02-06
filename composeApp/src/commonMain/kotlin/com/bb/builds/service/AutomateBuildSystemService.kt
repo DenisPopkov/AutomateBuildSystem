@@ -16,6 +16,9 @@ class AutomateBuildSystem(
     suspend fun buildAndroid(buildData: BuildData): HttpResponse? =
         remoteApi.buildAndroid(buildData)
 
+    suspend fun buildBundleAndroid(buildData: BuildData): HttpResponse? =
+        remoteApi.buildBundleAndroid(buildData)
+
     suspend fun buildIOS(buildData: BuildData): HttpResponse? =
         remoteApi.buildIOS(buildData)
 
