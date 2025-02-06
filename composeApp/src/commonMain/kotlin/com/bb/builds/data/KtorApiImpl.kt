@@ -12,7 +12,7 @@ import kotlinx.serialization.json.Json
 
 class KtorApiImpl : KtorApi {
 
-    private val prodUrl = "https://e64f-143-198-25-149.ngrok-free.app"
+    private val prodUrl = "https://55b6-143-198-25-149.ngrok-free.app"
 
     override val client = HttpClient {
         install(ContentNegotiation) {
