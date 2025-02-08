@@ -28,7 +28,7 @@ class RemoteApi(
 ) : KtorApi by ktorApi {
 
     private val repoUrl =
-        "https://api.github.com/repos/DenisPopkov/AutomateBuildSystem/contents/contents/config.json?ref=develop"
+        "https://api.github.com/repos/DenisPopkov/AutomateBuildSystem/contents/config.json?ref=develop"
     private var prodUrl =
         "https://55b6-143-198-25-149.ngrok-free.app"
 
