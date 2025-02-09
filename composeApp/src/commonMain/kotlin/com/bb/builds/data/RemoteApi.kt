@@ -141,7 +141,6 @@ class RemoteApi(
                 val configJson = configResponse.bodyAsText()
                 val config = Json.parseToJsonElement(configJson).jsonObject
                 prodUrl = config["server_url"]?.jsonPrimitive?.content ?: prodUrl
-                println("efefe test - $prodUrl")
             }
         } catch (_: Exception) {}
     }
