@@ -215,10 +215,7 @@ fun App() {
 
                                             when (selectedBuildType) {
                                                 BuildType.IOS -> isBuilding = true
-                                                BuildType.ANDROID, BuildType.MACOS -> isBumpDialogVisible =
-                                                    true
-
-                                                else -> {} // for Windows in future
+                                                else -> isBumpDialogVisible = true
                                             }
                                         }
                                     },
