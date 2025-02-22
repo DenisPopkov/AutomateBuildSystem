@@ -49,7 +49,11 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
                     )
                 }
 
-                else -> {}
+                BuildType.WINDOWS -> {
+                    automateBuildSystemService.buildWin(
+                        buildData = buildData,
+                    )
+                }
             }
         }
     }

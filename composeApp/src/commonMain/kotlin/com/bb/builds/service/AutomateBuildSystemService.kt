@@ -19,6 +19,9 @@ class AutomateBuildSystem(
     suspend fun buildIOS(buildData: BuildData): HttpResponse? =
         remoteApi.buildIOS(buildData)
 
+    suspend fun buildWin(buildData: BuildData): HttpResponse? =
+        remoteApi.buildWin(buildData)
+
     suspend fun getBuilds(): List<BuildItem>? =
         remoteApi.getBuilds()
 

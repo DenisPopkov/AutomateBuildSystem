@@ -105,15 +105,8 @@ fun CreateScreen(
                         snackbarHostState = snackbarHostState,
                         buildData = buildOptions[index],
                         onBuildClick = {
-                            val buildType = buildOptions[index].buildType
-                            if (buildType == BuildType.WINDOWS) {
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar(message = "Not available now")
-                                }
-                            } else {
-                                updateSelectedBuildType.invoke(buildOptions[index].buildType)
-                                showSelectBranchBottomSheet.invoke()
-                            }
+                            updateSelectedBuildType.invoke(buildOptions[index].buildType)
+                            showSelectBranchBottomSheet.invoke()
                         },
                         onOptionsClick = {
                             coroutineScope.launch {

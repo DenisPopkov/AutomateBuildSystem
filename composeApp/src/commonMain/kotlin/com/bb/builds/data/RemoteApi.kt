@@ -31,6 +31,7 @@ class RemoteApi(
         "https://api.github.com/repos/DenisPopkov/AutomateBuildSystem/contents/config.json?ref=develop"
     private var prodUrl =
         "https://55b6-143-198-25-149.ngrok-free.app"
+    private var windowsUrl: String? = null
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
@@ -92,6 +93,18 @@ class RemoteApi(
             }
         }.getOrNull()
 
+    suspend fun buildWin(buildData: BuildData): HttpResponse? =
+        runCatching {
+            client.post {
+                url {
+                    takeFrom(windowsUrl ?: prodUrl)
+                    encodedPath = "build_win"
+                }
+                setBody(buildData)
+                json()
+            }
+        }.getOrNull()
+
     suspend fun sendBuild(buildId: BuildId): HttpResponse? =
         runCatching {
             client.post {
@@ -141,8 +154,8 @@ class RemoteApi(
                 val configJson = configResponse.bodyAsText()
                 val config = Json.parseToJsonElement(configJson).jsonObject
                 prodUrl = config["server_url"]?.jsonPrimitive?.content ?: prodUrl
+                windowsUrl = config["windows_url"]?.jsonPrimitive?.content
             }
         } catch (_: Exception) {}
     }
-
 }

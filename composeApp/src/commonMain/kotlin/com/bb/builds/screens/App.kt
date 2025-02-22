@@ -72,8 +72,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import kotlin.time.Duration.Companion.seconds
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun App() {
     val navHostController = rememberNavController()
@@ -107,7 +109,6 @@ fun App() {
     var isBundleToBuild by remember { mutableStateOf(false) }
 
     val filteredItems = branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
-    val isMobile = selectedBuildType == BuildType.ANDROID || selectedBuildType == BuildType.IOS
     var isBuilding by remember { mutableStateOf(false) }
 
     LaunchedEffect(bottomState.currentValue) {
@@ -198,7 +199,7 @@ fun App() {
                             )
                         }
 
-                        Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.weight(weight = 1f))
 
                         AnimatedVisibility(
                             visible = selectedItemText.isNotEmpty(),
@@ -365,7 +366,10 @@ fun App() {
                                     when (selectedBuildType) {
                                         BuildType.ANDROID -> isBundleOrApkDialogVisible = true
                                         BuildType.MACOS -> isSignDialogVisible = true
-                                        BuildType.WINDOWS -> {}
+                                        BuildType.WINDOWS -> {
+                                            isBumpDialogVisible = false
+                                            isBuilding = true
+                                        }
 
                                         else -> {} // for iOS empty condition
                                     }
@@ -384,7 +388,10 @@ fun App() {
                                     when (selectedBuildType) {
                                         BuildType.ANDROID -> isBundleOrApkDialogVisible = true
                                         BuildType.MACOS -> isSignDialogVisible = true
-                                        BuildType.WINDOWS -> {}
+                                        BuildType.WINDOWS -> {
+                                            isBumpDialogVisible = false
+                                            isBuilding = true
+                                        }
 
                                         else -> {} // for iOS empty condition
                                     }
