@@ -98,6 +98,7 @@ fun App() {
 
     var searchQuery by remember { mutableStateOf("") }
     var selectedItemText by remember { mutableStateOf("") }
+    var branchPlaceholderPlatforms by remember { mutableStateOf("") }
     var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
 
     var isSignDialogVisible by remember { mutableStateOf(false) }
@@ -114,6 +115,15 @@ fun App() {
     LaunchedEffect(bottomState.currentValue) {
         if (bottomState.currentValue == ModalBottomSheetValue.Hidden) {
             keyboardController?.hide()
+        }
+    }
+
+    LaunchedEffect(selectedBuildType) {
+        branchPlaceholderPlatforms = when (selectedBuildType) {
+            BuildType.WINDOWS -> "Windows"
+            BuildType.IOS -> "iOS"
+            BuildType.ANDROID -> "Android"
+            BuildType.MACOS -> "macOS"
         }
     }
 
@@ -242,7 +252,7 @@ fun App() {
                             .padding(vertical = Theme.spacingSystem.m),
                         onValueChange = { searchQuery = it },
                         textFieldValue = searchQuery,
-                        placeholder = "Select branch"
+                        placeholder = "Select branch for $branchPlaceholderPlatforms build"
                     )
 
                     if (isLoading) {

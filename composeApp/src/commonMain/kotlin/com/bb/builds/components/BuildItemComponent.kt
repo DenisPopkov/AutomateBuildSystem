@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_android
 import automatebuildsystem.composeapp.generated.resources.ic_macos
+import automatebuildsystem.composeapp.generated.resources.ic_windows
 import com.bb.builds.theme.MavenFontFamily
 import com.bb.builds.theme.Theme
 import com.bb.builds.theme.getColorSystem
@@ -84,7 +85,20 @@ fun BuildItemComponent(
             }
 
             BuildType.WINDOWS.buildName -> {
-
+                Box(
+                    modifier = Modifier
+                        .size(size = 60.dp)
+                        .clip(shape = RoundedCornerShape(size = 10.dp))
+                        .background(color = Color(0xFFFF7D60)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .size(size = 32.dp),
+                        painter = painterResource(Res.drawable.ic_windows),
+                        contentDescription = null,
+                    )
+                }
             }
 
             else ->  {
