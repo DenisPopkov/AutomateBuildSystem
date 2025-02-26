@@ -413,7 +413,7 @@ fun App() {
                                 onApprove = {
                                     isSignDialogVisible = false
                                     isSign = true
-                                    isBuilding = true
+                                    isUseDevAnalyticsDialogVisible = true
                                 },
                                 onDismissRequest = {
                                     isSignDialogVisible = false
@@ -421,11 +421,12 @@ fun App() {
                                     isSign = false
                                     isBump = false
                                     isBundleToBuild = false
+                                    isUseDevAnalytics = true
                                 },
                                 onCancel = {
                                     isSignDialogVisible = false
                                     isSign = false
-                                    isBuilding = true
+                                    isUseDevAnalyticsDialogVisible = true
                                 },
                             )
                         }
