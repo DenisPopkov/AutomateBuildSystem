@@ -104,10 +104,12 @@ fun App() {
     var isSignDialogVisible by remember { mutableStateOf(false) }
     var isBumpDialogVisible by remember { mutableStateOf(false) }
     var isBundleOrApkDialogVisible by remember { mutableStateOf(false) }
+    var isUseDevAnalyticsDialogVisible by remember { mutableStateOf(false) }
 
     var isSign by remember { mutableStateOf(false) }
     var isBump by remember { mutableStateOf(false) }
     var isBundleToBuild by remember { mutableStateOf(false) }
+    var isUseDevAnalytics by remember { mutableStateOf(true) }
 
     val filteredItems = branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
     var isBuilding by remember { mutableStateOf(false) }
@@ -138,6 +140,7 @@ fun App() {
                     bumpVersion = isBump,
                     isBundleToBuild = isBundleToBuild,
                     sign = isSign,
+                    isUseDevAnalytics = isUseDevAnalytics,
                 ),
                 buildType = selectedBuildType,
             )
@@ -149,6 +152,7 @@ fun App() {
             isSign = false
             isBump = false
             isBundleToBuild = false
+            isUseDevAnalytics = false
         }
     }
 
@@ -224,7 +228,7 @@ fun App() {
                                             keyboardController?.hide()
 
                                             when (selectedBuildType) {
-                                                BuildType.IOS -> isBuilding = true
+                                                BuildType.IOS -> isUseDevAnalyticsDialogVisible = true
                                                 else -> isBumpDialogVisible = true
                                             }
                                         }
@@ -373,10 +377,7 @@ fun App() {
                                     when (selectedBuildType) {
                                         BuildType.ANDROID -> isBundleOrApkDialogVisible = true
                                         BuildType.MACOS -> isSignDialogVisible = true
-                                        BuildType.WINDOWS -> {
-                                            isBumpDialogVisible = false
-                                            isBuilding = true
-                                        }
+                                        BuildType.WINDOWS -> isUseDevAnalyticsDialogVisible = true
 
                                         else -> {} // for iOS empty condition
                                     }
@@ -395,10 +396,7 @@ fun App() {
                                     when (selectedBuildType) {
                                         BuildType.ANDROID -> isBundleOrApkDialogVisible = true
                                         BuildType.MACOS -> isSignDialogVisible = true
-                                        BuildType.WINDOWS -> {
-                                            isBumpDialogVisible = false
-                                            isBuilding = true
-                                        }
+                                        BuildType.WINDOWS -> isUseDevAnalyticsDialogVisible = true
 
                                         else -> {} // for iOS empty condition
                                     }
@@ -406,7 +404,7 @@ fun App() {
                             )
                         }
 
-                        // for macOS, and Windows in future
+                        // for macOS and Windows
                         AnimatedVisibility(visible = isSignDialogVisible) {
                             AutomateBuildDialog(
                                 title = "Do You Want To Sign The Build?",
@@ -432,7 +430,6 @@ fun App() {
                             )
                         }
 
-                        // Last step for Android
                         AnimatedVisibility(visible = isBundleOrApkDialogVisible) {
                             AutomateBuildDialog(
                                 title = "Do You Want To Build APK or Bundle?",
@@ -441,7 +438,7 @@ fun App() {
                                 onApprove = {
                                     isBundleOrApkDialogVisible = false
                                     isBundleToBuild = false
-                                    isBuilding = true
+                                    isUseDevAnalyticsDialogVisible = true
                                 },
                                 onDismissRequest = {
                                     isBundleOrApkDialogVisible = false
@@ -453,7 +450,35 @@ fun App() {
                                 onCancel = {
                                     isBundleOrApkDialogVisible = false
                                     isBundleToBuild = true
+                                    isUseDevAnalyticsDialogVisible = true
+                                },
+                            )
+                        }
+
+                        // for all targets
+                        AnimatedVisibility(visible = isUseDevAnalyticsDialogVisible) {
+                            AutomateBuildDialog(
+                                title = "Do You Want To Use Dev Analytics?",
+                                approveButtonText = "Use Dev",
+                                cancelButtonText = "Use Prod",
+                                onApprove = {
+                                    isUseDevAnalytics = true
                                     isBuilding = true
+                                    isUseDevAnalyticsDialogVisible = false
+                                },
+                                onDismissRequest = {
+                                    isBumpDialogVisible = false
+                                    isBuilding = false
+                                    isSign = false
+                                    isBump = false
+                                    isUseDevAnalytics = true
+                                    isBundleToBuild = false
+                                    isUseDevAnalyticsDialogVisible = false
+                                },
+                                onCancel = {
+                                    isUseDevAnalytics = false
+                                    isBuilding = true
+                                    isUseDevAnalyticsDialogVisible = false
                                 },
                             )
                         }

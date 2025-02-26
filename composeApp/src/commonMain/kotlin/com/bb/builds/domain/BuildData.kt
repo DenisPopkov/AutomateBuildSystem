@@ -8,4 +8,5 @@ data class BuildData(
     val sign: Boolean = false, // in some targets not using
     val bumpVersion: Boolean = false, // in some targets not using
     val isBundleToBuild: Boolean = false, // in some targets not using
+    val isUseDevAnalytics: Boolean,
 )
