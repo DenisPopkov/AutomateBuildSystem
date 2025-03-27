@@ -101,15 +101,8 @@ fun App() {
     var branchPlaceholderPlatforms by remember { mutableStateOf("") }
     var selectedBuildType by remember { mutableStateOf(BuildType.MACOS) }
 
-    var isSignDialogVisible by remember { mutableStateOf(false) }
-    var isBumpDialogVisible by remember { mutableStateOf(false) }
-    var isBundleOrApkDialogVisible by remember { mutableStateOf(false) }
     var isUseDevAnalyticsDialogVisible by remember { mutableStateOf(false) }
-
-    var isSign by remember { mutableStateOf(false) }
-    var isBump by remember { mutableStateOf(false) }
-    var isBundleToBuild by remember { mutableStateOf(false) }
-    var isUseDevAnalytics by remember { mutableStateOf(true) }
+    var isUseForDevPurpose by remember { mutableStateOf(true) }
 
     val filteredItems = branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
     var isBuilding by remember { mutableStateOf(false) }
@@ -137,10 +130,7 @@ fun App() {
             createViewModel.build(
                 buildData = BuildData(
                     branchName = selectedItemText,
-                    bumpVersion = isBump,
-                    isBundleToBuild = isBundleToBuild,
-                    sign = isSign,
-                    isUseDevAnalytics = isUseDevAnalytics,
+                    isUseDevAnalytics = isUseForDevPurpose,
                 ),
                 buildType = selectedBuildType,
             )
@@ -149,15 +139,14 @@ fun App() {
 
             // Clearing old states
             isBuilding = false
-            isSign = false
-            isBump = false
-            isBundleToBuild = false
-            isUseDevAnalytics = false
+            isUseForDevPurpose = false
         }
     }
 
     MaterialTheme {
         ModalBottomSheetLayout(
+            modifier = Modifier
+                .statusBarsPadding(),
             sheetState = bottomState,
             sheetContent = {
                 Column(
@@ -226,11 +215,7 @@ fun App() {
                                         coroutineScope.launch {
                                             bottomState.hide()
                                             keyboardController?.hide()
-
-                                            when (selectedBuildType) {
-                                                BuildType.IOS -> isUseDevAnalyticsDialogVisible = true
-                                                else -> isBumpDialogVisible = true
-                                            }
+                                            isUseDevAnalyticsDialogVisible = true
                                         }
                                     },
                                 contentAlignment = Alignment.Center,
@@ -364,120 +349,23 @@ fun App() {
                             showSelectBranchBottomSheet = { coroutineScope.launch { bottomState.show() } },
                         )
 
-                        // for all targets, except iOS
-                        AnimatedVisibility(visible = isBumpDialogVisible) {
-                            AutomateBuildDialog(
-                                title = "Do You Want To Bump Version?",
-                                approveButtonText = "Bump",
-                                cancelButtonText = "Not bump",
-                                onApprove = {
-                                    isBump = true
-                                    isBumpDialogVisible = false
-
-                                    when (selectedBuildType) {
-                                        BuildType.ANDROID -> isBundleOrApkDialogVisible = true
-                                        BuildType.MACOS -> isSignDialogVisible = true
-                                        BuildType.WINDOWS -> isUseDevAnalyticsDialogVisible = true
-
-                                        else -> {} // for iOS empty condition
-                                    }
-                                },
-                                onDismissRequest = {
-                                    isBumpDialogVisible = false
-                                    isBuilding = false
-                                    isSign = false
-                                    isBump = false
-                                    isBundleToBuild = false
-                                },
-                                onCancel = {
-                                    isBump = false
-                                    isBumpDialogVisible = false
-
-                                    when (selectedBuildType) {
-                                        BuildType.ANDROID -> isBundleOrApkDialogVisible = true
-                                        BuildType.MACOS -> isSignDialogVisible = true
-                                        BuildType.WINDOWS -> isUseDevAnalyticsDialogVisible = true
-
-                                        else -> {} // for iOS empty condition
-                                    }
-                                },
-                            )
-                        }
-
-                        // for macOS and Windows
-                        AnimatedVisibility(visible = isSignDialogVisible) {
-                            AutomateBuildDialog(
-                                title = "Do You Want To Sign The Build?",
-                                approveButtonText = "Sign",
-                                cancelButtonText = "Not sign",
-                                onApprove = {
-                                    isSignDialogVisible = false
-                                    isSign = true
-                                    isUseDevAnalyticsDialogVisible = true
-                                },
-                                onDismissRequest = {
-                                    isSignDialogVisible = false
-                                    isBuilding = false
-                                    isSign = false
-                                    isBump = false
-                                    isBundleToBuild = false
-                                    isUseDevAnalytics = true
-                                },
-                                onCancel = {
-                                    isSignDialogVisible = false
-                                    isSign = false
-                                    isUseDevAnalyticsDialogVisible = true
-                                },
-                            )
-                        }
-
-                        AnimatedVisibility(visible = isBundleOrApkDialogVisible) {
-                            AutomateBuildDialog(
-                                title = "Do You Want To Build APK or Bundle?",
-                                approveButtonText = "APK",
-                                cancelButtonText = "Bundle",
-                                onApprove = {
-                                    isBundleOrApkDialogVisible = false
-                                    isBundleToBuild = false
-                                    isUseDevAnalyticsDialogVisible = true
-                                },
-                                onDismissRequest = {
-                                    isBundleOrApkDialogVisible = false
-                                    isBuilding = false
-                                    isSign = false
-                                    isBump = false
-                                    isBundleToBuild = false
-                                },
-                                onCancel = {
-                                    isBundleOrApkDialogVisible = false
-                                    isBundleToBuild = true
-                                    isUseDevAnalyticsDialogVisible = true
-                                },
-                            )
-                        }
-
-                        // for all targets
                         AnimatedVisibility(visible = isUseDevAnalyticsDialogVisible) {
                             AutomateBuildDialog(
-                                title = "Do You Want To Use Dev Analytics?",
-                                approveButtonText = "Use Dev",
-                                cancelButtonText = "Use Prod",
+                                title = "Choose Build Purpose",
+                                approveButtonText = "Dev",
+                                cancelButtonText = "Prod",
                                 onApprove = {
-                                    isUseDevAnalytics = true
+                                    isUseForDevPurpose = true
                                     isBuilding = true
                                     isUseDevAnalyticsDialogVisible = false
                                 },
                                 onDismissRequest = {
-                                    isBumpDialogVisible = false
                                     isBuilding = false
-                                    isSign = false
-                                    isBump = false
-                                    isUseDevAnalytics = true
-                                    isBundleToBuild = false
+                                    isUseForDevPurpose = true
                                     isUseDevAnalyticsDialogVisible = false
                                 },
                                 onCancel = {
-                                    isUseDevAnalytics = false
+                                    isUseForDevPurpose = false
                                     isBuilding = true
                                     isUseDevAnalyticsDialogVisible = false
                                 },

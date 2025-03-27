@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,6 +49,10 @@ fun AutomateBuildDialog(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .width(width = 290.dp)
+                .shadow(
+                    elevation = 8.dp,
+                    shape = RoundedCornerShape(size = 14.dp)
+                )
                 .background(
                     color = colors.white100,
                     shape = RoundedCornerShape(size = 14.dp)

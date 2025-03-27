@@ -22,12 +22,6 @@ class AutomateBuildSystem(
     suspend fun buildWin(buildData: BuildData): HttpResponse? =
         remoteApi.buildWin(buildData)
 
-    suspend fun getBuilds(): List<BuildItem>? =
-        remoteApi.getBuilds()
-
-    suspend fun sendBuild(buildId: BuildId): HttpResponse? =
-        remoteApi.sendBuild(buildId)
-
     suspend fun getBranches(): Branches? =
         remoteApi.getBranches()
 }

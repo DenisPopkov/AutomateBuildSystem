@@ -1,6 +1,5 @@
 package com.bb.builds.screens.builds
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,17 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -30,15 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_sparkle
-import com.bb.builds.components.AutomateBuildDialog
-import com.bb.builds.components.BuildItemComponent
 import com.bb.builds.components.LoadingScreen
 import com.bb.builds.theme.MavenFontFamily
-import com.bb.builds.theme.SfFontFamily
 import com.bb.builds.theme.Theme
 import com.bb.builds.theme.getColorSystem
-import com.bb.builds.domain.BuildId
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -46,14 +34,7 @@ fun BuildsScreen(
     viewModel: BuildScreenViewModel,
     snackbarHostState: SnackbarHostState,
 ) {
-    val builds by viewModel.builds.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    val sfFontFamily = SfFontFamily()
-    val coroutineScope = rememberCoroutineScope()
-
-    var isApproveDialogVisible by remember { mutableStateOf(false) }
-    var currentBuildId by remember { mutableStateOf<BuildId?>(null) }
-
     val colors = getColorSystem()
 
     Column(
@@ -68,74 +49,20 @@ fun BuildsScreen(
             LoadingScreen()
         }
 
-        AnimatedVisibility(visible = isApproveDialogVisible) {
-            AutomateBuildDialog(
-                title =  "Are You Sure You Want to Send the Build?",
-                approveButtonText = "Send",
-                onDismissRequest = {
-                    isApproveDialogVisible = false
-                },
-                onCancel = {
-                    isApproveDialogVisible = false
-                },
-                onApprove = {
-                    coroutineScope.launch {
-                        currentBuildId?.let {
-                            snackbarHostState.showSnackbar(message = "Sending...")
-                            viewModel.send(it)
-                        }
-                    }
-                }
-            )
-        }
+        Spacer(modifier = Modifier.weight(weight = 1f))
 
-        if (builds.isEmpty()) {
-            Spacer(modifier = Modifier.weight(weight = 1f))
-
-            if (!isLoading) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    NoBuilds()
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(weight = 1f))
-        } else {
-            LazyColumn(
+        if (!isLoading) {
+            Row(
                 modifier = Modifier
-                    .padding(top = 16.dp),
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                item {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 4.dp)
-                            .padding(bottom = 20.dp),
-                        text = "Builds",
-                        color = colors.black100,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = sfFontFamily,
-                        fontSize = 32.sp,
-                        letterSpacing = 0.2.sp,
-                    )
-                }
-
-                items(builds) {
-                    BuildItemComponent(
-                        version = it.version,
-                        platformName = it.platformName,
-                        date = it.date,
-                        onSendClick = {
-                            currentBuildId = BuildId(buildId = it.id)
-                            isApproveDialogVisible = true
-                        },
-                    )
-                }
+                NoBuilds()
             }
         }
+
+        Spacer(modifier = Modifier.weight(weight = 1f))
     }
 }
 
@@ -159,7 +86,7 @@ fun NoBuilds() {
         Text(
             modifier = Modifier
                 .padding(top = 12.dp),
-            text = "No Builds Yet",
+            text = "This page will be redesigned",
             color = colors.black100,
             fontWeight = FontWeight.Bold,
             fontFamily = fontFamily,

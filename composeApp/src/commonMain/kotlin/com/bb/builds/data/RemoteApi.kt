@@ -2,8 +2,6 @@ package com.bb.builds.data
 
 import com.bb.builds.domain.Branches
 import com.bb.builds.domain.BuildData
-import com.bb.builds.domain.BuildId
-import com.bb.builds.domain.BuildItem
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -105,30 +103,6 @@ class RemoteApi(
             }
         }.getOrNull()
 
-    suspend fun sendBuild(buildId: BuildId): HttpResponse? =
-        runCatching {
-            client.post {
-                url {
-                    takeFrom(prodUrl)
-                    encodedPath = "send_build"
-                }
-                setBody(buildId)
-                json()
-            }
-        }.getOrNull()
-
-    suspend fun getBuilds(): List<BuildItem>? =
-        retryApiCall {
-            client.get {
-                url {
-                    takeFrom(prodUrl)
-                    encodedPath = "builds"
-                }
-                contentType(ContentType.Application.Json)
-                json()
-            }.body()
-        }
-
     suspend fun getBranches(): Branches? =
         retryApiCall {
             client.get {
@@ -156,6 +130,7 @@ class RemoteApi(
                 prodUrl = config["server_url"]?.jsonPrimitive?.content ?: prodUrl
                 windowsUrl = config["windows_url"]?.jsonPrimitive?.content
             }
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
     }
 }

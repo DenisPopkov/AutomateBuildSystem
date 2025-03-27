@@ -18,26 +18,4 @@ class BuildScreenViewModel : ViewModel(), KoinComponent {
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _builds = MutableStateFlow<List<BuildItem>>(listOf())
-    val builds = _builds.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            _builds.emit(getBuilds())
-        }
-    }
-
-    fun send(buildId: BuildId) {
-        viewModelScope.launch {
-            automateBuildSystemService.sendBuild(buildId)
-        }
-    }
-
-    private suspend fun getBuilds(): List<BuildItem> {
-        _isLoading.update { true }
-        val builds = automateBuildSystemService.getBuilds()
-        _isLoading.update { false }
-        return builds ?: emptyList()
-    }
-
 }
