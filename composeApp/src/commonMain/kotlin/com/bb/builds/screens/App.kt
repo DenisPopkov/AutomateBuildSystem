@@ -389,14 +389,20 @@ fun App() {
                                     when (selectedBuildType) {
                                         BuildType.ANDROID -> {
                                             coroutineScope.launch {
-                                                createViewModel.rebuildAndroidDSPLibrary(selectedItemText)
                                                 snackbarHostState.showSnackbar(message = "Rebuilding...")
+                                            }
+
+                                            coroutineScope.launch {
+                                                createViewModel.rebuildAndroidDSPLibrary(selectedItemText)
                                             }
                                         }
                                         BuildType.MACOS, BuildType.WINDOWS -> {
                                             coroutineScope.launch {
-                                                createViewModel.rebuildDSPLibrary(selectedItemText)
                                                 snackbarHostState.showSnackbar(message = "Rebuilding...")
+                                            }
+
+                                            coroutineScope.launch {
+                                                createViewModel.rebuildDSPLibrary(selectedItemText)
                                             }
                                         }
                                         else -> {}
