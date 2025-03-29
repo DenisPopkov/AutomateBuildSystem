@@ -118,10 +118,10 @@ fun App() {
 
     LaunchedEffect(selectedBuildType) {
         branchPlaceholderPlatforms = when (selectedBuildType) {
-            BuildType.WINDOWS -> "Windows"
+            BuildType.WINDOWS -> if (isSelectedFromOptions) "Windows DSP" else "Windows"
             BuildType.IOS -> "iOS"
-            BuildType.ANDROID -> "Android"
-            BuildType.MACOS -> "MacOS"
+            BuildType.ANDROID -> if (isSelectedFromOptions) "Android DSP" else "Android"
+            BuildType.MACOS -> if (isSelectedFromOptions) "MacOS DSP" else "MacOS"
         }
     }
 
