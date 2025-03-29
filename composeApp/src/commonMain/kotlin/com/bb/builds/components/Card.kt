@@ -12,14 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import automatebuildsystem.composeapp.generated.resources.Res
 import automatebuildsystem.composeapp.generated.resources.ic_dots
-import com.bb.builds.theme.MavenFontFamily
 import com.bb.builds.domain.BuildType
 import com.bb.builds.isDesktop
 import com.bb.builds.screens.create.BuildStateScreen
+import com.bb.builds.theme.MavenFontFamily
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -46,13 +40,10 @@ private const val DESKTOP_CARD_WIDTH = 220
 @Composable
 fun BuildCard(
     buildData: BuildStateScreen.Build,
-    snackbarHostState: SnackbarHostState,
     onBuildClick: () -> Unit,
     onOptionsClick: () -> Unit,
 ) {
     val fontFamily = MavenFontFamily()
-    val coroutineScope = rememberCoroutineScope()
-    var isOptionsDropdownExpanded by remember { mutableStateOf(false) }
 
     val cardWidth = if (isDesktop) DESKTOP_CARD_WIDTH else MOBILE_CARD_WIDTH
     val cardHeight = if (isDesktop) DESKTOP_CARD_HEIGHT else MOBILE_CARD_HEIGHT
@@ -88,41 +79,28 @@ fun BuildCard(
                     painter = painterResource(buildData.buildIcon),
                     contentDescription = null,
                 )
+
                 Spacer(modifier = Modifier.weight(weight = 1f))
 
-                Box {
-//                    OptionsDropdownMenuContent(
-//                        expanded = isOptionsDropdownExpanded,
-//                        onDismissRequest = { isOptionsDropdownExpanded = false },
-//                        onStopBuildClick = {
-//                            onOptionsClick.invoke()
-//                        },
-//                        onOpenLogsClick = {
-////                            coroutineScope.launch {
-////                                snackbarHostState.showSnackbar("Not available now")
-////                            }
-//                        }
-//                    )
-
-                    Box(
-                        modifier = Modifier
-                            .size(size = 28.dp)
-                            .clip(shape = CircleShape)
-                            .background(color = Color.White.copy(alpha = 0.2f))
-                            .clickable {
-                                onOptionsClick.invoke()
-//                                isOptionsDropdownExpanded = true
-                            },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Image(
-                            painter = painterResource(Res.drawable.ic_dots),
-                            contentDescription = null,
-                        )
-                    }
+                Box(
+                    modifier = Modifier
+                        .size(size = 28.dp)
+                        .clip(shape = CircleShape)
+                        .background(color = Color.White.copy(alpha = 0.2f))
+                        .clickable {
+                            onOptionsClick.invoke()
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        painter = painterResource(Res.drawable.ic_dots),
+                        contentDescription = null,
+                    )
                 }
             }
+
             Spacer(modifier = Modifier.weight(weight = 1f))
+
             Text(
                 text = buildData.buildType.buildName,
                 color = Color.White,

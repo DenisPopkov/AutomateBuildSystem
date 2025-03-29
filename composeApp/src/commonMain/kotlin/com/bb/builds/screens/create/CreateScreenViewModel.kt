@@ -58,6 +58,10 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
         }
     }
 
+    fun rebuildDSPLibrary(branchName: String) {
+        viewModelScope.launch { automateBuildSystemService.rebuildDSPLibrary(branchName) }
+    }
+
     private fun getBranches() = viewModelScope.launch {
         _isLoading.update { true }
         _branches.value = automateBuildSystemService.getBranches()?.branches ?: emptyList()

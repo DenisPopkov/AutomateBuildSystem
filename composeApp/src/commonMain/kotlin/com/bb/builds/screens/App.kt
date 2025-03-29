@@ -104,6 +104,9 @@ fun App() {
     var isUseDevAnalyticsDialogVisible by remember { mutableStateOf(false) }
     var isUseForDevPurpose by remember { mutableStateOf(true) }
 
+    var isSelectedFromOptions by remember { mutableStateOf(false) }
+    var showRebuildDSPDialog by remember { mutableStateOf(false) }
+
     val filteredItems = branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
     var isBuilding by remember { mutableStateOf(false) }
 
@@ -118,7 +121,7 @@ fun App() {
             BuildType.WINDOWS -> "Windows"
             BuildType.IOS -> "iOS"
             BuildType.ANDROID -> "Android"
-            BuildType.MACOS -> "macOS"
+            BuildType.MACOS -> "MacOS"
         }
     }
 
@@ -185,6 +188,7 @@ fun App() {
                                         keyboardController?.hide()
                                         selectedItemText = ""
                                         searchQuery = ""
+                                        isSelectedFromOptions = false
                                     }
                                 },
                             contentAlignment = Alignment.Center,
@@ -216,12 +220,14 @@ fun App() {
                                             bottomState.hide()
                                             keyboardController?.hide()
                                             isUseDevAnalyticsDialogVisible = true
+                                            showRebuildDSPDialog = isSelectedFromOptions
+                                            snackbarHostState.showSnackbar(message = "Rebuilding...")
                                         }
                                     },
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text(
-                                    text = if (selectedBuildType == BuildType.IOS) "Build" else "Select",
+                                    text = "Select",
                                     style = TextStyle(
                                         fontFamily = MavenFontFamily(),
                                         fontWeight = FontWeight.Medium,
@@ -344,12 +350,14 @@ fun App() {
                 ) {
                     composable(Navigation.Build::class.simpleName ?: "") {
                         CreateScreen(
-                            snackbarHostState = snackbarHostState,
                             updateSelectedBuildType = { selectedBuildType = it },
-                            showSelectBranchBottomSheet = { coroutineScope.launch { bottomState.show() } },
+                            showSelectBranchBottomSheet = {
+                                coroutineScope.launch { bottomState.show() }
+                            },
+                            onOptionsSelected = { isSelectedFromOptions = it }
                         )
 
-                        AnimatedVisibility(visible = isUseDevAnalyticsDialogVisible) {
+                        AnimatedVisibility(visible = isUseDevAnalyticsDialogVisible && !isSelectedFromOptions) {
                             AutomateBuildDialog(
                                 title = "Choose Build Purpose",
                                 approveButtonText = "Dev",
@@ -368,6 +376,24 @@ fun App() {
                                     isUseForDevPurpose = false
                                     isBuilding = true
                                     isUseDevAnalyticsDialogVisible = false
+                                },
+                            )
+                        }
+
+                        AnimatedVisibility(visible = showRebuildDSPDialog) {
+                            AutomateBuildDialog(
+                                title = "Rebuild DSP library",
+                                approveButtonText = "Rebuild",
+                                cancelButtonText = "Cancel",
+                                onApprove = {
+                                    createViewModel.rebuildDSPLibrary(selectedItemText)
+                                    isSelectedFromOptions = false
+                                },
+                                onDismissRequest = {
+                                    isSelectedFromOptions = false
+                                },
+                                onCancel = {
+                                    isSelectedFromOptions = false
                                 },
                             )
                         }

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,7 +35,7 @@ import org.jetbrains.compose.resources.painterResource
 fun CreateScreen(
     updateSelectedBuildType: (BuildType) -> Unit,
     showSelectBranchBottomSheet: () -> Unit,
-    snackbarHostState: SnackbarHostState,
+    onOptionsSelected: (isSelected: Boolean) -> Unit,
 ) {
     val buildOptions = getBuildOptions()
     val sfFontFamily = SfFontFamily()
@@ -102,7 +101,6 @@ fun CreateScreen(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     BuildCard(
-                        snackbarHostState = snackbarHostState,
                         buildData = buildOptions[index],
                         onBuildClick = {
                             updateSelectedBuildType.invoke(buildOptions[index].buildType)
@@ -110,7 +108,9 @@ fun CreateScreen(
                         },
                         onOptionsClick = {
                             coroutineScope.launch {
-                                snackbarHostState.showSnackbar(message = "Not available now")
+                                updateSelectedBuildType.invoke(buildOptions[index].buildType)
+                                showSelectBranchBottomSheet.invoke()
+                                onOptionsSelected.invoke(true)
                             }
                         }
                     )

@@ -103,6 +103,18 @@ class RemoteApi(
             }
         }.getOrNull()
 
+    suspend fun rebuildDSPLibrary(branchName: String): HttpResponse? =
+        runCatching {
+            client.post {
+                url {
+                    takeFrom(windowsUrl ?: prodUrl)
+                    encodedPath = "rebuild_dsp"
+                }
+                setBody(branchName)
+                json()
+            }
+        }.getOrNull()
+
     suspend fun getBranches(): Branches? =
         retryApiCall {
             client.get {
