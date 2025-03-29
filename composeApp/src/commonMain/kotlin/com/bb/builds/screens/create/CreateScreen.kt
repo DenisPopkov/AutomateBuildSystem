@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,6 +34,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun CreateScreen(
+    snackbarHostState: SnackbarHostState,
     updateSelectedBuildType: (BuildType) -> Unit,
     showSelectBranchBottomSheet: () -> Unit,
     onOptionsSelected: (isSelected: Boolean) -> Unit,
@@ -108,9 +110,13 @@ fun CreateScreen(
                         },
                         onOptionsClick = {
                             coroutineScope.launch {
-                                updateSelectedBuildType.invoke(buildOptions[index].buildType)
-                                showSelectBranchBottomSheet.invoke()
-                                onOptionsSelected.invoke(true)
+                                if (buildOptions[index].buildType == BuildType.IOS) {
+                                    snackbarHostState.showSnackbar(message = "Not supported")
+                                } else {
+                                    updateSelectedBuildType.invoke(buildOptions[index].buildType)
+                                    showSelectBranchBottomSheet.invoke()
+                                    onOptionsSelected.invoke(true)
+                                }
                             }
                         }
                     )

@@ -115,6 +115,18 @@ class RemoteApi(
             }
         }.getOrNull()
 
+    suspend fun rebuildAndroidDSPLibrary(buildData: BuildData): HttpResponse? =
+        runCatching {
+            client.post {
+                url {
+                    takeFrom(prodUrl)
+                    encodedPath = "rebuild_android_dsp"
+                }
+                setBody(buildData)
+                json()
+            }
+        }.getOrNull()
+
     suspend fun getBranches(): Branches? =
         retryApiCall {
             client.get {

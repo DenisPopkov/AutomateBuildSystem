@@ -27,4 +27,7 @@ class AutomateBuildSystem(
 
     suspend fun rebuildDSPLibrary(buildData: BuildData): HttpResponse? =
         remoteApi.rebuildDSPLibrary(buildData)
+
+    suspend fun rebuildAndroidDSPLibrary(buildData: BuildData): HttpResponse? =
+        remoteApi.rebuildAndroidDSPLibrary(buildData)
 }

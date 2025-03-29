@@ -349,6 +349,7 @@ fun App() {
                 ) {
                     composable(Navigation.Build::class.simpleName ?: "") {
                         CreateScreen(
+                            snackbarHostState = snackbarHostState,
                             updateSelectedBuildType = { selectedBuildType = it },
                             showSelectBranchBottomSheet = {
                                 coroutineScope.launch { bottomState.show() }
@@ -385,10 +386,22 @@ fun App() {
                                 approveButtonText = "Rebuild",
                                 cancelButtonText = "Cancel",
                                 onApprove = {
-                                    createViewModel.rebuildDSPLibrary(selectedItemText)
-                                    coroutineScope.launch {
-                                        snackbarHostState.showSnackbar(message = "Rebuilding...")
+                                    when (selectedBuildType) {
+                                        BuildType.ANDROID -> {
+                                            coroutineScope.launch {
+                                                createViewModel.rebuildAndroidDSPLibrary(selectedItemText)
+                                                snackbarHostState.showSnackbar(message = "Rebuilding...")
+                                            }
+                                        }
+                                        BuildType.MACOS, BuildType.WINDOWS -> {
+                                            coroutineScope.launch {
+                                                createViewModel.rebuildDSPLibrary(selectedItemText)
+                                                snackbarHostState.showSnackbar(message = "Rebuilding...")
+                                            }
+                                        }
+                                        else -> {}
                                     }
+
                                     showRebuildDSPDialog = false
                                 },
                                 onDismissRequest = {
