@@ -103,14 +103,14 @@ class RemoteApi(
             }
         }.getOrNull()
 
-    suspend fun rebuildDSPLibrary(branchName: String): HttpResponse? =
+    suspend fun rebuildDSPLibrary(buildData: BuildData): HttpResponse? =
         runCatching {
             client.post {
                 url {
                     takeFrom(prodUrl)
                     encodedPath = "rebuild_dsp"
                 }
-                setBody(branchName)
+                setBody(buildData)
                 json()
             }
         }.getOrNull()

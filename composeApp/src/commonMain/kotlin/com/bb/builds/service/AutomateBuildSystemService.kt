@@ -25,6 +25,6 @@ class AutomateBuildSystem(
     suspend fun getBranches(): Branches? =
         remoteApi.getBranches()
 
-    suspend fun rebuildDSPLibrary(branchName: String): HttpResponse? =
-        remoteApi.rebuildDSPLibrary(branchName)
+    suspend fun rebuildDSPLibrary(buildData: BuildData): HttpResponse? =
+        remoteApi.rebuildDSPLibrary(buildData)
 }
