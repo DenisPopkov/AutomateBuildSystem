@@ -107,7 +107,7 @@ class RemoteApi(
         runCatching {
             client.post {
                 url {
-                    takeFrom(windowsUrl ?: prodUrl)
+                    takeFrom(prodUrl)
                     encodedPath = "rebuild_dsp"
                 }
                 setBody(branchName)

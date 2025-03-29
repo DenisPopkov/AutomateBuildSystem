@@ -219,9 +219,8 @@ fun App() {
                                         coroutineScope.launch {
                                             bottomState.hide()
                                             keyboardController?.hide()
-                                            isUseDevAnalyticsDialogVisible = true
+                                            isUseDevAnalyticsDialogVisible = !isSelectedFromOptions
                                             showRebuildDSPDialog = isSelectedFromOptions
-                                            snackbarHostState.showSnackbar(message = "Rebuilding...")
                                         }
                                     },
                                 contentAlignment = Alignment.Center,
@@ -387,12 +386,17 @@ fun App() {
                                 cancelButtonText = "Cancel",
                                 onApprove = {
                                     createViewModel.rebuildDSPLibrary(selectedItemText)
-                                    isSelectedFromOptions = false
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar(message = "Rebuilding...")
+                                    }
+                                    showRebuildDSPDialog = false
                                 },
                                 onDismissRequest = {
+                                    showRebuildDSPDialog = false
                                     isSelectedFromOptions = false
                                 },
                                 onCancel = {
+                                    showRebuildDSPDialog = false
                                     isSelectedFromOptions = false
                                 },
                             )
