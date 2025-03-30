@@ -103,11 +103,14 @@ class RemoteApi(
             }
         }.getOrNull()
 
-    suspend fun rebuildDSPLibrary(buildData: BuildData): HttpResponse? =
+    suspend fun rebuildDSPLibrary(
+        buildData: BuildData,
+        isWindows: Boolean,
+    ): HttpResponse? =
         runCatching {
             client.post {
                 url {
-                    takeFrom(prodUrl)
+                    takeFrom(if (isWindows) (windowsUrl ?: prodUrl) else prodUrl)
                     encodedPath = "rebuild_dsp"
                 }
                 setBody(buildData)

@@ -25,8 +25,11 @@ class AutomateBuildSystem(
     suspend fun getBranches(): Branches? =
         remoteApi.getBranches()
 
-    suspend fun rebuildDSPLibrary(buildData: BuildData): HttpResponse? =
-        remoteApi.rebuildDSPLibrary(buildData)
+    suspend fun rebuildDSPLibrary(
+        buildData: BuildData,
+        isWindows: Boolean,
+    ): HttpResponse? =
+        remoteApi.rebuildDSPLibrary(buildData, isWindows)
 
     suspend fun rebuildAndroidDSPLibrary(buildData: BuildData): HttpResponse? =
         remoteApi.rebuildAndroidDSPLibrary(buildData)

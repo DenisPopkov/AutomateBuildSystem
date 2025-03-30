@@ -402,7 +402,10 @@ fun App() {
                                             }
 
                                             coroutineScope.launch {
-                                                createViewModel.rebuildDSPLibrary(selectedItemText)
+                                                createViewModel.rebuildDSPLibrary(
+                                                    branchName = selectedItemText,
+                                                    isWindows = selectedBuildType == BuildType.WINDOWS,
+                                                )
                                             }
                                         }
                                         else -> {}

@@ -58,12 +58,16 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    suspend fun rebuildDSPLibrary(branchName: String) {
+    suspend fun rebuildDSPLibrary(
+        branchName: String,
+        isWindows: Boolean,
+    ) {
         automateBuildSystemService.rebuildDSPLibrary(
             BuildData(
                 branchName = branchName,
                 isUseDevAnalytics = false,
-            )
+            ),
+            isWindows = isWindows,
         )
     }
 
