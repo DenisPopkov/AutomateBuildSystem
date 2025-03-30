@@ -412,6 +412,7 @@ fun App() {
                                     }
 
                                     showRebuildDSPDialog = false
+                                    isSelectedFromOptions = false
                                 },
                                 onDismissRequest = {
                                     showRebuildDSPDialog = false
