@@ -107,6 +107,9 @@ fun App() {
     var isSelectedFromOptions by remember { mutableStateOf(false) }
     var showRebuildDSPDialog by remember { mutableStateOf(false) }
 
+    var showArchitectureDialog by remember { mutableStateOf(false) }
+    var isMacBuildX86 by remember { mutableStateOf(false) }
+
     val filteredItems = branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
     var isBuilding by remember { mutableStateOf(false) }
 
@@ -136,11 +139,11 @@ fun App() {
                     isUseDevAnalytics = isUseForDevPurpose,
                 ),
                 buildType = selectedBuildType,
+                isX86 = isMacBuildX86,
             )
 
             delay(duration = 5.seconds)
 
-            // Clearing old states
             isBuilding = false
             isUseForDevPurpose = false
         }
@@ -214,15 +217,22 @@ fun App() {
                             exit = fadeOut(animationSpec = spring())
                         ) {
                             Box(
-                                modifier = Modifier
-                                    .clickable {
-                                        coroutineScope.launch {
-                                            bottomState.hide()
-                                            keyboardController?.hide()
-                                            isUseDevAnalyticsDialogVisible = !isSelectedFromOptions
-                                            showRebuildDSPDialog = isSelectedFromOptions
+                                modifier = Modifier.clickable {
+                                    coroutineScope.launch {
+                                        bottomState.hide()
+                                        keyboardController?.hide()
+
+                                        if (isSelectedFromOptions) {
+                                            showRebuildDSPDialog = true
+                                        } else {
+                                            if (selectedBuildType == BuildType.MACOS) {
+                                                showArchitectureDialog = true
+                                            } else {
+                                                isUseDevAnalyticsDialogVisible = true
+                                            }
                                         }
-                                    },
+                                    }
+                                },
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text(
@@ -252,10 +262,8 @@ fun App() {
                     if (isLoading) {
                         LoadingScreen()
                     } else {
-                        LazyColumn(
-                            modifier = Modifier,
-                        ) {
-                            itemsIndexed(items = filteredItems) { index, item ->
+                        LazyColumn {
+                            itemsIndexed(filteredItems) { index, item ->
                                 BranchItem(
                                     branch = item,
                                     branchColor = if (item == selectedItemText) colors.main else colors.black100,
@@ -335,8 +343,7 @@ fun App() {
                 },
                 snackbarHost = {
                     SnackbarHost(
-                        modifier = Modifier
-                            .imePadding(),
+                        modifier = Modifier.imePadding(),
                         hostState = snackbarHostState,
                     )
                 },
@@ -357,7 +364,7 @@ fun App() {
                             onOptionsSelected = { isSelectedFromOptions = it }
                         )
 
-                        AnimatedVisibility(visible = isUseDevAnalyticsDialogVisible && !isSelectedFromOptions) {
+                        AnimatedVisibility(visible = isUseDevAnalyticsDialogVisible) {
                             AutomateBuildDialog(
                                 title = "Choose Build Purpose",
                                 approveButtonText = "Dev",
@@ -367,54 +374,75 @@ fun App() {
                                     isBuilding = true
                                     isUseDevAnalyticsDialogVisible = false
                                 },
-                                onDismissRequest = {
-                                    isBuilding = false
-                                    isUseForDevPurpose = true
-                                    isUseDevAnalyticsDialogVisible = false
-                                },
                                 onCancel = {
                                     isUseForDevPurpose = false
                                     isBuilding = true
                                     isUseDevAnalyticsDialogVisible = false
                                 },
+                                onDismissRequest = {
+                                    isBuilding = false
+                                    isUseForDevPurpose = true
+                                    isUseDevAnalyticsDialogVisible = false
+                                }
+                            )
+                        }
+
+                        AnimatedVisibility(visible = showArchitectureDialog) {
+                            AutomateBuildDialog(
+                                title = "Select MacOS Architecture",
+                                approveButtonText = "x86",
+                                cancelButtonText = "ARM",
+                                onApprove = {
+                                    isMacBuildX86 = true
+                                    isBuilding = true
+                                    showArchitectureDialog = false
+                                },
+                                onCancel = {
+                                    isMacBuildX86 = false
+                                    isBuilding = true
+                                    showArchitectureDialog = false
+                                },
+                                onDismissRequest = {
+                                    isBuilding = false
+                                    showArchitectureDialog = false
+                                }
                             )
                         }
 
                         AnimatedVisibility(visible = showRebuildDSPDialog) {
                             AutomateBuildDialog(
-                                title = "Rebuild DSP library",
+                                title = "Rebuild DSP Library",
                                 approveButtonText = "Rebuild",
                                 cancelButtonText = "Cancel",
                                 onApprove = {
                                     when (selectedBuildType) {
                                         BuildType.ANDROID -> {
                                             coroutineScope.launch {
-                                                snackbarHostState.showSnackbar(message = "Rebuilding...")
-                                            }
-
-                                            coroutineScope.launch {
-                                                createViewModel.rebuildAndroidDSPLibrary(selectedItemText)
-                                            }
-                                        }
-                                        BuildType.MACOS, BuildType.WINDOWS -> {
-                                            coroutineScope.launch {
-                                                snackbarHostState.showSnackbar(message = "Rebuilding...")
-                                            }
-
-                                            coroutineScope.launch {
-                                                createViewModel.rebuildDSPLibrary(
-                                                    branchName = selectedItemText,
-                                                    isWindows = selectedBuildType == BuildType.WINDOWS,
+                                                snackbarHostState.showSnackbar("Rebuilding...")
+                                                createViewModel.rebuildAndroidDSPLibrary(
+                                                    selectedItemText
                                                 )
                                             }
                                         }
+
+                                        BuildType.WINDOWS -> {
+                                            coroutineScope.launch {
+                                                snackbarHostState.showSnackbar("Rebuilding...")
+                                                createViewModel.rebuildDSPLibrary(
+                                                    branchName = selectedItemText,
+                                                    isWindows = true,
+                                                    isX86 = false
+                                                )
+                                            }
+                                        }
+
+                                        BuildType.MACOS -> {
+                                            showArchitectureDialog = true
+                                        }
+
                                         else -> {}
                                     }
 
-                                    showRebuildDSPDialog = false
-                                    isSelectedFromOptions = false
-                                },
-                                onDismissRequest = {
                                     showRebuildDSPDialog = false
                                     isSelectedFromOptions = false
                                 },
@@ -422,6 +450,45 @@ fun App() {
                                     showRebuildDSPDialog = false
                                     isSelectedFromOptions = false
                                 },
+                                onDismissRequest = {
+                                    showRebuildDSPDialog = false
+                                    isSelectedFromOptions = false
+                                }
+                            )
+                        }
+
+                        AnimatedVisibility(visible = showArchitectureDialog && isSelectedFromOptions && selectedBuildType == BuildType.MACOS) {
+                            AutomateBuildDialog(
+                                title = "Select macOS DSP Architecture",
+                                approveButtonText = "x86",
+                                cancelButtonText = "ARM",
+                                onApprove = {
+                                    isMacBuildX86 = true
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar("Rebuilding...")
+                                        createViewModel.rebuildDSPLibrary(
+                                            branchName = selectedItemText,
+                                            isWindows = false,
+                                            isX86 = true
+                                        )
+                                    }
+                                    showArchitectureDialog = false
+                                },
+                                onCancel = {
+                                    isMacBuildX86 = false
+                                    coroutineScope.launch {
+                                        snackbarHostState.showSnackbar("Rebuilding...")
+                                        createViewModel.rebuildDSPLibrary(
+                                            branchName = selectedItemText,
+                                            isWindows = false,
+                                            isX86 = false
+                                        )
+                                    }
+                                    showArchitectureDialog = false
+                                },
+                                onDismissRequest = {
+                                    showArchitectureDialog = false
+                                }
                             )
                         }
                     }
@@ -429,7 +496,7 @@ fun App() {
                     composable(Navigation.Builds::class.simpleName ?: "") {
                         BuildsScreen(
                             viewModel = buildViewModel,
-                            snackbarHostState = snackbarHostState,
+                            snackbarHostState = snackbarHostState
                         )
                     }
                 }

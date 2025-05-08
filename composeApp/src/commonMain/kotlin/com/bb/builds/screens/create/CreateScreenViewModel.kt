@@ -28,12 +28,14 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
     fun build(
         buildData: BuildData,
         buildType: BuildType,
+        isX86: Boolean,
     ) {
         viewModelScope.launch {
             when (buildType) {
                 BuildType.MACOS -> {
                     automateBuildSystemService.buildMac(
                         buildData = buildData,
+                        isX86 = isX86,
                     )
                 }
 
@@ -61,6 +63,7 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
     suspend fun rebuildDSPLibrary(
         branchName: String,
         isWindows: Boolean,
+        isX86: Boolean,
     ) {
         automateBuildSystemService.rebuildDSPLibrary(
             BuildData(
@@ -68,6 +71,7 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
                 isUseDevAnalytics = false,
             ),
             isWindows = isWindows,
+            isX86 = isX86,
         )
     }
 

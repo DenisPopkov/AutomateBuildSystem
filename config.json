@@ -1,4 +1,5 @@
 {
-  "server_url": "https://4ba6-143-198-25-149.ngrok-free.app",
-  "windows_url": "https://9c32-143-198-25-149.ngrok-free.app"
+  "windows_url": "https://17b0-143-198-25-149.ngrok-free.app",
+  "mac_x86_url": "https://2d3b-143-198-25-149.ngrok-free.app",
+  "mac_m1_url": "https://39e5-143-198-25-149.ngrok-free.app"
 }

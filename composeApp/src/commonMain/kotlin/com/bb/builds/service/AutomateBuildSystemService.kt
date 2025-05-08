@@ -10,8 +10,8 @@ import io.ktor.client.statement.HttpResponse
 class AutomateBuildSystem(
     private val remoteApi: RemoteApi
 ) {
-    suspend fun buildMac(buildData: BuildData): HttpResponse? =
-        remoteApi.buildMac(buildData)
+    suspend fun buildMac(buildData: BuildData, isX86: Boolean): HttpResponse? =
+        remoteApi.buildMac(buildData, isX86)
 
     suspend fun buildAndroid(buildData: BuildData): HttpResponse? =
         remoteApi.buildAndroid(buildData)
@@ -28,8 +28,9 @@ class AutomateBuildSystem(
     suspend fun rebuildDSPLibrary(
         buildData: BuildData,
         isWindows: Boolean,
+        isX86: Boolean,
     ): HttpResponse? =
-        remoteApi.rebuildDSPLibrary(buildData, isWindows)
+        remoteApi.rebuildDSPLibrary(buildData, isWindows, isX86)
 
     suspend fun rebuildAndroidDSPLibrary(buildData: BuildData): HttpResponse? =
         remoteApi.rebuildAndroidDSPLibrary(buildData)

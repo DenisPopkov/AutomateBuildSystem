@@ -27,9 +27,10 @@ class RemoteApi(
 
     private val repoUrl =
         "https://api.github.com/repos/DenisPopkov/AutomateBuildSystem/contents/config.json?ref=develop"
-    private var prodUrl =
-        "https://55b6-143-198-25-149.ngrok-free.app"
+
     private var windowsUrl: String? = null
+    private var macX86Url: String? = null
+    private var macM1Url: String? = null
 
     init {
         CoroutineScope(Dispatchers.IO).launch {
@@ -55,11 +56,13 @@ class RemoteApi(
         }
     }
 
-    suspend fun buildMac(buildData: BuildData): HttpResponse? =
+    suspend fun buildMac(buildData: BuildData, isX86: Boolean): HttpResponse? =
         runCatching {
+            val url = if (isX86) macX86Url else macM1Url
+            url ?: return@runCatching null
             client.post {
                 url {
-                    takeFrom(prodUrl)
+                    takeFrom(url)
                     encodedPath = "build_mac"
                 }
                 setBody(buildData)
@@ -71,7 +74,7 @@ class RemoteApi(
         runCatching {
             client.post {
                 url {
-                    takeFrom(prodUrl)
+                    takeFrom(macM1Url ?: macX86Url ?: windowsUrl ?: "")
                     encodedPath = "build_android"
                 }
                 setBody(buildData)
@@ -83,7 +86,7 @@ class RemoteApi(
         runCatching {
             client.post {
                 url {
-                    takeFrom(prodUrl)
+                    takeFrom(macM1Url ?: macX86Url ?: windowsUrl ?: "")
                     encodedPath = "build_ios"
                 }
                 setBody(buildData)
@@ -93,9 +96,10 @@ class RemoteApi(
 
     suspend fun buildWin(buildData: BuildData): HttpResponse? =
         runCatching {
+            val url = windowsUrl ?: return@runCatching null
             client.post {
                 url {
-                    takeFrom(windowsUrl ?: prodUrl)
+                    takeFrom(url)
                     encodedPath = "build_win"
                 }
                 setBody(buildData)
@@ -106,11 +110,18 @@ class RemoteApi(
     suspend fun rebuildDSPLibrary(
         buildData: BuildData,
         isWindows: Boolean,
+        isX86: Boolean = false
     ): HttpResponse? =
         runCatching {
+            val url = when {
+                isWindows -> windowsUrl
+                isX86 -> macX86Url
+                else -> macM1Url
+            }
+            url ?: return@runCatching null
             client.post {
                 url {
-                    takeFrom(if (isWindows) (windowsUrl ?: prodUrl) else prodUrl)
+                    takeFrom(url)
                     encodedPath = "rebuild_dsp"
                 }
                 setBody(buildData)
@@ -122,7 +133,7 @@ class RemoteApi(
         runCatching {
             client.post {
                 url {
-                    takeFrom(prodUrl)
+                    takeFrom(macM1Url ?: macX86Url ?: windowsUrl ?: "")
                     encodedPath = "rebuild_android_dsp"
                 }
                 setBody(buildData)
@@ -134,7 +145,7 @@ class RemoteApi(
         retryApiCall {
             client.get {
                 url {
-                    takeFrom(prodUrl)
+                    takeFrom(macM1Url ?: macX86Url ?: windowsUrl ?: "")
                     encodedPath = "remote_branches"
                 }
                 contentType(ContentType.Application.Json)
@@ -146,7 +157,6 @@ class RemoteApi(
         try {
             val response = client.get(repoUrl)
             val jsonResponse = response.bodyAsText()
-
             val fileContent = Json.parseToJsonElement(jsonResponse).jsonObject
             val fileUrl = fileContent["download_url"]?.jsonPrimitive?.content
 
@@ -154,8 +164,9 @@ class RemoteApi(
                 val configResponse = client.get(it)
                 val configJson = configResponse.bodyAsText()
                 val config = Json.parseToJsonElement(configJson).jsonObject
-                prodUrl = config["server_url"]?.jsonPrimitive?.content ?: prodUrl
                 windowsUrl = config["windows_url"]?.jsonPrimitive?.content
+                macX86Url = config["mac_x86_url"]?.jsonPrimitive?.content
+                macM1Url = config["mac_m1_url"]?.jsonPrimitive?.content
             }
         } catch (_: Exception) {
         }
