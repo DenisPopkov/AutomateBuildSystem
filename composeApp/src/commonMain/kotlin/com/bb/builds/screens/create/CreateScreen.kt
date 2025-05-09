@@ -57,16 +57,16 @@ fun CreateScreen(
                 .padding(start = 4.dp),
             text = "Create Build",
             color = colors.black100,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.SemiBold,
             fontFamily = sfFontFamily,
-            fontSize = 32.sp,
-            letterSpacing = 0.2.sp,
+            fontSize = 34.sp,
+            letterSpacing = 0.4.sp,
         )
 
         Row(
             modifier = Modifier
                 .padding(vertical = 16.dp)
-                .padding(top = 20.dp)
+                .padding(top = 16.dp)
                 .padding(start = 4.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
