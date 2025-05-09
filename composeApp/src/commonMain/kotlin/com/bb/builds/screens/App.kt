@@ -108,6 +108,7 @@ fun App() {
     var showRebuildDSPDialog by remember { mutableStateOf(false) }
 
     var showArchitectureDialog by remember { mutableStateOf(false) }
+    var showDSPArchitectureDialog by remember { mutableStateOf(false) }
     var isMacBuildX86 by remember { mutableStateOf(false) }
 
     val filteredItems = branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
@@ -436,9 +437,7 @@ fun App() {
                                             }
                                         }
 
-                                        BuildType.MACOS -> {
-                                            showArchitectureDialog = true
-                                        }
+                                        BuildType.MACOS -> showDSPArchitectureDialog = true
 
                                         else -> {}
                                     }
@@ -457,9 +456,9 @@ fun App() {
                             )
                         }
 
-                        AnimatedVisibility(visible = showArchitectureDialog && isSelectedFromOptions && selectedBuildType == BuildType.MACOS) {
+                        AnimatedVisibility(visible = showDSPArchitectureDialog) {
                             AutomateBuildDialog(
-                                title = "Select macOS DSP Architecture",
+                                title = "Select MacOS DSP Architecture",
                                 approveButtonText = "x86",
                                 cancelButtonText = "ARM",
                                 onApprove = {
@@ -472,7 +471,7 @@ fun App() {
                                             isX86 = true
                                         )
                                     }
-                                    showArchitectureDialog = false
+                                    showDSPArchitectureDialog = false
                                 },
                                 onCancel = {
                                     isMacBuildX86 = false
@@ -484,10 +483,10 @@ fun App() {
                                             isX86 = false
                                         )
                                     }
-                                    showArchitectureDialog = false
+                                    showDSPArchitectureDialog = false
                                 },
                                 onDismissRequest = {
-                                    showArchitectureDialog = false
+                                    showDSPArchitectureDialog = false
                                 }
                             )
                         }
