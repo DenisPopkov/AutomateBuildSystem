@@ -11,6 +11,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
+import io.ktor.http.isRelativePath
 import io.ktor.http.takeFrom
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -99,6 +100,7 @@ class RemoteApi(
             val url = windowsUrl ?: return@runCatching null
             client.post {
                 url {
+                    println("efefe url = $url")
                     takeFrom(url)
                     encodedPath = "build_win"
                 }
