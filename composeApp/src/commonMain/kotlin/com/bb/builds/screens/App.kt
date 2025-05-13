@@ -395,13 +395,13 @@ fun App() {
                                 cancelButtonText = "ARM",
                                 onApprove = {
                                     isMacBuildX86 = true
-                                    isBuilding = true
                                     showArchitectureDialog = false
+                                    isUseDevAnalyticsDialogVisible = true
                                 },
                                 onCancel = {
                                     isMacBuildX86 = false
-                                    isBuilding = true
                                     showArchitectureDialog = false
+                                    isUseDevAnalyticsDialogVisible = true
                                 },
                                 onDismissRequest = {
                                     isBuilding = false
