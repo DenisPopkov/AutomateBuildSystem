@@ -39,24 +39,6 @@ class RemoteApi(
         }
     }
 
-    private suspend fun <T> retryApiCall(
-        retries: Int = 3,
-        block: suspend () -> T
-    ): T? {
-        repeat(retries - 1) {
-            try {
-                return block()
-            } catch (e: Exception) {
-                delay(2000)
-            }
-        }
-        return try {
-            block()
-        } catch (e: Exception) {
-            null
-        }
-    }
-
     suspend fun buildMac(buildData: BuildData, isX86: Boolean): HttpResponse? =
         runCatching {
             val url = if (isX86) macX86Url else macM1Url
@@ -171,6 +153,24 @@ class RemoteApi(
                 macM1Url = config["mac_m1_url"]?.jsonPrimitive?.content
             }
         } catch (_: Exception) {
+        }
+    }
+
+    private suspend fun <T> retryApiCall(
+        retries: Int = 3,
+        block: suspend () -> T
+    ): T? {
+        repeat(retries - 1) {
+            try {
+                return block()
+            } catch (e: Exception) {
+                delay(2000)
+            }
+        }
+        return try {
+            block()
+        } catch (e: Exception) {
+            null
         }
     }
 }
