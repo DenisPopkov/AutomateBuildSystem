@@ -64,22 +64,23 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
         branchName: String,
         isWindows: Boolean,
         isX86: Boolean,
+        isUseDevAnalytics: Boolean,
     ) {
         automateBuildSystemService.rebuildDSPLibrary(
             BuildData(
                 branchName = branchName,
-                isUseDevAnalytics = false,
+                isUseDevAnalytics = isUseDevAnalytics,
             ),
             isWindows = isWindows,
             isX86 = isX86,
         )
     }
 
-    suspend fun rebuildAndroidDSPLibrary(branchName: String) {
+    suspend fun rebuildAndroidDSPLibrary(branchName: String, isUseDevAnalytics: Boolean) {
         automateBuildSystemService.rebuildAndroidDSPLibrary(
             BuildData(
                 branchName = branchName,
-                isUseDevAnalytics = false,
+                isUseDevAnalytics = isUseDevAnalytics,
             )
         )
     }

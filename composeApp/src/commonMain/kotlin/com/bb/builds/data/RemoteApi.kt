@@ -82,7 +82,6 @@ class RemoteApi(
             val url = windowsUrl ?: return@runCatching null
             client.post {
                 url {
-                    println("efefe url = $url")
                     takeFrom(url)
                     encodedPath = "build_win"
                 }

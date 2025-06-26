@@ -111,6 +111,10 @@ fun App() {
     var showDSPArchitectureDialog by remember { mutableStateOf(false) }
     var isMacBuildX86 by remember { mutableStateOf(false) }
 
+    var showDSPDevProdDialog by remember { mutableStateOf(false) }
+    var dspDevProdValue by remember { mutableStateOf(true) }
+    var pendingDSPRebuild: (() -> Unit)? by remember { mutableStateOf(null) }
+
     val filteredItems = branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
     var isBuilding by remember { mutableStateOf(false) }
 
@@ -416,30 +420,37 @@ fun App() {
                                 approveButtonText = "Rebuild",
                                 cancelButtonText = "Cancel",
                                 onApprove = {
-                                    when (selectedBuildType) {
-                                        BuildType.ANDROID -> {
-                                            coroutineScope.launch {
-                                                snackbarHostState.showSnackbar("Rebuilding...")
-                                                createViewModel.rebuildAndroidDSPLibrary(
-                                                    selectedItemText
-                                                )
+                                    showDSPDevProdDialog = true
+
+                                    pendingDSPRebuild = {
+                                        when (selectedBuildType) {
+                                            BuildType.ANDROID -> {
+                                                coroutineScope.launch {
+                                                    snackbarHostState.showSnackbar("Rebuilding...")
+                                                    createViewModel.rebuildAndroidDSPLibrary(
+                                                        branchName = selectedItemText,
+                                                        isUseDevAnalytics = dspDevProdValue
+                                                    )
+                                                }
                                             }
-                                        }
 
-                                        BuildType.WINDOWS -> {
-                                            coroutineScope.launch {
-                                                snackbarHostState.showSnackbar("Rebuilding...")
-                                                createViewModel.rebuildDSPLibrary(
-                                                    branchName = selectedItemText,
-                                                    isWindows = true,
-                                                    isX86 = false
-                                                )
+                                            BuildType.WINDOWS -> {
+                                                coroutineScope.launch {
+                                                    snackbarHostState.showSnackbar("Rebuilding...")
+                                                    createViewModel.rebuildDSPLibrary(
+                                                        branchName = selectedItemText,
+                                                        isWindows = true,
+                                                        isX86 = false,
+                                                        isUseDevAnalytics = dspDevProdValue
+                                                    )
+                                                }
                                             }
+
+                                            BuildType.MACOS -> showDSPArchitectureDialog =
+                                                true
+
+                                            else -> {}
                                         }
-
-                                        BuildType.MACOS -> showDSPArchitectureDialog = true
-
-                                        else -> {}
                                     }
 
                                     showRebuildDSPDialog = false
@@ -456,6 +467,30 @@ fun App() {
                             )
                         }
 
+                        AnimatedVisibility(visible = showDSPDevProdDialog) {
+                            AutomateBuildDialog(
+                                title = "Choose DSP Build Purpose",
+                                approveButtonText = "Dev",
+                                cancelButtonText = "Prod",
+                                onApprove = {
+                                    dspDevProdValue = true
+                                    showDSPDevProdDialog = false
+                                    pendingDSPRebuild?.invoke()
+                                    pendingDSPRebuild = null
+                                },
+                                onCancel = {
+                                    dspDevProdValue = false
+                                    showDSPDevProdDialog = false
+                                    pendingDSPRebuild?.invoke()
+                                    pendingDSPRebuild = null
+                                },
+                                onDismissRequest = {
+                                    showDSPDevProdDialog = false
+                                    pendingDSPRebuild = null
+                                }
+                            )
+                        }
+
                         AnimatedVisibility(visible = showDSPArchitectureDialog) {
                             AutomateBuildDialog(
                                 title = "Select MacOS DSP Architecture",
@@ -468,7 +503,8 @@ fun App() {
                                         createViewModel.rebuildDSPLibrary(
                                             branchName = selectedItemText,
                                             isWindows = false,
-                                            isX86 = true
+                                            isX86 = true,
+                                            isUseDevAnalytics = dspDevProdValue
                                         )
                                     }
                                     showDSPArchitectureDialog = false
@@ -480,7 +516,8 @@ fun App() {
                                         createViewModel.rebuildDSPLibrary(
                                             branchName = selectedItemText,
                                             isWindows = false,
-                                            isX86 = false
+                                            isX86 = false,
+                                            isUseDevAnalytics = dspDevProdValue
                                         )
                                     }
                                     showDSPArchitectureDialog = false
