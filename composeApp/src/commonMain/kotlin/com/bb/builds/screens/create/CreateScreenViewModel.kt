@@ -85,6 +85,23 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
         )
     }
 
+    suspend fun rebuildMacDSPBothArchitectures(branchName: String, isUseDevAnalytics: Boolean) {
+        // Rebuild for x86
+        rebuildDSPLibrary(
+            branchName = branchName,
+            isWindows = false,
+            isX86 = true,
+            isUseDevAnalytics = isUseDevAnalytics
+        )
+        // Rebuild for ARM (M1)
+        rebuildDSPLibrary(
+            branchName = branchName,
+            isWindows = false,
+            isX86 = false,
+            isUseDevAnalytics = isUseDevAnalytics
+        )
+    }
+
     private fun getBranches() = viewModelScope.launch {
         _isLoading.update { true }
         _branches.value = automateBuildSystemService.getBranches()?.branches ?: emptyList()

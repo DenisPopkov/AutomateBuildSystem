@@ -446,8 +446,15 @@ fun App() {
                                                 }
                                             }
 
-                                            BuildType.MACOS -> showDSPArchitectureDialog =
-                                                true
+                                            BuildType.MACOS -> {
+                                                coroutineScope.launch {
+                                                    snackbarHostState.showSnackbar("Rebuilding DSP for both x86 and ARM (M1)...")
+                                                    createViewModel.rebuildMacDSPBothArchitectures(
+                                                        branchName = selectedItemText,
+                                                        isUseDevAnalytics = dspDevProdValue
+                                                    )
+                                                }
+                                            }
 
                                             else -> {}
                                         }
