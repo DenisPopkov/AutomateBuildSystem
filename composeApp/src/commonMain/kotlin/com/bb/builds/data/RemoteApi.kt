@@ -116,7 +116,7 @@ class RemoteApi(
         runCatching {
             client.post {
                 url {
-                    takeFrom(macM1Url ?: macX86Url ?: windowsUrl ?: "")
+                    takeFrom(macX86Url ?: windowsUrl ?: "")
                     encodedPath = "rebuild_android_dsp"
                 }
                 setBody(buildData)
