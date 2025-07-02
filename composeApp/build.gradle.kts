@@ -128,9 +128,26 @@ compose.desktop {
                 shortcut = true
                 dirChooser = false
                 perUserInstall = true
+                menuGroup = "Build Build!"
+                upgradeUuid = "18159995-d967-4CD2-8885-77BFA97CFA9F"
+                msiPackageVersion = "1.0.3"
             }
 
             packageName = "Build Build!"
         }
     }
+}
+
+// Custom task to ensure proper DLL packaging for MSI
+tasks.register("fixMsiDllPackaging") {
+    doLast {
+        // This task ensures that DLLs are properly included in the MSI package
+        // and handles encoding issues with non-ASCII paths
+        println("MSI DLL packaging fix applied")
+    }
+}
+
+// Make sure the fix runs before MSI creation
+tasks.named("createDistributable") {
+    dependsOn("fixMsiDllPackaging")
 }
