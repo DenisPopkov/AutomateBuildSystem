@@ -60,10 +60,14 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.library.base)
+            implementation(libs.kotlinx.serialization.core)
             api(libs.koin.core)
         }
         desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
+            implementation(compose.desktop.currentOs) {
+                exclude("org.jetbrains.compose.material")
+            }
+
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.ktor.client.cio)
         }
@@ -105,6 +109,10 @@ dependencies {
 
 compose.desktop {
     application {
+        buildTypes.release.proguard {
+            this.isEnabled = false
+        }
+
         mainClass = "com.bb.builds.MainKt"
 
         nativeDistributions {
@@ -114,6 +122,12 @@ compose.desktop {
 
             macOS {
                 iconFile.set(project.file("icon.icns"))
+            }
+
+            windows {
+                shortcut = true
+                dirChooser = false
+                perUserInstall = true
             }
 
             packageName = "Build Build!"
