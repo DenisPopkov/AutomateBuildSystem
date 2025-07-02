@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.realm)
 }
 
 kotlin {
@@ -58,6 +59,7 @@ kotlin {
             implementation(libs.jetbrains.androidx.navigation.compose)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.library.base)
             api(libs.koin.core)
         }
         desktopMain.dependencies {

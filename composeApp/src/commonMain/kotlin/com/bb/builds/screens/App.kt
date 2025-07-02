@@ -68,6 +68,9 @@ import com.bb.builds.screens.create.CreateScreenViewModel
 import com.bb.builds.theme.MavenFontFamily
 import com.bb.builds.theme.Theme
 import com.bb.builds.theme.getColorSystem
+import io.realm.kotlin.Configuration
+import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -117,6 +120,13 @@ fun App() {
 
     val filteredItems = branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
     var isBuilding by remember { mutableStateOf(false) }
+
+    Realm.open(
+        RealmConfiguration.Builder(schema = setOf())
+            .name("FUzz")
+            .schemaVersion(1)
+            .build()
+    )
 
     LaunchedEffect(bottomState.currentValue) {
         if (bottomState.currentValue == ModalBottomSheetValue.Hidden) {
