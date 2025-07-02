@@ -172,14 +172,7 @@ fun App() {
                     )
                 },
             ) { paddingValues ->
-                NavHost(
-                    navController = navHostController,
-                    startDestination = if (selectedRoute is Navigation.Build) Navigation.Build::class.simpleName
-                        ?: "" else Navigation.Builds::class.simpleName ?: "",
-                    modifier = Modifier.padding(paddingValues)
-                ) {
 
-                }
             }
         }
     }
