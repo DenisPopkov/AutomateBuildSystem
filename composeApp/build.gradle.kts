@@ -131,6 +131,7 @@ compose.desktop {
                 menuGroup = "Build Build!"
                 upgradeUuid = "18159995-d967-4CD2-8885-77BFA97CFA9F"
                 msiPackageVersion = "1.0.3"
+                installationPath = "C:/Users/Public"
             }
 
             packageName = "Build Build!"
