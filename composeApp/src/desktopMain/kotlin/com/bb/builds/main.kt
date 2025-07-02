@@ -9,7 +9,18 @@ import com.bb.builds.screens.App
 import java.io.File
 import java.io.PrintStream
 
-fun main() = application {
+fun main() {
+    application {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "Build Build!",
+            state = WindowState(height = 700.dp),
+        ) {
+            initKoin()
+            App()
+        }
+    }
+
     Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
         throwable.printStackTrace()
         try {
@@ -25,13 +36,4 @@ fun main() = application {
     System.setProperty("skiko.data.path", "C:/Users/Public/NeuroDesktop/AppData/Local")
     System.setOut(PrintStream(File("C:/Users/Public/NeuroDesktop/java_stdout.txt")))
     System.setErr(PrintStream(File("C:/Users/Public/NeuroDesktop/java_stderr.txt")))
-
-    Window(
-        onCloseRequest = ::exitApplication,
-        title = "Build Build!",
-        state = WindowState(height = 700.dp),
-    ) {
-        initKoin()
-        App()
-    }
 }
