@@ -61,6 +61,7 @@ import com.bb.builds.components.BranchItem
 import com.bb.builds.components.LoadingScreen
 import com.bb.builds.domain.BuildData
 import com.bb.builds.domain.BuildType
+import com.bb.builds.domain.UploadTarget
 import com.bb.builds.screens.builds.BuildScreenViewModel
 import com.bb.builds.screens.builds.BuildsScreen
 import com.bb.builds.screens.create.CreateScreen
@@ -115,6 +116,9 @@ fun App() {
     var dspDevProdValue by remember { mutableStateOf(true) }
     var pendingDSPRebuild: (() -> Unit)? by remember { mutableStateOf(null) }
 
+    var showUploadTargetDialog by remember { mutableStateOf(false) }
+    var selectedUploadTarget by remember { mutableStateOf(UploadTarget.SLACK) }
+
     val filteredItems = branches.filter { it.contains(searchQuery.trim(), ignoreCase = true) }
     var isBuilding by remember { mutableStateOf(false) }
 
@@ -142,6 +146,7 @@ fun App() {
                 buildData = BuildData(
                     branchName = selectedItemText,
                     isUseDevAnalytics = isUseForDevPurpose,
+                    uploadTarget = selectedUploadTarget.targetName,
                 ),
                 buildType = selectedBuildType,
                 isX86 = isMacBuildX86,
@@ -376,8 +381,13 @@ fun App() {
                                 cancelButtonText = "Prod",
                                 onApprove = {
                                     isUseForDevPurpose = true
-                                    isBuilding = true
-                                    isUseDevAnalyticsDialogVisible = false
+                                    if (selectedBuildType == BuildType.ANDROID) {
+                                        showUploadTargetDialog = true
+                                        isUseDevAnalyticsDialogVisible = false
+                                    } else {
+                                        isBuilding = true
+                                        isUseDevAnalyticsDialogVisible = false
+                                    }
                                 },
                                 onCancel = {
                                     isUseForDevPurpose = false
@@ -410,6 +420,27 @@ fun App() {
                                 onDismissRequest = {
                                     isBuilding = false
                                     showArchitectureDialog = false
+                                }
+                            )
+                        }
+
+                        AnimatedVisibility(visible = showUploadTargetDialog) {
+                            AutomateBuildDialog(
+                                title = "Select Upload Target",
+                                approveButtonText = "Slack",
+                                cancelButtonText = "Firebase",
+                                onApprove = {
+                                    selectedUploadTarget = UploadTarget.SLACK
+                                    showUploadTargetDialog = false
+                                    isBuilding = true
+                                },
+                                onCancel = {
+                                    selectedUploadTarget = UploadTarget.FIREBASE
+                                    showUploadTargetDialog = false
+                                    isBuilding = true
+                                },
+                                onDismissRequest = {
+                                    showUploadTargetDialog = false
                                 }
                             )
                         }
