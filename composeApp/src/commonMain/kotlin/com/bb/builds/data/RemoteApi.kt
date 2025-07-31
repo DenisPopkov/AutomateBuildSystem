@@ -11,7 +11,6 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
-import io.ktor.http.isRelativePath
 import io.ktor.http.takeFrom
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -116,7 +115,7 @@ class RemoteApi(
         runCatching {
             client.post {
                 url {
-                    takeFrom(macM1Url ?: macX86Url ?: windowsUrl ?: "")
+                    takeFrom(macX86Url ?: "")
                     encodedPath = "rebuild_android_dsp"
                 }
                 setBody(buildData)
