@@ -57,9 +57,9 @@ fun CreateScreen(
                 .padding(start = 4.dp),
             text = "Create Build",
             color = colors.black100,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.ExtraBold,
             fontFamily = sfFontFamily,
-            fontSize = 34.sp,
+            fontSize = 32.sp,
             letterSpacing = 0.4.sp,
         )
 
