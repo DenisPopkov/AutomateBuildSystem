@@ -128,7 +128,7 @@ fun App() {
                 buildData = BuildData(
                     branchName = selectedItemText,
                     isUseDevAnalytics = isUseForDevPurpose,
-                    uploadTarget = selectedUploadTarget.targetName,
+                    uploadTarget = if (selectedBuildType == BuildType.WINDOWS) UploadTarget.R2.targetName else selectedUploadTarget.targetName,
                 ),
                 buildType = selectedBuildType,
                 isX86 = isMacBuildX86,
@@ -290,7 +290,7 @@ fun App() {
                     cancelButtonText = if (selectedBuildType == BuildType.WINDOWS) "Release" else "Prod",
                     onApprove = {
                         isUseForDevPurpose = true
-                        if (selectedBuildType == BuildType.ANDROID || selectedBuildType == BuildType.WINDOWS) {
+                        if (selectedBuildType == BuildType.ANDROID) {
                             showUploadTargetDialog = true
                             isUseDevAnalyticsDialogVisible = false
                         } else {
