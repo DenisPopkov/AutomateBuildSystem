@@ -128,7 +128,7 @@ fun App() {
                 buildData = BuildData(
                     branchName = selectedItemText,
                     isUseDevAnalytics = isUseForDevPurpose,
-                    uploadTarget = if (selectedBuildType == BuildType.WINDOWS) UploadTarget.R2.targetName else selectedUploadTarget.targetName,
+                    uploadTarget = selectedUploadTarget.targetName,
                 ),
                 buildType = selectedBuildType,
                 isX86 = isMacBuildX86,
@@ -336,15 +336,15 @@ fun App() {
             AnimatedVisibility(visible = showUploadTargetDialog) {
                 AutomateBuildDialog(
                     title = "Select Upload Target",
-                    approveButtonText = if (selectedBuildType == BuildType.WINDOWS) "R2" else "Slack",
-                    cancelButtonText = if (selectedBuildType == BuildType.WINDOWS) "Slack" else "Firebase",
+                    approveButtonText = "Slack",
+                    cancelButtonText = "Firebase",
                     onApprove = {
-                        selectedUploadTarget = if (selectedBuildType == BuildType.WINDOWS) UploadTarget.R2 else UploadTarget.SLACK
+                        selectedUploadTarget = UploadTarget.SLACK
                         showUploadTargetDialog = false
                         isBuilding = true
                     },
                     onCancel = {
-                        selectedUploadTarget = if (selectedBuildType == BuildType.WINDOWS) UploadTarget.SLACK else UploadTarget.FIREBASE
+                        selectedUploadTarget = UploadTarget.FIREBASE
                         showUploadTargetDialog = false
                         isBuilding = true
                     },
