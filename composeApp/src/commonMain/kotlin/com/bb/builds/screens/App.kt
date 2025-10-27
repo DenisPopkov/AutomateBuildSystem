@@ -286,11 +286,11 @@ fun App() {
             AnimatedVisibility(visible = isUseDevAnalyticsDialogVisible) {
                 AutomateBuildDialog(
                     title = "Choose Build Purpose",
-                    approveButtonText = "Dev",
-                    cancelButtonText = "Prod",
+                    approveButtonText = if (selectedBuildType == BuildType.WINDOWS) "Test" else "Dev",
+                    cancelButtonText = if (selectedBuildType == BuildType.WINDOWS) "Release" else "Prod",
                     onApprove = {
                         isUseForDevPurpose = true
-                        if (selectedBuildType == BuildType.ANDROID) {
+                        if (selectedBuildType == BuildType.ANDROID || selectedBuildType == BuildType.WINDOWS) {
                             showUploadTargetDialog = true
                             isUseDevAnalyticsDialogVisible = false
                         } else {
@@ -336,15 +336,15 @@ fun App() {
             AnimatedVisibility(visible = showUploadTargetDialog) {
                 AutomateBuildDialog(
                     title = "Select Upload Target",
-                    approveButtonText = "Slack",
-                    cancelButtonText = "Firebase",
+                    approveButtonText = if (selectedBuildType == BuildType.WINDOWS) "R2" else "Slack",
+                    cancelButtonText = if (selectedBuildType == BuildType.WINDOWS) "Slack" else "Firebase",
                     onApprove = {
-                        selectedUploadTarget = UploadTarget.SLACK
+                        selectedUploadTarget = if (selectedBuildType == BuildType.WINDOWS) UploadTarget.R2 else UploadTarget.SLACK
                         showUploadTargetDialog = false
                         isBuilding = true
                     },
                     onCancel = {
-                        selectedUploadTarget = UploadTarget.FIREBASE
+                        selectedUploadTarget = if (selectedBuildType == BuildType.WINDOWS) UploadTarget.SLACK else UploadTarget.FIREBASE
                         showUploadTargetDialog = false
                         isBuilding = true
                     },

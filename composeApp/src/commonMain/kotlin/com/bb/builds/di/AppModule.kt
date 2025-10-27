@@ -3,7 +3,6 @@ package com.bb.builds.di
 import com.bb.builds.data.KtorApi
 import com.bb.builds.data.KtorApiImpl
 import com.bb.builds.data.RemoteApi
-import com.bb.builds.screens.builds.BuildScreenViewModel
 import com.bb.builds.screens.create.CreateScreenViewModel
 import com.bb.builds.service.AutomateBuildSystem
 import org.koin.compose.viewmodel.dsl.viewModel
@@ -29,5 +28,4 @@ val serviceModule = module {
 
 val viewModelModule = module {
     viewModel { CreateScreenViewModel() }
-    viewModel { BuildScreenViewModel() }
 }
