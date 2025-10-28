@@ -146,7 +146,10 @@ fun App() {
     MaterialTheme {
         Scaffold(
             snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState)
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    modifier = Modifier.navigationBarsPadding()
+                )
             }
         ) { paddingValues ->
             ModalBottomSheetLayout(
