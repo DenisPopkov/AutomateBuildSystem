@@ -123,6 +123,18 @@ class RemoteApi(
             }
         }.getOrNull()
 
+    suspend fun rebuildJARLibrary(buildData: BuildData): HttpResponse? =
+        runCatching {
+            client.post {
+                url {
+                    takeFrom(windowsUrl ?: "")
+                    encodedPath = "rebuild_jar"
+                }
+                setBody(buildData)
+                json()
+            }
+        }.getOrNull()
+
     suspend fun getBranches(): Branches? =
         retryApiCall {
             client.get {

@@ -92,6 +92,8 @@ fun App() {
 
     var isSelectedFromOptions by remember { mutableStateOf(false) }
     var showRebuildDSPDialog by remember { mutableStateOf(false) }
+    var showWindowsOptionsDialog by remember { mutableStateOf(false) }
+    var showRebuildJARDialog by remember { mutableStateOf(false) }
 
     var showArchitectureDialog by remember { mutableStateOf(false) }
     var showDSPArchitectureDialog by remember { mutableStateOf(false) }
@@ -112,7 +114,7 @@ fun App() {
 
     LaunchedEffect(selectedBuildType) {
         branchPlaceholderPlatforms = when (selectedBuildType) {
-            BuildType.WINDOWS -> if (isSelectedFromOptions) "Windows DSP" else "Windows"
+            BuildType.WINDOWS -> if (isSelectedFromOptions) "Windows" else "Windows"
             BuildType.IOS -> "iOS"
             BuildType.ANDROID -> if (isSelectedFromOptions) "Android DSP" else "Android"
             BuildType.MACOS -> if (isSelectedFromOptions) "MacOS DSP" else "MacOS"
@@ -221,7 +223,11 @@ fun App() {
                                         keyboardController?.hide()
 
                                         if (isSelectedFromOptions) {
-                                            showRebuildDSPDialog = true
+                                            if (selectedBuildType == BuildType.WINDOWS) {
+                                                showWindowsOptionsDialog = true
+                                            } else {
+                                                showRebuildDSPDialog = true
+                                            }
                                         } else {
                                             if (selectedBuildType == BuildType.MACOS) {
                                                 showArchitectureDialog = true
@@ -443,6 +449,50 @@ fun App() {
                     },
                     onDismissRequest = {
                         showDSPArchitectureDialog = false
+                    }
+                )
+            }
+            AnimatedVisibility(visible = showWindowsOptionsDialog) {
+                AutomateBuildDialog(
+                    title = "Windows Options",
+                    approveButtonText = "DSP",
+                    cancelButtonText = "JAR",
+                    onApprove = {
+                        showWindowsOptionsDialog = false
+                        showRebuildDSPDialog = true
+                    },
+                    onCancel = {
+                        showWindowsOptionsDialog = false
+                        showRebuildJARDialog = true
+                    },
+                    onDismissRequest = {
+                        showWindowsOptionsDialog = false
+                    }
+                )
+            }
+
+            AnimatedVisibility(visible = showRebuildJARDialog) {
+                AutomateBuildDialog(
+                    title = "Rebuild JAR Update",
+                    approveButtonText = "Build",
+                    cancelButtonText = "Cancel",
+                    onApprove = {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar("Rebuilding JAR...")
+                            createViewModel.rebuildJARLibrary(
+                                branchName = selectedItemText
+                            )
+                        }
+                        showRebuildJARDialog = false
+                        isSelectedFromOptions = false
+                    },
+                    onCancel = {
+                        showRebuildJARDialog = false
+                        isSelectedFromOptions = false
+                    },
+                    onDismissRequest = {
+                        showRebuildJARDialog = false
+                        isSelectedFromOptions = false
                     }
                 )
             }
