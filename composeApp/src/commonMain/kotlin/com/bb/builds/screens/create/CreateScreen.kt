@@ -34,7 +34,6 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun CreateScreen(
-    snackbarHostState: SnackbarHostState,
     updateSelectedBuildType: (BuildType) -> Unit,
     showSelectBranchBottomSheet: () -> Unit,
     onOptionsSelected: (isSelected: Boolean) -> Unit,
@@ -110,13 +109,9 @@ fun CreateScreen(
                         },
                         onOptionsClick = {
                             coroutineScope.launch {
-                                if (buildOptions[index].buildType == BuildType.IOS) {
-                                    snackbarHostState.showSnackbar(message = "Not supported")
-                                } else {
-                                    updateSelectedBuildType.invoke(buildOptions[index].buildType)
-                                    showSelectBranchBottomSheet.invoke()
-                                    onOptionsSelected.invoke(true)
-                                }
+                                updateSelectedBuildType.invoke(buildOptions[index].buildType)
+                                showSelectBranchBottomSheet.invoke()
+                                onOptionsSelected.invoke(true)
                             }
                         }
                     )

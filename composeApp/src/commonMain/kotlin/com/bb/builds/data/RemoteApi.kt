@@ -135,6 +135,18 @@ class RemoteApi(
             }
         }.getOrNull()
 
+    suspend fun checkIOSCache(buildData: BuildData): HttpResponse? =
+        runCatching {
+            client.post {
+                url {
+                    takeFrom(macM1Url ?: macX86Url ?: windowsUrl ?: "")
+                    encodedPath = "check_ios_cache"
+                }
+                setBody(buildData)
+                json()
+            }
+        }.getOrNull()
+
     suspend fun getBranches(): Branches? =
         retryApiCall {
             client.get {

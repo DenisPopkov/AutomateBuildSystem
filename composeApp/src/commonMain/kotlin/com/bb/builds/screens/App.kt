@@ -94,6 +94,7 @@ fun App() {
     var showRebuildDSPDialog by remember { mutableStateOf(false) }
     var showWindowsOptionsDialog by remember { mutableStateOf(false) }
     var showRebuildJARDialog by remember { mutableStateOf(false) }
+    var showIOSCacheCheckDialog by remember { mutableStateOf(false) }
 
     var showArchitectureDialog by remember { mutableStateOf(false) }
     var showDSPArchitectureDialog by remember { mutableStateOf(false) }
@@ -226,10 +227,16 @@ fun App() {
                                         keyboardController?.hide()
 
                                         if (isSelectedFromOptions) {
-                                            if (selectedBuildType == BuildType.WINDOWS) {
-                                                showWindowsOptionsDialog = true
-                                            } else {
-                                                showRebuildDSPDialog = true
+                                            when (selectedBuildType) {
+                                                BuildType.WINDOWS -> {
+                                                    showWindowsOptionsDialog = true
+                                                }
+                                                BuildType.IOS -> {
+                                                    showIOSCacheCheckDialog = true
+                                                }
+                                                else -> {
+                                                    showRebuildDSPDialog = true
+                                                }
                                             }
                                         } else {
                                             if (selectedBuildType == BuildType.MACOS) {
@@ -284,7 +291,6 @@ fun App() {
             },
         ) {
             CreateScreen(
-                snackbarHostState = snackbarHostState,
                 updateSelectedBuildType = { selectedBuildType = it },
                 showSelectBranchBottomSheet = {
                     coroutineScope.launch { bottomState.show() }
@@ -495,6 +501,33 @@ fun App() {
                     },
                     onDismissRequest = {
                         showRebuildJARDialog = false
+                        isSelectedFromOptions = false
+                    }
+                )
+            }
+
+            AnimatedVisibility(visible = showIOSCacheCheckDialog) {
+                AutomateBuildDialog(
+                    title = "Are you sure you want to check iOS build cache?",
+                    approveButtonText = "Check",
+                    cancelButtonText = "Cancel",
+                    onApprove = {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar("Checking iOS cache...")
+                            createViewModel.checkIOSCache(
+                                branchName = selectedItemText
+                            )
+                            snackbarHostState.showSnackbar("iOS cache check completed!")
+                        }
+                        showIOSCacheCheckDialog = false
+                        isSelectedFromOptions = false
+                    },
+                    onCancel = {
+                        showIOSCacheCheckDialog = false
+                        isSelectedFromOptions = false
+                    },
+                    onDismissRequest = {
+                        showIOSCacheCheckDialog = false
                         isSelectedFromOptions = false
                     }
                 )

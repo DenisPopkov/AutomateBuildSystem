@@ -37,4 +37,7 @@ class AutomateBuildSystem(
 
     suspend fun rebuildJARLibrary(buildData: BuildData): HttpResponse? =
         remoteApi.rebuildJARLibrary(buildData)
+
+    suspend fun checkIOSCache(buildData: BuildData): HttpResponse? =
+        remoteApi.checkIOSCache(buildData)
 }

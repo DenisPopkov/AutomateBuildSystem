@@ -111,6 +111,15 @@ class CreateScreenViewModel : ViewModel(), KoinComponent {
         )
     }
 
+    suspend fun checkIOSCache(branchName: String) {
+        automateBuildSystemService.checkIOSCache(
+            BuildData(
+                branchName = branchName,
+                isUseDevAnalytics = false,
+            )
+        )
+    }
+
     private fun getBranches() = viewModelScope.launch {
         _isLoading.update { true }
         _branches.value = automateBuildSystemService.getBranches()?.branches ?: emptyList()
