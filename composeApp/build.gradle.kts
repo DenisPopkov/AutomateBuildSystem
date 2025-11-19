@@ -76,8 +76,8 @@ android {
         applicationId = "com.bb.builds"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 7
-        versionName = "2.5"
+        versionCode = 8
+        versionName = "2.6"
     }
     packaging {
         resources {
