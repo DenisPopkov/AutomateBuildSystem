@@ -301,8 +301,8 @@ fun App() {
             AnimatedVisibility(visible = isUseDevAnalyticsDialogVisible) {
                 AutomateBuildDialog(
                     title = "Choose Build Purpose",
-                    approveButtonText = if (selectedBuildType == BuildType.WINDOWS) "Test" else "Dev",
-                    cancelButtonText = if (selectedBuildType == BuildType.WINDOWS) "Release" else "Prod",
+                    approveButtonText = "Dev",
+                    cancelButtonText = "Prod",
                     onApprove = {
                         isUseForDevPurpose = true
                         if (selectedBuildType == BuildType.ANDROID) {
