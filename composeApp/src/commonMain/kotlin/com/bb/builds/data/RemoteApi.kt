@@ -179,14 +179,14 @@ class RemoteApi(
     }
 
     private suspend fun <T> retryApiCall(
-        retries: Int = 3,
+        retries: Int = 5,
         block: suspend () -> T
     ): T? {
         repeat(retries - 1) {
             try {
                 return block()
             } catch (e: Exception) {
-                delay(2000)
+                delay(10000)
             }
         }
         return try {
